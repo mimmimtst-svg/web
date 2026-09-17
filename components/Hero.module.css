@@ -39,9 +39,9 @@
   transform: translateY(-50px);
 }
 
+/* Web version stays a single line (white-space: nowrap) — only the phone
+   breakpoint below forces the two-line break. */
 .headlineKr {
-  display: flex;
-  flex-direction: column;
   font-family: var(--font-kr);
   font-weight: 800;
   font-size: var(--fs-hero-kr);
@@ -49,10 +49,11 @@
   color: var(--color-white);
   opacity: 0;
   animation: heroFadeIn 1700ms cubic-bezier(0.19, 1, 0.22, 1) 200ms forwards;
+  white-space: nowrap;
 }
 
 .headlineLine {
-  display: block;
+  display: inline;
 }
 
 .headlineEn {
@@ -124,9 +125,19 @@
   }
 }
 
+/* Phone only: break into the explicit two-line layout and shrink the
+   type — the "web version" rule above (single line, nowrap) is only
+   overridden here. */
 @media (max-width: 640px) {
   .headlineKr {
+    display: flex;
+    flex-direction: column;
+    white-space: normal;
     font-size: clamp(1.7rem, 1.2rem + 4vw, 2.5rem);
+  }
+
+  .headlineLine {
+    display: block;
   }
 
   .headlineEn {

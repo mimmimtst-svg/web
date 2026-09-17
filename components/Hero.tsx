@@ -13,7 +13,7 @@ export default function Hero() {
       <div className={styles.inner}>
         <div className={styles.headline}>
           <h1 className={styles.headlineKr}>
-            <span className={styles.headlineLine}>자유로운 지성,</span>
+            <span className={styles.headlineLine}>자유로운 지성,</span>{" "}
             <span className={styles.headlineLine}>시대를 여는 고대</span>
           </h1>
           <p className={styles.headlineEn}>Free Minds, a New Era</p>
