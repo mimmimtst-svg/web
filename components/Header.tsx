@@ -13,31 +13,35 @@ export default function Header() {
     const heroEl = document.getElementById("hero");
     if (!headerEl || !heroEl) return;
 
-    const syncHeaderHeight = () => {
+    let intersectionObserver: IntersectionObserver | null = null;
+
+    // Rebuilds the IntersectionObserver so its rootMargin always matches
+    // the header's current (fluid) height. Using IntersectionObserver
+    // instead of a scroll listener avoids reading layout (getBoundingClientRect/
+    // offsetHeight) on every scroll frame, which was competing with the
+    // native scroll-snap animation and contributing to jank.
+    const rebuildObserver = () => {
+      intersectionObserver?.disconnect();
+      const headerHeight = headerEl.offsetHeight;
       document.documentElement.style.setProperty(
         "--header-height",
-        `${headerEl.offsetHeight}px`
+        `${headerHeight}px`
       );
+      intersectionObserver = new IntersectionObserver(
+        ([entry]) => setScrolled(!entry.isIntersecting),
+        { rootMargin: `-${headerHeight}px 0px 0px 0px`, threshold: 0 }
+      );
+      intersectionObserver.observe(heroEl);
     };
 
-    const onScroll = () => {
-      const heroBottom = heroEl.getBoundingClientRect().bottom;
-      setScrolled(heroBottom <= headerEl.offsetHeight);
-    };
+    rebuildObserver();
 
-    syncHeaderHeight();
-    onScroll();
-
-    const resizeObserver = new ResizeObserver(syncHeaderHeight);
+    const resizeObserver = new ResizeObserver(rebuildObserver);
     resizeObserver.observe(headerEl);
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
 
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      intersectionObserver?.disconnect();
     };
   }, []);
 

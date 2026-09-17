@@ -1,15 +1,16 @@
 .section {
   width: 100%;
-  min-height: 100dvh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: clamp(32px, 4vw, 50px);
-  padding: var(--space-section-y) 0;
+  gap: 0;
+  /* top padding reserves space for the fixed header; bottom has no
+     padding of its own — the Footer nested at the end of this section
+     supplies its own bottom spacing so the two don't stack. */
+  padding-top: calc(var(--header-height) + var(--space-section-y));
   background-color: #141414;
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  scroll-margin-top: var(--header-height);
 }
 
 .inner {
@@ -17,12 +18,15 @@
   max-width: var(--content-max);
   margin: 0 auto;
   padding: 0 var(--space-page-x);
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: clamp(24px, 3vw, 40px);
+  gap: var(--gap-md);
 }
 
 .headerRow {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -88,7 +92,10 @@
 }
 
 .track {
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
+  align-items: stretch;
   gap: var(--gap-md);
   overflow-x: auto;
   scroll-snap-type: x proximity;
@@ -111,13 +118,15 @@
   background-color: var(--color-white);
   border-radius: 14px;
   border: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
 }
 
 .cardHead {
+  flex: 0 0 auto;
   display: flex;
   align-items: baseline;
   gap: 14px;
-  padding: clamp(24px, 2.4vw, 40px) clamp(24px, 2.6vw, 40px) clamp(18px, 2vw, 24px);
+  padding: clamp(16px, 2.2vh, 40px) clamp(24px, 2.6vw, 40px) clamp(12px, 1.6vh, 24px);
 }
 
 .cardNumber {
@@ -135,23 +144,25 @@
 }
 
 .cardLine {
+  flex: 0 0 auto;
   height: 1px;
   background-color: rgba(0, 0, 0, 0.1);
   margin: 0 clamp(24px, 2.6vw, 40px);
 }
 
 .cardCategories {
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: clamp(18px, 2vw, 26px);
-  padding: clamp(18px, 2vw, 24px) clamp(24px, 2.6vw, 40px);
-  flex: 1 1 auto;
+  gap: clamp(10px, 1.8vh, 26px);
+  padding: clamp(10px, 1.8vh, 24px) clamp(24px, 2.6vw, 40px);
 }
 
 .category {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: clamp(4px, 0.8vh, 10px);
 }
 
 .categoryLabel {
@@ -164,7 +175,7 @@
 .categoryItems {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: clamp(3px, 0.6vh, 8px);
 }
 
 .categoryItem {
@@ -174,7 +185,7 @@
   font-family: var(--font-kr);
   font-weight: 300;
   font-size: var(--fs-plan-item);
-  line-height: 1.4;
+  line-height: 1.35;
   color: var(--color-charcoal);
 }
 
@@ -182,12 +193,13 @@
   width: 11px;
   height: auto;
   flex-shrink: 0;
-  margin-top: 6px;
+  margin-top: 5px;
   color: var(--color-key);
 }
 
 .cardFoot {
-  padding: clamp(18px, 2vw, 24px) clamp(24px, 2.6vw, 40px);
+  flex: 0 0 auto;
+  padding: clamp(10px, 1.6vh, 24px) clamp(24px, 2.6vw, 40px);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -203,4 +215,32 @@
 .cardLink svg {
   width: 13px;
   height: auto;
+}
+
+/* Short desktop viewports (1366x768 laptops etc.) — trim card font size
+   a bit further so the fullest card (multiple categories, many items)
+   fits without its own internal scroll area. */
+@media (max-height: 940px) {
+  .categoryItem {
+    font-size: clamp(0.8rem, 0.7rem + 0.4vw, 1rem);
+  }
+}
+
+@media (max-height: 700px) {
+  .cardHead {
+    padding-top: 12px;
+    padding-bottom: 8px;
+  }
+
+  .categoryItem {
+    font-size: clamp(0.75rem, 0.68rem + 0.35vw, 0.9rem);
+    line-height: 1.25;
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    height: auto;
+    min-height: 100dvh;
+  }
 }

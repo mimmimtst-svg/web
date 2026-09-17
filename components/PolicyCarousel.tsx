@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import styles from "./PolicyCarousel.module.css";
 import { ArrowRightIcon, CheckIcon, ChevronIcon, PlusIcon } from "./icons";
 import { policyCards } from "@/lib/policyData";
+import Footer from "./Footer";
 
 export default function PolicyCarousel() {
   const trackRef = useRef<HTMLUListElement>(null);
@@ -100,6 +101,7 @@ export default function PolicyCarousel() {
           ))}
         </ul>
       </div>
+      <Footer />
     </section>
   );
 }

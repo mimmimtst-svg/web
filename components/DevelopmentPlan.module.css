@@ -1,27 +1,34 @@
 .section {
   width: 100%;
-  min-height: 100dvh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: clamp(40px, 6vw, 80px);
-  padding: var(--space-section-y) var(--space-page-x);
+  gap: var(--gap-lg);
+  /* top padding reserves space for the fixed header so it never covers
+     the title; total box height still stays exactly 100dvh (no
+     scroll-margin-top shift, which would push the bottom edge past
+     the viewport instead). */
+  padding: calc(var(--header-height) + var(--space-section-y)) var(--space-page-x)
+    var(--space-section-y);
   background-color: var(--color-white);
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  scroll-margin-top: var(--header-height);
 }
 
 .inner {
   width: 100%;
   max-width: var(--content-max);
   margin: 0 auto;
+  min-height: 0;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(40px, 6vw, 80px);
+  gap: var(--gap-lg);
 }
 
 .sectionHeader {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   gap: var(--gap-sm);
@@ -42,6 +49,8 @@
 }
 
 .grid {
+  flex: 1 1 auto;
+  min-height: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--gap-sm);
@@ -53,15 +62,14 @@
   background-color: var(--color-card-bg);
   border-radius: var(--radius-card);
   overflow: hidden;
-  min-height: 480px;
 }
 
 .cardBody {
   display: flex;
   flex-direction: column;
-  gap: clamp(14px, 1.6vw, 20px);
-  padding: clamp(28px, 3vw, 50px);
-  flex: 1 1 auto;
+  gap: clamp(10px, 1.6vw, 20px);
+  padding: clamp(20px, 3vw, 50px);
+  flex: 0 1 auto;
 }
 
 .cardTitleRow {
@@ -102,7 +110,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: clamp(16px, 2vw, 32px);
+  gap: clamp(10px, 2vw, 32px);
   flex: 1 1 auto;
 }
 
@@ -132,11 +140,13 @@
 .cardImageWrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 600 / 338;
-  flex-shrink: 0;
+  flex: 1 1 auto;
+  min-height: 64px;
 }
 
 .cardImage {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -151,11 +161,19 @@
 }
 
 @media (max-width: 640px) {
-  .grid {
-    grid-template-columns: 1fr;
+  .section {
+    height: auto;
+    min-height: 100dvh;
   }
 
-  .card {
+  .grid {
+    grid-template-columns: 1fr;
+    flex: 0 0 auto;
+  }
+
+  .cardImageWrap {
+    aspect-ratio: 600 / 338;
+    flex: 0 0 auto;
     min-height: unset;
   }
 }
