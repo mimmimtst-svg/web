@@ -108,11 +108,12 @@ intercept = min - slope * 390
 | `--gap-sm` | 10px → 20px | 카드 그리드 간격, 헤더 요소 간격 |
 | `--content-max` | 1920px | 콘텐츠 wrapper 최대 너비 (그 이상 와이드 화면에서 중앙 정렬) |
 | `--radius-card` | 10px | Section 2 카드 라운드 (Figma 원본 값) |
+| `--header-height` | 기본값 96px, `Header.tsx`가 실측 높이로 실시간 갱신 | 고정 헤더 높이. 스크롤 스냅 보정(`scroll-margin-top`)에 사용 |
 
 ### 레이아웃 규칙
 - **고정 1920px 레이아웃 금지.** 모든 컨테이너는 `max-width: var(--content-max); margin: 0 auto;` + `padding: 0 var(--space-page-x)` 패턴.
-- 섹션 높이는 `min-height: 100svh` 사용 (고정 `height` 금지). 콘텐츠가 많으면 자연스럽게 늘어나야 한다.
-- 가로 스크롤 발생 금지 (`html, body { overflow-x: hidden; max-width: 100vw; }`가 이미 걸려 있음 — 새 컴포넌트가 이 규칙을 깨지 않는지 `document.documentElement.scrollWidth === clientWidth`로 확인).
+- 섹션 높이는 `min-height: 100dvh` 사용 (고정 `height` 금지, `100svh`/`100vh` 대신 `100dvh` 우선 — 모바일 주소창 높이 변화에 대응). 콘텐츠가 많으면 자연스럽게 늘어나야 한다.
+- 가로 스크롤 발생 금지. **`overflow-x: hidden`은 반드시 `body`에만 건다 (`html`에는 걸지 않는다)** — `html`에 걸면 이 프로젝트가 쓰는 Chromium 빌드에서 `scroll-snap-type`이 조용히 무시되는 버그가 있다 (실측으로 확인됨). 새 컴포넌트가 가로 스크롤 규칙을 깨지 않는지 `document.documentElement.scrollWidth === clientWidth`로 확인.
 - 브레이크포인트 기준: **1920 / 1440 / 1024 / 768 / 390**. 실제 CSS 분기점은 컴포넌트 CSS Module 안에 `@media (max-width: 1023px)`, `@media (max-width: 640px)` 형태로 존재. 다단 그리드는 1024 이하에서 2열, 640 이하에서 1열로 재배치하는 것이 기본 패턴 (`DevelopmentPlan.module.css` 참고).
 
 ---
@@ -151,6 +152,43 @@ intercept = min - slope * 390
 - 모두 실제 Figma 원본 에셋 (`public/images/`), placeholder 금지
 - 배경형 이미지: `position: absolute; inset: 0; object-fit: cover;` + 필요시 다크 오버레이(`--color-overlay`)
 - 카드형 이미지: `aspect-ratio` 고정 + `object-fit: cover` (원본 비율이 달라도 크롭으로 흡수)
+- **컬러 멀티플라이 블렌딩**(Hero 배경 패턴): 이미지 자체의 투명도를 낮추는 방식(❌)이 아니라, 이미지 뒤에 브랜드 컬러 배경을 깔고 이미지에 `mix-blend-mode: multiply`를 적용해 실제 블렌딩한다(✅). 패턴:
+  ```css
+  .section { background-color: var(--color-key); } /* 색 레이어 */
+  .bgImage { position: absolute; inset: 0; object-fit: cover; mix-blend-mode: multiply; }
+  ```
+
+### 4.7 고정 헤더 + 스크롤 기반 테마 전환 (`Header.tsx`)
+히어로처럼 이미지 위에 오버레이되는 투명 헤더가 필요한 페이지에서 재사용하는 패턴:
+- `position: fixed; top:0; z-index:40;`, 기본 상태는 `background-color: transparent; color: var(--color-white);`
+- 클라이언트 컴포넌트로 히어로(`#hero`) 요소의 `getBoundingClientRect().bottom`을 스크롤 시 확인해, 헤더 높이 이하로 내려오면 `.scrolled` 클래스를 토글 → `background-color: white; color: var(--color-charcoal);`
+- 전환은 `transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;`
+- 자식 요소(브랜드 텍스트, 버튼, 아이콘)는 색을 하드코딩하지 않고 전부 `color: inherit` / `border-color: currentColor`로 상속받아야 상태 전환이 한 번에 적용된다.
+- `ResizeObserver`로 헤더의 실제 렌더링 높이를 재서 `document.documentElement.style.setProperty('--header-height', ...)`로 CSS 변수에 반영 — fluid 타이포로 헤더 높이가 브레이크포인트마다 달라지기 때문에 하드코딩하지 않는다.
+
+### 4.8 전체 페이지 스크롤 스냅
+`Section 1~4`(`<section>` 태그, `Header`/`Footer` 제외)는 화면 단위로 스냅된다:
+- `html { scroll-snap-type: y mandatory; }` (**`body`가 아니라 `html`**에 건다 — 이 프로젝트의 실제 스크롤 컨테이너는 `html`)
+- 각 섹션: `scroll-snap-align: start; scroll-snap-stop: always;`
+- 고정 헤더에 가려지지 않도록, **히어로를 제외한** 섹션에만 `scroll-margin-top: var(--header-height);`를 추가로 건다 (히어로는 헤더가 투명하므로 0 유지)
+- JS로 wheel 이벤트를 가로채지 않는다 — 순수 CSS 스냅만 사용
+- ⚠️ **`overflow-x: hidden`을 `html`에 걸면 스냅이 깨진다** (4.6 위 레이아웃 규칙 참고). 새 페이지에서 스냅이 갑자기 안 먹힌다면 이 규칙부터 의심한다.
+- 새 스냅 섹션을 추가할 컴포넌트 CSS에 그대로 복사할 스니펫:
+  ```css
+  .section {
+    min-height: 100dvh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    scroll-margin-top: var(--header-height); /* 히어로가 아니라면 */
+  }
+  ```
+
+### 4.9 히어로 2/3·1/3 비대칭 레이아웃 (엣지 정렬 이미지)
+텍스트가 좌측 2/3, 인물/제품 이미지가 우측 1/3을 섹션의 실제 가장자리(오른쪽·하단)에 여백 없이 맞닿게 배치하는 패턴:
+- 텍스트는 패딩이 있는 `.inner` 컨테이너 안에 두고 `width: 66.66%`
+- 이미지는 `.inner`가 아니라 **섹션 자체의 직계 자식**으로 두고 `position: absolute; right:0; bottom:0;` (패딩된 컨테이너 안에 두면 그 패딩만큼 가장자리에서 밀려나므로 반드시 섹션 바로 아래에 배치)
+- 원본 이미지를 좌우 반전해야 하면 `transform: scaleX(-1)`을 이미지 자체에 적용 (컨테이너에는 걸지 않는다)
+- 1024px 미만에서는 절대 위치를 해제하고(`position: static`) 텍스트 아래로 자연스럽게 쌓는다 — 겹침 방지
 
 ---
 
@@ -168,7 +206,7 @@ intercept = min - slope * 390
 
 1. Figma 소스를 먼저 확인(`get_design_context`)하고, 이 문서에 대응하는 토큰이 있는지 확인한다.
 2. 색상/타이포/spacing은 **기존 토큰을 재사용**한다. 새 값이 꼭 필요하면 위 표에 추가하고 이 문서를 갱신한다.
-3. 섹션은 `min-height: 100svh`, 좌우 패딩 `--space-page-x`, 콘텐츠 wrapper `max-width: var(--content-max)` 패턴을 따른다.
+3. 섹션은 `min-height: 100dvh`, 좌우 패딩 `--space-page-x`, 콘텐츠 wrapper `max-width: var(--content-max)` 패턴을 따르고, 스크롤 스냅 섹션이면 4.8의 스니펫을 그대로 적용한다.
 4. 1024 / 640 분기 기준으로 다단 → 스택 반응형을 기본으로 검토한다(필요시 768 분기 추가).
 5. 이미지·아이콘은 전부 실제 에셋만 사용한다. 구할 수 없으면 사용자에게 먼저 알린다.
 6. 과한 그라디언트/글로우/불필요한 둥근 카드/장식 요소를 새로 추가하지 않는다.

@@ -1,12 +1,15 @@
 .section {
   width: 100%;
-  min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: clamp(32px, 4vw, 50px);
   padding: var(--space-section-y) 0;
   background-color: #141414;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  scroll-margin-top: var(--header-height);
 }
 
 .inner {

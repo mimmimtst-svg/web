@@ -1,12 +1,12 @@
 .hero {
   position: relative;
-  min-height: 100svh;
+  min-height: 100dvh;
   width: 100%;
-  display: flex;
-  align-items: center;
   overflow: hidden;
-  background-color: #efefef;
+  background-color: var(--color-key);
   isolation: isolate;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .bgImage {
@@ -16,29 +16,27 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+  mix-blend-mode: multiply;
   z-index: 0;
 }
 
 .inner {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   width: 100%;
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: clamp(96px, 14vw, 160px) var(--space-page-x) clamp(48px, 6vw, 96px);
+  min-height: 100dvh;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-lg);
-  flex-wrap: wrap-reverse;
+  padding: clamp(96px, 14vw, 160px) var(--space-page-x) clamp(48px, 6vw, 96px);
 }
 
 .headline {
   display: flex;
   flex-direction: column;
   gap: clamp(4px, 1vw, 12px);
-  max-width: 62ch;
-  flex: 1 1 480px;
+  width: 66.66%;
 }
 
 .headlineKr {
@@ -47,7 +45,6 @@
   font-size: var(--fs-hero-kr);
   line-height: 1.2;
   color: var(--color-white);
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.28);
 }
 
 .headlineEn {
@@ -56,34 +53,49 @@
   font-size: var(--fs-hero-en);
   line-height: 1.2;
   color: var(--color-white);
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.28);
 }
 
 .portraitWrap {
-  flex: 0 1 420px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  max-width: 100%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: clamp(200px, 33vw, 640px);
+  line-height: 0;
 }
 
 .portrait {
+  display: block;
   width: 100%;
-  max-width: 420px;
   height: auto;
-  aspect-ratio: 686 / 960;
+  aspect-ratio: 591 / 827;
   object-fit: cover;
-  object-position: top center;
+  object-position: bottom;
+  transform: scaleX(-1);
 }
 
 @media (max-width: 1023px) {
+  .hero {
+    display: flex;
+    flex-direction: column;
+  }
+
   .inner {
-    flex-direction: column-reverse;
-    align-items: flex-start;
-    padding-top: clamp(88px, 20vw, 140px);
+    min-height: unset;
+    flex: 1 1 auto;
+    align-items: flex-end;
+    padding-top: clamp(96px, 20vw, 140px);
+    padding-bottom: clamp(24px, 5vw, 48px);
+  }
+
+  .headline {
+    width: 100%;
   }
 
   .portraitWrap {
+    position: static;
     align-self: center;
+    width: min(70vw, 360px);
+    padding-bottom: clamp(32px, 6vw, 56px);
   }
 }
