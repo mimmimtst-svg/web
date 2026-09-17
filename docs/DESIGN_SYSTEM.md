@@ -202,8 +202,10 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 - 텍스트는 패딩이 있는 `.inner` 컨테이너 안에 두고 `width: 66.66%`
 - 이미지는 `.inner`가 아니라 **섹션 자체의 직계 자식**으로 두고 `position: absolute; right:0; bottom:0;` (패딩된 컨테이너 안에 두면 그 패딩만큼 가장자리에서 밀려나므로 반드시 섹션 바로 아래에 배치)
 - 원본 이미지를 좌우 반전해야 하면 `transform: scaleX(-1)`을 이미지 자체에 적용 (컨테이너에는 걸지 않는다)
-- 1024px 미만에서는 절대 위치를 해제하고(`position: static`) 텍스트 아래로 자연스럽게 쌓는다 — 겹침 방지
-- 텍스트 블록(`.headline`)은 데스크톱에서 `transform: translateY(-50px)`로 살짝 위로 올려 시각적 중심을 맞춘다 (모바일 `@media (max-width: 1023px)`에서는 `transform: none`으로 되돌린다 — 모바일은 이미 하단 정렬 레이아웃이라 별도 보정이 필요 없다).
+- **1024px 미만에서도 이미지는 계속 `position: absolute; right:0; bottom:0;`로 고정한다 — `position: static`으로 풀지 않는다.** 이전엔 모바일에서 static + `align-self: center`로 자연스러운 흐름에 맡겼는데, 뷰포트 폭이 바뀔 때마다 이미지가 이리저리 움직이는 것처럼 보인다는 피드백을 받았다. 절대 위치를 유지한 채 `width`만 `clamp()`로 줄이면 항상 같은 모서리(우측 하단)에 붙어 있어서 훨씬 안정적이다. 겹침은 `.headline`을 `width: 100%; align-items: flex-start`로 상단에 배치해 이미지와 텍스트가 수직으로 자연히 분리되게 해서 방지한다(둘 다 같은 `.hero`의 절대/플렉스 자식이라 서로 레이아웃에 영향을 주지 않는다).
+- 텍스트 블록(`.headline`)은 데스크톱에서 `transform: translateY(-50px)`로 살짝 위로 올려 시각적 중심을 맞춘다 (모바일 `@media (max-width: 1023px)`에서는 `transform: none`으로 되돌린다 — 모바일은 이미 상단 정렬 레이아웃이라 별도 보정이 필요 없다).
+- **줄바꿈이 반드시 특정 지점에서 일어나야 하는 타이틀**(예: "자유로운 지성,(줄바꿈)시대를 여는 고대")은 CSS `white-space`/너비 조절로 자연스러운 wrap에 기대지 말고, JSX에서 아예 `<span className={styles.headlineLine}>`으로 줄 단위로 쪼개고 `.headlineLine { display: block; }`을 건다. 뷰포트 폭이 넓어져도(또는 폰트 크기가 줄어도) 줄바꿈 위치가 흔들리지 않는다.
+- 모바일 전용으로 폰트 크기를 더 줄여야 하면 전역 fluid 토큰(`--fs-hero-kr` 등)을 건드리지 말고, 해당 컴포넌트의 `@media (max-width: 640px)` 블록 안에서 그 요소에만 별도 `clamp()`를 지정한다 — 다른 곳에서 같은 토큰을 재사용 중이면 전역 값을 줄였을 때 의도치 않게 같이 줄어들 수 있다.
 - fade-in은 `heroFadeIn` 키프레임(`opacity 0→1` + `translateY(28px→0)`)을 국문/영문 줄에 각각 살짝 다른 delay로 건다. **duration은 짧게 잡지 않는다** — 처음에 900ms로 했더니 "뚝 끊기는" 느낌이라는 피드백을 받고 1700ms(`cubic-bezier(0.19,1,0.22,1)`, ease-out 계열)로 늘렸다. 다른 곳에서도 로드 즉시 재생되는 fade-in은 1.2~1.8s 정도로 여유 있게 잡는 걸 기본값으로 삼는다(4.14의 스크롤 트리거 Reveal은 700ms로 더 짧아도 된다 — 사용자가 스크롤하는 동작 자체가 이미 "빠른 입력"이라 성격이 다르다).
 
 ### 4.12 엣지-투-엣지 스와이프 캐러셀 (`PolicyCarousel`)
@@ -215,6 +217,7 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 - 세로 여백 배분: 버튼 줄→트랙 간격은 좁게(`margin-top: clamp(16px, 2vw, 32px)`), 트랙→Footer 간격은 넉넉하게(`.trackOuter`의 `padding-bottom: clamp(24px, 3.5vh, 40px)`) — "카드 밑 여백이 없어 보인다"는 피드백을 받고 이 비율로 조정했다. 새로 세로 캐러셀형 섹션을 만들 때도 상단보다 하단 여백을 더 확보하는 쪽이 자연스럽다.
 - ⚠️ **`scroll-snap-align`이 걸린 요소 자체에는 `transform`을 걸지 않는다** (hover 포함). `.card`(li, snap 대상)에 직접 `:hover{transform:translateY(-6px)}`를 걸었더니, 호버할 때 트랙의 스크롤 위치가 왼쪽 끝으로 튀는 버그가 있었다. 고친 방법: `.card`는 스냅 대상으로만 두고 `transform`을 전혀 주지 않고, 그 **안에 `.cardInner`를 한 겹 더 두어 배경·radius·overflow·hover transform을 전부 `.cardInner`로 옮겼다**. 가로 스크롤 캐러셀에 카드 hover 효과를 넣을 땐 항상 이 2단 구조(바깥 = snap 대상, 안쪽 = 비주얼/transform)를 쓴다.
 - ⚠️ **가로 스크롤 컨테이너에 좌우 여백을 줄 때는 `padding`만으로 끝내지 말고 `scroll-padding-left`/`scroll-padding-right`도 같은 값으로 같이 건다.** `padding`만 걸어두면 `scroll-snap-type: x proximity`가 첫 로드 시(버튼을 한 번도 안 눌렀을 때) 그 패딩을 무시하고 scrollLeft를 자동으로 보정해버려서, 첫 카드가 여백 없이 화면 끝에 붙어 있다가 버튼을 한 번 누르면 그제서야 여백이 "생기는" 것처럼 보이는 버그가 있었다. `scroll-padding`은 브라우저에게 "스냅 계산에서 이 여백은 의도된 것"이라고 알려주는 역할이라, 이걸 같이 걸면 최초 페인트부터 `scrollLeft: 0`에서 패딩이 정확히 보인다. 새로 가로 스크롤 캐러셀을 만들 때 이 둘을 한 세트로 기억한다.
+- ⚠️ **가로 스크롤 트랙에 `overflow-x: auto`를 걸면 `overflow-y`도 자동으로 `auto`(클립)가 된다** (스펙상 한쪽 축이 `visible`이 아니게 되면 다른 축도 `visible`을 유지할 수 없다). `.cardInner:hover`처럼 세로로 살짝 움직이는 hover 효과가 있으면, 트랙의 세로 여백이 `padding-bottom`에만 있고 `padding-top`이 0일 때 위로 움직이는 hover가 잘려 보인다(카드 상단 모서리가 잘리는 버그). 오버플로우 클리핑은 **content box가 아니라 padding box 가장자리**에서 일어나므로, `.track`에 hover 이동량만큼(또는 그 이상) `padding-top`을 주면 그 여백 안에서는 잘리지 않는다. 시각적 여백이 늘어나 보이지 않도록, 그만큼을 바깥 wrapper(`.trackOuter`)의 `margin-top`에서 `calc()`로 빼서 상쇄한다.
 
 ### 4.13 6-컬럼 그리드로 텍스트를 오른쪽에 정렬하기 (`Promises`)
 "첫째, 둘째, 셋째"처럼 구분선은 전체 폭을 채우지만 텍스트 그룹은 화면 오른쪽에 붙어야 하는 레이아웃:
@@ -245,7 +248,29 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 - **JS 없는 환경 대비**: `revealHidden`은 SSR 시 이미 `opacity:0`으로 렌더링되므로, `app/layout.tsx`의 `<noscript>` 블록이 JS가 없을 때 강제로 보이게 처리한다.
 - `@media (prefers-reduced-motion: reduce)`에서 자동으로 무효화된다(항상 보이는 상태로 고정).
 
-### 4.15 hover 인터랙션
+### 4.15 모바일 한 장씩 보기 카드 캐러셀 (`DevelopmentPlan`, `PolicyCarousel`)
+데스크톱/태블릿에서는 그리드나 여러 장이 함께 보이는 캐러셀이던 카드 목록이, 폰 너비(`max-width: 640px`)에서는 **한 번에 카드 한 장 + 하단 prev/dots/next 내비게이션**으로 바뀌는 공용 패턴. 3장짜리 그리드(`DevelopmentPlan`)를 세로로 그냥 쌓으면 섹션이 `100dvh`를 넘어 스냅 섹션 안에서 추가 스크롤이 생기는 문제가 있었는데, 이 패턴으로 해결했다.
+- 드래그/스크롤/prev-next-버튼/현재 인덱스 로직은 `hooks/useHorizontalCarousel.ts`에 공용 훅으로 뽑아뒀다 (`PolicyCarousel`이 먼저 갖고 있던 pointer-drag 로직을 두 번째 사용처가 생기면서 훅으로 추출). 트랙 엘리먼트에 `ref`, `onPointerDown/Move/Up/Leave/Cancel`을 연결하면 `atStart`/`atEnd`(버튼 disabled 판정용)와 `activeIndex`(현재 카드 인덱스, 첫 자식의 렌더링된 너비 + `column-gap`으로 스텝을 계산)를 제공한다. 카드 개수가 바뀌는 새 캐러셀을 추가할 때 로직을 새로 짜지 말고 이 훅을 재사용한다.
+- 점 내비게이션은 `components/CarouselDots.tsx` (+ `.module.css`)로 공용화되어 있다. `count`/`activeIndex`/`onSelect`만 받는 순수 표시용 컴포넌트라 언제 보일지(데스크톱에서 숨길지 등)는 감싸는 컴포넌트가 CSS로 결정한다 — dots 자체엔 반응형 로직이 없다. 점 색상은 `background-color: currentColor`라서, 감싸는 `.mobileNav`에 `color`만 지정하면 다크/라이트 배경 어디서든 그대로 맞는다.
+- 데스크톱 그리드(`display:grid`)와 모바일 캐러셀(`display:flex; overflow-x:auto; scroll-snap-type:x mandatory;`)은 **같은 DOM**(`<ul ref={trackRef}>` + `<li className={styles.card}>`)에 미디어쿼리로 다른 레이아웃을 입히는 방식이다 — 별도 모바일 전용 마크업을 만들지 않는다. `<ul>`을 감싸는 `.gridWrap`은 그리드/캐러셀과 그 아래 `.mobileNav`를 하나의 flex-column 자식으로 묶어서, `.inner`의 `justify-content: space-between`(제목은 위, 콘텐츠 덩어리는 아래)이 깨지지 않게 한다.
+- `.card`가 모바일에서 `scroll-snap-align`의 대상이 되면(각 카드가 곧 스냅 지점), 4.12에서 정리한 "snap 대상에 직접 transform 금지" 규칙이 여기도 적용된다. `DevelopmentPlan`의 `.card`는 데스크톱 전용 hover-lift(`:hover{transform:translateY(-6px)}`)를 그대로 갖고 있으므로, `@media (max-width: 640px)` 블록 안에서 `.card:hover{transform:none}`으로 무력화한다(터치 입력엔 hover가 없어서 잃는 건 없다). `PolicyCarousel`처럼 카드가 이미 바깥(snap 대상)/안쪽(`.cardInner`, transform) 2단 구조라면 이 걱정이 애초에 없다 — 새 캐러셀을 만들 때는 가능하면 처음부터 2단 구조를 쓰는 쪽이 더 안전하다.
+- 새 카드 캐러셀에 그대로 복사할 스니펫(모바일 전용 블록):
+  ```css
+  @media (max-width: 640px) {
+    .grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: var(--gap-sm);
+      scrollbar-width: none;
+    }
+    .grid::-webkit-scrollbar { display: none; }
+    .card { flex: 0 0 100%; width: 100%; scroll-snap-align: start; }
+    .mobileNav { display: flex; align-items: center; justify-content: center; gap: 18px; }
+  }
+  ```
+
+### 4.16 hover 인터랙션
 - **카드** (`DevelopmentPlan`, `PolicyCarousel`): `transform: translateY(-6px)` + `box-shadow`, `transition: 300ms cubic-bezier(0.16,1,0.3,1)`. 카드 안 이미지가 있으면 `transform: scale(1.04)`도 같이 (별도 `transition-duration` 500ms로 조금 더 느리게). 카드가 `Reveal`로 감싸여 있다면 4.14의 `:where()` 명시도 규칙 때문에 hover가 항상 이긴다.
 - **"자세히 보기" 류 링크** (`cardLink`, `itemLink`): `gap`을 8px→9px 정도로 늘려서 화살표가 살짝 앞으로 나가는 느낌 + `color`를 포인트 컬러로 전환. `transition: gap 200ms ease, color 200ms ease;`
 - 전부 `@media (prefers-reduced-motion: reduce)`에서 `transform` 애니메이션은 끈다(그림자/색 전환은 순간적이라 굳이 끄지 않아도 됨).

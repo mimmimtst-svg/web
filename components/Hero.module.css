@@ -40,6 +40,8 @@
 }
 
 .headlineKr {
+  display: flex;
+  flex-direction: column;
   font-family: var(--font-kr);
   font-weight: 800;
   font-size: var(--fs-hero-kr);
@@ -47,6 +49,10 @@
   color: var(--color-white);
   opacity: 0;
   animation: heroFadeIn 1700ms cubic-bezier(0.19, 1, 0.22, 1) 200ms forwards;
+}
+
+.headlineLine {
+  display: block;
 }
 
 .headlineEn {
@@ -97,18 +103,15 @@
   transform: scaleX(-1);
 }
 
+/* Below 1024px the portrait stays pinned bottom-right (position: absolute,
+   inherited from the base rule) instead of dropping into normal flow —
+   an earlier static/centered layout let it drift to different spots as
+   the viewport width changed. Only its size and the headline's alignment
+   adjust per breakpoint. */
 @media (max-width: 1023px) {
-  .hero {
-    display: flex;
-    flex-direction: column;
-  }
-
   .inner {
-    min-height: unset;
-    flex: 1 1 auto;
-    align-items: flex-end;
-    padding-top: clamp(96px, 20vw, 140px);
-    padding-bottom: clamp(24px, 5vw, 48px);
+    align-items: flex-start;
+    padding-top: clamp(88px, 18vw, 140px);
   }
 
   .headline {
@@ -117,9 +120,20 @@
   }
 
   .portraitWrap {
-    position: static;
-    align-self: center;
-    width: min(70vw, 360px);
-    padding-bottom: clamp(32px, 6vw, 56px);
+    width: clamp(180px, 48vw, 320px);
+  }
+}
+
+@media (max-width: 640px) {
+  .headlineKr {
+    font-size: clamp(1.7rem, 1.2rem + 4vw, 2.5rem);
+  }
+
+  .headlineEn {
+    font-size: clamp(1rem, 0.85rem + 1.6vw, 1.375rem);
+  }
+
+  .portraitWrap {
+    width: clamp(150px, 46vw, 220px);
   }
 }

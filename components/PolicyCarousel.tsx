@@ -1,72 +1,25 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
 import styles from "./PolicyCarousel.module.css";
 import { ArrowRightIcon, CheckIcon, ChevronIcon, PlusIcon } from "./icons";
 import { policyCards } from "@/lib/policyData";
+import { useHorizontalCarousel } from "@/hooks/useHorizontalCarousel";
+import CarouselDots from "./CarouselDots";
 import Footer from "./Footer";
 
 export default function PolicyCarousel() {
-  const trackRef = useRef<HTMLUListElement>(null);
-  const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(false);
-
-  const drag = useRef<{ active: boolean; startX: number; startScrollLeft: number }>({
-    active: false,
-    startX: 0,
-    startScrollLeft: 0,
-  });
-  const [dragging, setDragging] = useState(false);
-
-  const updateEdges = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    setAtStart(el.scrollLeft <= 4);
-    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 4);
-  }, []);
-
-  useEffect(() => {
-    updateEdges();
-    const el = trackRef.current;
-    if (!el) return;
-    el.addEventListener("scroll", updateEdges, { passive: true });
-    window.addEventListener("resize", updateEdges);
-    return () => {
-      el.removeEventListener("scroll", updateEdges);
-      window.removeEventListener("resize", updateEdges);
-    };
-  }, [updateEdges]);
-
-  const scrollByCard = (direction: 1 | -1) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const card = el.querySelector(`.${styles.card}`) as HTMLElement | null;
-    const distance = card ? card.offsetWidth + 24 : el.clientWidth * 0.8;
-    el.scrollBy({ left: distance * direction, behavior: "smooth" });
-  };
-
-  // Mouse click-and-drag horizontal scroll (touch/trackpad already
-  // scroll the track natively via overflow-x: auto).
-  const onPointerDown = (e: React.PointerEvent<HTMLUListElement>) => {
-    const el = trackRef.current;
-    if (!el || e.pointerType !== "mouse") return;
-    drag.current = { active: true, startX: e.clientX, startScrollLeft: el.scrollLeft };
-    setDragging(true);
-    el.setPointerCapture(e.pointerId);
-  };
-
-  const onPointerMove = (e: React.PointerEvent<HTMLUListElement>) => {
-    const el = trackRef.current;
-    if (!el || !drag.current.active) return;
-    el.scrollLeft = drag.current.startScrollLeft - (e.clientX - drag.current.startX);
-  };
-
-  const endDrag = (e: React.PointerEvent<HTMLUListElement>) => {
-    const el = trackRef.current;
-    drag.current.active = false;
-    setDragging(false);
-    if (el && el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
-  };
+  const {
+    trackRef,
+    atStart,
+    atEnd,
+    activeIndex,
+    dragging,
+    scrollByCard,
+    scrollToIndex,
+    onPointerDown,
+    onPointerMove,
+    endDrag,
+  } = useHorizontalCarousel<HTMLUListElement>();
 
   return (
     <section className={styles.section} id="policies">
@@ -143,6 +96,33 @@ export default function PolicyCarousel() {
           ))}
         </ul>
       </div>
+
+      <div className={styles.mobileNav}>
+        <button
+          type="button"
+          className={styles.navButton}
+          onClick={() => scrollByCard(-1)}
+          disabled={atStart}
+          aria-label="이전 카드"
+        >
+          <ChevronIcon />
+        </button>
+        <CarouselDots
+          count={policyCards.length}
+          activeIndex={activeIndex}
+          onSelect={scrollToIndex}
+        />
+        <button
+          type="button"
+          className={`${styles.navButton} ${styles.navButtonNext}`}
+          onClick={() => scrollByCard(1)}
+          disabled={atEnd}
+          aria-label="다음 카드"
+        >
+          <ChevronIcon />
+        </button>
+      </div>
+
       <Footer />
     </section>
   );

@@ -42,11 +42,23 @@
   line-height: 1.4;
 }
 
-.grid {
+.gridWrap {
   flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2.2vh, 24px);
+}
+
+.grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--gap-sm);
+}
+
+/* Hidden on desktop/tablet where .grid is a static grid; shown only in
+   the phone carousel (see the max-width:640px block below). */
+.mobileNav {
+  display: none;
 }
 
 .card {
@@ -173,8 +185,81 @@
   }
 }
 
+/* Below 640px a stacked single column let three full cards force the
+   section past 100dvh. Instead show one card at a time in a horizontally
+   swipeable, scroll-snapping track with a prev/dots/next bar underneath —
+   matching the phone pattern used by the Section 4 policy carousel. */
 @media (max-width: 640px) {
   .grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: var(--gap-sm);
+    cursor: grab;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gridDragging {
+    scroll-snap-type: none;
+    user-select: none;
+  }
+
+  .card {
+    flex: 0 0 100%;
+    width: 100%;
+    scroll-snap-align: start;
+  }
+
+  /* .card is the scroll-snap target here, so its hover-lift transform is
+     disabled at this breakpoint (see PolicyCarousel.module.css for why a
+     transform on a snap target is unsafe) — touch input doesn't hover
+     anyway, so nothing is lost. */
+  .card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .mobileNav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    color: var(--color-charcoal);
+  }
+
+  .navButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border: 1px solid var(--color-charcoal-30);
+    border-radius: 999px;
+    transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .navButton:hover:not(:disabled) {
+    background-color: var(--color-charcoal);
+    color: var(--color-white);
+  }
+
+  .navButton:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .navButton svg {
+    width: 40%;
+    height: auto;
+  }
+
+  .navButtonNext svg {
+    transform: rotate(180deg);
   }
 }

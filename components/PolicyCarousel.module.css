@@ -82,6 +82,14 @@
   transform: rotate(180deg);
 }
 
+/* Bottom prev/dots/next bar shown only on phones (see the max-width:640px
+   block below), replacing the top-right nav buttons once a card fills
+   almost the entire viewport width and the top row gets cramped next to
+   the title. */
+.mobileNav {
+  display: none;
+}
+
 /* Full-bleed wrapper: no side margin, so the swipeable area visually
    reaches both screen edges (the cue that it scrolls). Only the track's
    own padding pulls the resting card position back in to line up with
@@ -90,7 +98,10 @@
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
-  margin-top: clamp(16px, 2vw, 32px);
+  /* .track carries an equal padding-top (see below) that eats into this
+     gap, so the resting position above the cards stays the same as
+     before that padding was added. */
+  margin-top: calc(clamp(16px, 2vw, 32px) - 12px);
   padding-bottom: clamp(24px, 3.5vh, 40px);
 }
 
@@ -99,7 +110,12 @@
   display: flex;
   align-items: stretch;
   gap: var(--gap-md);
-  padding: 0 var(--space-page-x) 8px;
+  /* Overflow clipping happens at the padding edge, not the content edge —
+     giving the track a top padding equal to (or larger than) the hover
+     lift lets .cardInner's translateY(-6px) move into that padding
+     without being clipped by overflow-x: auto (which forces overflow-y
+     to auto too, per spec, once it's non-"visible" on either axis). */
+  padding: 12px var(--space-page-x) 8px;
   overflow-x: auto;
   scroll-snap-type: x proximity;
   /* Without this, proximity snapping ignores the padding above and
@@ -278,8 +294,16 @@
     min-height: 100dvh;
   }
 
+  .navRow {
+    display: none;
+  }
+
   .card {
     width: min(92vw, 430px);
+  }
+
+  .trackOuter {
+    padding-bottom: clamp(10px, 2vh, 18px);
   }
 
   .cardHead,
@@ -291,5 +315,15 @@
 
   .categoryItem span {
     font-size: clamp(0.72rem, 0.66rem + 1vw, 0.9rem);
+  }
+
+  .mobileNav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 0 var(--space-page-x);
+    margin-top: 14px;
+    color: var(--color-white);
   }
 }
