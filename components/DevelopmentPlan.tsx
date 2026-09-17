@@ -17,7 +17,9 @@ export default function DevelopmentPlan() {
               as="li"
               key={card.title}
               className={styles.card}
-              delay={index * 100}
+              delay={index * 120}
+              distance={64}
+              scale={0.92}
             >
               <div className={styles.cardBody}>
                 <div className={styles.cardTitleRow}>

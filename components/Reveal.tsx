@@ -8,12 +8,13 @@ type RevealProps = {
   as?: ElementType;
   delay?: number;
   distance?: number;
+  scale?: number;
 };
 
 /**
- * Fades + slides an element in the first time it enters the viewport.
- * Fires once (the observer disconnects after the first intersection) and
- * never re-toggles on subsequent scrolls past it. Purely visual — it
+ * Fades + slides an element in every time it scrolls into view, and
+ * resets when it scrolls back out — so the transition replays each time
+ * the page passes over it, not just the first time. Purely visual — it
  * never reads or changes scroll position, so it can't interact with the
  * page's CSS scroll-snap.
  */
@@ -23,6 +24,7 @@ export default function Reveal({
   as: Tag = "div",
   delay = 0,
   distance = 24,
+  scale = 1,
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
@@ -32,12 +34,7 @@ export default function Reveal({
     if (!el) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
+      ([entry]) => setVisible(entry.isIntersecting),
       { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
     );
     observer.observe(el);
@@ -47,10 +44,11 @@ export default function Reveal({
   return (
     <Tag
       ref={ref}
-      className={`${className} ${visible ? "revealVisible" : "revealHidden"}`}
+      className={`reveal ${className} ${visible ? "revealVisible" : "revealHidden"}`}
       style={{
-        transitionDelay: `${delay}ms`,
+        transitionDelay: visible ? `${delay}ms` : "0ms",
         ["--reveal-distance" as string]: `${distance}px`,
+        ["--reveal-scale" as string]: scale,
       }}
     >
       {children}

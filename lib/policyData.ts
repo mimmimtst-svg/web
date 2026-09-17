@@ -144,17 +144,17 @@ export const promises: Promise[] = [
   {
     index: "첫째,",
     title: "단과대학별로 전임교원 1인당 1억원 규모로 연구기금을 설치하겠습니다",
-    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape. Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
+    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
   },
   {
     index: "둘째,",
     title: "AI시대에 걸맞는 교육과정을 확립하겠습니다",
-    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape. Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
+    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
   },
   {
     index: "셋째,",
     title: "행정혁신TF를 설치하여 학교 행정을 원점에서부터 살피겠습니다",
-    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape. Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
+    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
   },
 ];
 
