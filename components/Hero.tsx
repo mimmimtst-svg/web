@@ -1,4 +1,5 @@
 import styles from "./Hero.module.css";
+import { withBasePath } from "@/lib/basePath";
 
 export default function Hero() {
   return (
@@ -6,7 +7,7 @@ export default function Hero() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         className={styles.bgImage}
-        src="/images/hero-bg.png"
+        src={withBasePath("/images/hero-bg.png")}
         alt=""
         aria-hidden="true"
       />
@@ -23,7 +24,7 @@ export default function Hero() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className={styles.portrait}
-          src="/images/hero-portrait.png"
+          src={withBasePath("/images/hero-portrait.png")}
           alt="유병현 교수"
         />
       </div>

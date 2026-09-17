@@ -4,6 +4,7 @@ import styles from "./DevelopmentPlan.module.css";
 import { ArrowRightIcon, ChevronIcon, PlusIcon } from "./icons";
 import { planCards } from "@/lib/policyData";
 import { useHorizontalCarousel } from "@/hooks/useHorizontalCarousel";
+import { withBasePath } from "@/lib/basePath";
 import CarouselDots from "./CarouselDots";
 import Reveal from "./Reveal";
 
@@ -67,7 +68,7 @@ export default function DevelopmentPlan() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     className={styles.cardImage}
-                    src={card.image}
+                    src={withBasePath(card.image)}
                     alt=""
                     loading="lazy"
                   />

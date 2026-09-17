@@ -1,13 +1,14 @@
 import styles from "./Promises.module.css";
 import { ArrowRightIcon, PlusIcon } from "./icons";
 import { promises } from "@/lib/policyData";
+import { withBasePath } from "@/lib/basePath";
 import Reveal from "./Reveal";
 
 export default function Promises() {
   return (
     <section className={styles.section} id="promises">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className={styles.bgImage} src="/images/promises-bg.png" alt="" aria-hidden="true" />
+      <img className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} alt="" aria-hidden="true" />
       <div className={styles.overlay} aria-hidden="true" />
       <div className={styles.inner}>
         <div className={styles.heading}>
