@@ -9,7 +9,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        {/* Reveal starts hidden (opacity: 0) until IntersectionObserver
+            fires; without JS that would never happen, so force it visible. */}
+        <noscript>
+          <style>{`.revealHidden{opacity:1!important;transform:none!important;}`}</style>
+        </noscript>
+        {children}
+      </body>
     </html>
   );
 }

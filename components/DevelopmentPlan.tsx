@@ -1,18 +1,24 @@
 import styles from "./DevelopmentPlan.module.css";
-import { ArrowRightIcon } from "./icons";
+import { ArrowRightIcon, PlusIcon } from "./icons";
 import { planCards } from "@/lib/policyData";
+import Reveal from "./Reveal";
 
 export default function DevelopmentPlan() {
   return (
     <section className={styles.section} id="plan">
       <div className={styles.inner}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>유병현의 발전계획 3대 체계</h2>
-          <div className={styles.sectionLine} />
+        <div className={styles.heading}>
+          <PlusIcon />
+          <h2 className={styles.headingTitle}>유병현의 세 가지 약속</h2>
         </div>
         <ul className={styles.grid}>
-          {planCards.map((card) => (
-            <li className={styles.card} key={card.title}>
+          {planCards.map((card, index) => (
+            <Reveal
+              as="li"
+              key={card.title}
+              className={styles.card}
+              delay={index * 100}
+            >
               <div className={styles.cardBody}>
                 <div className={styles.cardTitleRow}>
                   <span className={styles.cardTitle}>{card.title}</span>
@@ -37,7 +43,7 @@ export default function DevelopmentPlan() {
                   loading="lazy"
                 />
               </div>
-            </li>
+            </Reveal>
           ))}
         </ul>
       </div>

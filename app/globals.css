@@ -49,44 +49,23 @@
   --fs-header-label: clamp(0.8rem, 0.74rem + 0.3vw, 1.125rem); /* 12.8 → 18 */
   --fs-plan-item: clamp(0.95rem, 0.87rem + 0.4vw, 1.25rem); /* 15.2 → 20 */
 
-  /* fluid spacing scale */
+  /* fluid spacing scale — max values match the Figma frame exactly
+     (measured at the 1920px reference frame after the Sep round of
+     edits): 40px section top/bottom margin, 85px gap between a
+     section's title and the content below it. */
   --space-page-x: clamp(20px, 1.6vw + 10px, 40px);
-  --space-section-y: clamp(48px, 4vw + 24px, 80px);
-  --gap-lg: clamp(24px, 6vw, 80px);
+  --space-section-y: clamp(24px, 1.6vw + 14px, 40px);
+  --gap-lg: clamp(32px, 4.4vw, 85px);
   --gap-md: clamp(16px, 2.5vw, 40px);
   --gap-sm: clamp(10px, 1.2vw, 20px);
 
   --radius-card: 10px;
   --content-max: 1920px;
 
-  /* fixed header height, kept in sync with the real rendered height by Header.tsx */
-  --header-height: 96px;
-}
-
-/* ---------------------------------------------------
-   Short-viewport overrides (laptops like 1366x768)
-   Section 2/3/4 use `height: 100dvh` (not min-height), so on short
-   screens their own vertical padding/gaps/title size must shrink to
-   keep content from overflowing the one-screen box. Hero is excluded
-   on purpose (it doesn't use these tokens) — its layout stays as-is.
---------------------------------------------------- */
-@media (max-height: 820px) {
-  :root {
-    --space-section-y: clamp(20px, 5vh, 48px);
-    --gap-lg: clamp(16px, 3vh, 40px);
-    --gap-md: clamp(12px, 2.5vh, 28px);
-    --gap-sm: clamp(8px, 1.5vh, 16px);
-    --fs-section-title: clamp(1.375rem, 1.1rem + 1.4vw, 2.1rem);
-  }
-}
-
-@media (max-height: 700px) {
-  :root {
-    --space-section-y: clamp(16px, 4vh, 32px);
-    --gap-lg: clamp(12px, 2vh, 28px);
-    --gap-md: clamp(10px, 2vh, 20px);
-    --gap-sm: clamp(6px, 1vh, 12px);
-  }
+  /* Fixed header height (not fluid — set to exactly 100px per design).
+     Header.tsx still measures the real rendered height and writes it
+     here, so this literal value is just the SSR/first-paint fallback. */
+  --header-height: 100px;
 }
 
 /* ---------------------------------------------------
@@ -145,4 +124,31 @@ img {
 ul,
 ol {
   list-style: none;
+}
+
+/* ---------------------------------------------------
+   Scroll-triggered reveal (used by components/Reveal.tsx)
+   One-shot: fires once when the element first enters the viewport,
+   never re-triggers on subsequent scrolls past it.
+--------------------------------------------------- */
+.revealHidden {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance, 24px));
+}
+
+.revealVisible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revealHidden,
+  .revealVisible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none !important;
+  }
 }

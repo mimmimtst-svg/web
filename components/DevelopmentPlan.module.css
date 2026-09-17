@@ -1,56 +1,49 @@
 .section {
   width: 100%;
-  height: 100dvh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: var(--gap-lg);
-  /* top padding reserves space for the fixed header so it never covers
-     the title; total box height still stays exactly 100dvh (no
-     scroll-margin-top shift, which would push the bottom edge past
-     the viewport instead). */
   padding: calc(var(--header-height) + var(--space-section-y)) var(--space-page-x)
     var(--space-section-y);
   background-color: var(--color-white);
   scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 .inner {
   width: 100%;
   max-width: var(--content-max);
   margin: 0 auto;
-  min-height: 0;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: var(--gap-lg);
 }
 
-.sectionHeader {
+.heading {
   flex: 0 0 auto;
   display: flex;
-  flex-direction: column;
-  gap: var(--gap-sm);
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  color: var(--color-charcoal);
 }
 
-.sectionTitle {
+.heading svg {
+  width: clamp(20px, 2vw, 32px);
+  height: clamp(20px, 2vw, 32px);
+  flex-shrink: 0;
+  color: var(--color-charcoal);
+}
+
+.headingTitle {
   font-family: var(--font-kr);
   font-weight: 400;
   font-size: var(--fs-section-title);
   line-height: 1.4;
-  color: var(--color-black);
-}
-
-.sectionLine {
-  width: 100%;
-  height: 1px;
-  background-color: var(--color-black);
 }
 
 .grid {
-  flex: 1 1 auto;
-  min-height: 0;
+  flex: 0 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--gap-sm);
@@ -62,14 +55,26 @@
   background-color: var(--color-card-bg);
   border-radius: var(--radius-card);
   overflow: hidden;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    transform: none;
+  }
 }
 
 .cardBody {
   display: flex;
   flex-direction: column;
   gap: clamp(10px, 1.6vw, 20px);
-  padding: clamp(20px, 3vw, 50px);
-  flex: 0 1 auto;
+  padding: clamp(24px, 2.6vw, 50px);
 }
 
 .cardTitleRow {
@@ -109,9 +114,7 @@
 .cardFooter {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: clamp(10px, 2vw, 32px);
-  flex: 1 1 auto;
+  gap: clamp(16px, 2vw, 32px);
 }
 
 .cardDesc {
@@ -130,6 +133,12 @@
   font-family: var(--font-en);
   font-size: var(--fs-btn);
   color: var(--color-line);
+  transition: gap 200ms ease, color 200ms ease;
+}
+
+.cardLink:hover {
+  gap: 9px;
+  color: var(--color-key);
 }
 
 .cardLink svg {
@@ -140,18 +149,22 @@
 .cardImageWrap {
   position: relative;
   width: 100%;
-  flex: 1 1 auto;
-  min-height: 64px;
+  aspect-ratio: 600 / 338;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
 .cardImage {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center bottom;
   display: block;
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover .cardImage {
+  transform: scale(1.04);
 }
 
 @media (max-width: 1023px) {
@@ -161,19 +174,7 @@
 }
 
 @media (max-width: 640px) {
-  .section {
-    height: auto;
-    min-height: 100dvh;
-  }
-
   .grid {
     grid-template-columns: 1fr;
-    flex: 0 0 auto;
-  }
-
-  .cardImageWrap {
-    aspect-ratio: 600 / 338;
-    flex: 0 0 auto;
-    min-height: unset;
   }
 }

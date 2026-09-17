@@ -1,6 +1,7 @@
 import styles from "./Promises.module.css";
 import { ArrowRightIcon, PlusIcon } from "./icons";
 import { promises } from "@/lib/policyData";
+import Reveal from "./Reveal";
 
 export default function Promises() {
   return (
@@ -14,8 +15,14 @@ export default function Promises() {
           <h2 className={styles.headingTitle}>유병현의 세 가지 약속</h2>
         </div>
         <ol className={styles.list}>
-          {promises.map((item) => (
-            <li className={styles.item} key={item.index}>
+          {promises.map((item, index) => (
+            <Reveal
+              as="li"
+              key={item.index}
+              className={styles.item}
+              delay={index * 120}
+              distance={40}
+            >
               <span className={styles.itemNumber}>{item.index}</span>
               <div className={styles.itemBody}>
                 <p className={styles.itemTitle}>{item.title}</p>
@@ -25,7 +32,7 @@ export default function Promises() {
                   <ArrowRightIcon />
                 </a>
               </div>
-            </li>
+            </Reveal>
           ))}
         </ol>
       </div>

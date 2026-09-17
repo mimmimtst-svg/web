@@ -108,11 +108,13 @@ intercept = min - slope * 390
 | `--gap-sm` | 10px → 20px | 카드 그리드 간격, 헤더 요소 간격 |
 | `--content-max` | 1920px | 콘텐츠 wrapper 최대 너비 (그 이상 와이드 화면에서 중앙 정렬) |
 | `--radius-card` | 10px | Section 2 카드 라운드 (Figma 원본 값) |
-| `--header-height` | 기본값 96px, `Header.tsx`가 실측 높이로 실시간 갱신 | 고정 헤더 높이. 스냅 섹션의 top padding 계산에 사용 (4.8 참고) |
+| `--header-height` | **100px 고정** (fluid 아님), `Header.tsx`가 실측 높이로 재확인 | 고정 헤더 높이. 스냅 섹션의 top padding 계산에 사용 (4.8 참고) |
+
+> `--space-section-y`(40px)와 `--gap-lg`(85px)의 최댓값은 Figma 1920 프레임에서 실측한 값이다 (섹션 상하 여백 40px, 타이틀→콘텐츠 간격 85px). 임의로 더 크게 잡지 않는다 — 예전에 80px/48px로 더 크게 잡았다가 레이아웃이 화면마다 잘리는 문제가 있었다.
 
 ### 레이아웃 규칙
 - **고정 1920px 레이아웃 금지.** 모든 컨테이너는 `max-width: var(--content-max); margin: 0 auto;` + `padding: 0 var(--space-page-x)` 패턴.
-- 섹션 높이는 `100svh`/`100vh` 대신 `100dvh` 우선 (모바일 주소창 높이 변화에 대응). **데스크톱(> 640px)에서 화면에 정확히 맞아야 하는 스냅 섹션은 `height: 100dvh`(고정)를 쓰고 내부 콘텐츠를 4.9의 방식으로 축소**하며, 그 외/모바일은 `min-height: 100dvh`로 콘텐츠가 넘치면 자연스럽게 늘어나게 한다. `min-height`와 `height`를 같은 요소에 동시에 걸지 않는다 (중복되면 항상 더 큰 쪽으로 늘어난다).
+- 섹션 높이는 **`min-height: 100dvh`가 기본**이다 (`100svh`/`100vh` 대신 `100dvh` 우선 — 모바일 주소창 높이 변화 대응). 콘텐츠가 한 화면보다 많으면 섹션이 자연스럽게 늘어나고, 다음 섹션으로 넘어가려면 그만큼 더 스크롤하면 된다 — **이걸 막으려고 `height: 100dvh`로 고정해서 내부 폰트/여백을 억지로 욱여넣지 않는다.** (실제로 이 방식을 썼다가 화면마다 레이아웃이 잘리는 버그가 났었다.) 아주 예외적으로 콘텐츠 양이 확정적이고 한 화면에 반드시 맞춰야 하는 경우에만 `height: 100dvh` + 내부 축소를 고려하되, 먼저 사용자에게 이 트레이드오프를 확인한다.
 - 가로 스크롤 발생 금지. **`overflow-x: hidden`은 반드시 `body`에만 건다 (`html`에는 걸지 않는다)** — `html`에 걸면 이 프로젝트가 쓰는 Chromium 빌드에서 `scroll-snap-type`이 조용히 무시되는 버그가 있다 (실측으로 확인됨). 새 컴포넌트가 가로 스크롤 규칙을 깨지 않는지 `document.documentElement.scrollWidth === clientWidth`로 확인.
 - 브레이크포인트 기준: **1920 / 1440 / 1024 / 768 / 390**. 실제 CSS 분기점은 컴포넌트 CSS Module 안에 `@media (max-width: 1023px)`, `@media (max-width: 640px)` 형태로 존재. 다단 그리드는 1024 이하에서 2열, 640 이하에서 1열로 재배치하는 것이 기본 패턴 (`DevelopmentPlan.module.css` 참고).
 
@@ -122,10 +124,8 @@ intercept = min - slope * 390
 
 새 컴포넌트를 만들 때는 기존 컴포넌트 중 가장 가까운 패턴을 복제해서 시작한다.
 
-### 4.1 섹션 헤더 (`sectionHeader` / `heading` 패턴)
-- 두 가지 변형이 존재:
-  1. **라이트 섹션**: 제목 텍스트만 + 아래 1px 블랙 라인 (`DevelopmentPlan`)
-  2. **다크 섹션**: `+` 아이콘(`PlusIcon`) + 제목 텍스트, 라인 없음 (`Promises`, `PolicyCarousel`)
+### 4.1 섹션 헤더 (`heading` 패턴)
+- 모든 섹션이 동일한 패턴을 쓴다: `+` 아이콘(`PlusIcon`) + 제목 텍스트, 밑줄 없음. 아이콘/텍스트 색은 섹션 배경에 맞춰 바꾼다 — 흰 배경(`DevelopmentPlan`)은 `--color-charcoal`, 다크 배경(`Promises`)은 아이콘 `#ABB8C3`/텍스트 `--color-light-gray`, `PolicyCarousel`은 아이콘 `#F4F2ED`/텍스트 `--color-white`. (예전엔 `DevelopmentPlan`만 아이콘 없이 밑줄 스타일이었지만, Figma가 세 섹션 모두 이 아이콘+텍스트 패턴으로 통일되어 코드도 맞췄다.)
 - 제목 폰트 크기: `--fs-section-title`, weight 400, `text-transform: uppercase`(국문에는 영향 없음, 영문 대비용으로 유지)
 
 ### 4.2 카드
@@ -169,46 +169,32 @@ intercept = min - slope * 390
 ### 4.8 전체 페이지 스크롤 스냅
 `Section 1~4`(`<section>` 태그, `Footer`는 Section 4 내부로 병합 — 4.10 참고)는 화면 단위로 스냅된다:
 - `html { scroll-snap-type: y mandatory; }` (**`body`가 아니라 `html`**에 건다 — 이 프로젝트의 실제 스크롤 컨테이너는 `html`)
-- 각 섹션: `scroll-snap-align: start; scroll-snap-stop: always;`
+- 각 섹션: `scroll-snap-align: start;` 만 건다. **`scroll-snap-stop: always`는 쓰지 않는다** — 강하게 스크롤했을 때 섹션마다 무조건 멈추게 만들어서 전환이 뻑뻑하고 덜 매끄럽게 느껴진다는 피드백을 받고 뺐다. `start`만으로도 각 섹션의 시작 지점에 정확히 스냅되고, 대신 빠르게 스크롤하면 여러 섹션을 자연스럽게 지나칠 수 있다.
 - **`html`에 `scroll-behavior: smooth`를 절대 걸지 않는다.** `scroll-snap-type`과 같은 요소에 같이 걸면 브라우저가 휠 입력의 smooth 보간과 스냅 보정 애니메이션을 이중으로 실행해서, 트랙패드의 연속된 wheel 이벤트가 누적되며 스냅 지점을 오버슈트했다가 다시 튕겨오는 "이중 움직임"이 생긴다. 이게 실측으로 확인된 버벅임의 주 원인이었다. 앵커 링크 점프 등 smooth가 필요한 곳은 JS `scrollIntoView({behavior:'smooth'})`처럼 스냅과 무관한 개별 호출로 처리하고, `html` 전역에는 절대 걸지 않는다.
-- 고정 헤더에 가려지지 않도록, **`scroll-margin-top`으로 스크롤 위치를 밀지 않는다.** 그 방식은 섹션의 실제 박스 높이(`100dvh`)에 헤더 높이만큼을 더 스크롤해야 하는 상태를 만들어 섹션 바닥이 뷰포트 아래로 밀려 잘리는 문제를 일으킨다. 대신 **섹션 자신의 `padding-top`에 헤더 높이를 포함**시켜 박스 총 높이는 `100dvh`를 유지한 채 콘텐츠만 헤더 아래로 내려오게 한다 (히어로 제외 — 히어로는 헤더가 투명이라 그대로 유지).
+- 고정 헤더에 가려지지 않도록, **`scroll-margin-top`으로 스크롤 위치를 밀지 않는다.** 대신 **섹션 자신의 `padding-top`에 헤더 높이를 포함**시킨다 (히어로 제외 — 히어로는 헤더가 투명이라 그대로 유지). `scroll-margin-top`은 섹션이 `height: 100dvh`처럼 고정 높이일 때 바닥을 뷰포트 밖으로 밀어내는 부작용이 있어서 쓰지 않는다.
 - JS로 wheel 이벤트를 가로채거나 `scrollTo()`/`scrollIntoView()`로 스크롤 위치를 강제 이동시키지 않는다 — 순수 CSS 스냅만 사용
-- ⚠️ **`overflow-x: hidden`을 `html`에 걸면 스냅이 깨진다** (4.6 위 레이아웃 규칙 참고). 새 페이지에서 스냅이 갑자기 안 먹힌다면 이 규칙부터 의심한다.
-- 새 스냅 섹션을 추가할 컴포넌트 CSS에 그대로 복사할 스니펫 (데스크톱에서 한 화면에 정확히 맞춰야 하는 섹션 기준):
+- ⚠️ **`overflow-x: hidden`을 `html`에 걸면 스냅이 깨진다** (위 레이아웃 규칙 참고). 새 페이지에서 스냅이 갑자기 안 먹힌다면 이 규칙부터 의심한다.
+- 새 스냅 섹션을 추가할 컴포넌트 CSS에 그대로 복사할 스니펫:
   ```css
   .section {
-    height: 100dvh; /* min-height가 아니라 height — 콘텐츠는 아래 4.9로 안에서 줄인다 */
-    display: flex;
-    flex-direction: column;
+    min-height: 100dvh;
     padding: calc(var(--header-height) + var(--space-section-y)) var(--space-page-x)
       var(--space-section-y); /* 헤더 높이 + 여백을 top padding에 포함 */
     scroll-snap-align: start;
-    scroll-snap-stop: always;
-  }
-
-  @media (max-width: 640px) {
-    .section {
-      height: auto;
-      min-height: 100dvh; /* 모바일은 콘텐츠가 늘어나도 되므로 min-height로 복귀 */
-    }
   }
   ```
 
-### 4.9 짧은 데스크톱 뷰포트(1366×768 등)에서 한 화면에 맞추기
-섹션이 `height: 100dvh`(고정)를 쓰면, 화면이 낮은 노트북에서는 내부 콘텐츠가 스스로 줄어들어야 한다 — 섹션에 `overflow: hidden`을 걸어 콘텐츠를 잘라내는 방식은 쓰지 않는다.
-- `app/globals.css`에 `@media (max-height: 820px)`, `@media (max-height: 700px)` 두 단계로 `--space-section-y`, `--gap-lg/md/sm`, `--fs-section-title`를 다시 정의해뒀다. **width 기반 `--space-page-x`는 여기서 건드리지 않는다** (히어로가 이 토큰을 쓰기 때문에 세로 높이 미디어쿼리로 히어로 레이아웃이 흔들리면 안 된다).
-- 그래도 안 맞는, 콘텐츠가 유독 많은 요소(카드 리스트 등)는 컴포넌트 CSS에 자체 `@media (max-height: ...)`를 추가해 `font-size`/`padding`/`gap`을 더 줄인다. `PolicyCarousel.module.css`의 `.categoryItem` 축소가 예시 — 실측(Playwright로 `scrollHeight`와 `clientHeight` 비교)해서 실제로 넘치는 뷰포트가 있는지 확인한 뒤 그 구간만 타깃으로 줄였다.
-- 정말 줄일 수 없는 긴 본문(예: Section 3의 placeholder 본문)은 `-webkit-line-clamp`로 특정 `max-height` 구간에서만 말줄임 처리한다. 기본 상태(1920/1440)에서는 그대로 전체 노출.
-- 검증 방법: 브레이크포인트별로 `section.getBoundingClientRect().height === section.scrollHeight`를 확인 (React가 아니라 브라우저에서 직접 재는 게 정확함).
+### 4.9 (결번 — 이전에 있던 "짧은 뷰포트에서 강제로 한 화면에 우겨넣기" 전략은 4.8의 `min-height` 기본 정책으로 대체되어 제거됨)
 
 ### 4.10 마지막 섹션에 Footer 통합하기
 Footer가 스크롤 스냅에서 별도의(도달하기 어려운) 스냅 영역이 되지 않도록, 마지막 콘텐츠 섹션(`PolicyCarousel`)이 자신의 `<section>` 안에서 `<Footer />`를 직접 렌더링한다 (`app/page.tsx`는 더 이상 `<Footer />`를 별도로 렌더링하지 않는다).
 ```
-.section { height: 100dvh; display: flex; flex-direction: column; }
-.inner   { flex: 1 1 auto; min-height: 0; }  /* 제목 + 가로 스크롤 카드 트랙 */
-footer   { flex: 0 0 auto; }                  /* Footer.module.css 쪽, scroll-snap-align 없음 */
+.section { min-height: 100dvh; display: flex; flex-direction: column; }
+.headerWrap { flex: 0 0 auto; }   /* 제목 줄 + prev/next 버튼 줄 (4.12 참고) */
+.trackOuter { flex: 1 1 auto; }   /* 가로 스크롤 카드 트랙 */
+footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align 없음 */
 ```
-Footer 자체의 상하 패딩도 이 섹션의 세로 예산을 나눠 쓰므로, 다른 곳처럼 폭 기준 `clamp()`가 아니라 높이 기반(`clamp(16px, 2.4vh, 40px)`)으로 줄어들게 되어 있다. 앞으로 이런 "마지막 섹션 + 푸터 통합" 패턴이 다시 필요하면 그대로 재사용한다.
+섹션이 한 화면을 다 못 채우면 Footer가 자연스럽게 화면 하단에 붙고, 카드가 많아 한 화면을 넘으면 Footer를 보기 위해 조금 더 스크롤하면 된다 — 강제로 맞추지 않는다.
 
 ### 4.11 히어로 2/3·1/3 비대칭 레이아웃 (엣지 정렬 이미지)
 텍스트가 좌측 2/3, 인물/제품 이미지가 우측 1/3을 섹션의 실제 가장자리(오른쪽·하단)에 여백 없이 맞닿게 배치하는 패턴:
@@ -216,6 +202,44 @@ Footer 자체의 상하 패딩도 이 섹션의 세로 예산을 나눠 쓰므�
 - 이미지는 `.inner`가 아니라 **섹션 자체의 직계 자식**으로 두고 `position: absolute; right:0; bottom:0;` (패딩된 컨테이너 안에 두면 그 패딩만큼 가장자리에서 밀려나므로 반드시 섹션 바로 아래에 배치)
 - 원본 이미지를 좌우 반전해야 하면 `transform: scaleX(-1)`을 이미지 자체에 적용 (컨테이너에는 걸지 않는다)
 - 1024px 미만에서는 절대 위치를 해제하고(`position: static`) 텍스트 아래로 자연스럽게 쌓는다 — 겹침 방지
+
+### 4.12 엣지-투-엣지 스와이프 캐러셀 (`PolicyCarousel`)
+카드가 화면 가장자리까지 닿아서 "옆으로 더 있다"는 걸 시각적으로 알려주는 가로 캐러셀 패턴:
+- 제목 줄과 prev/next 버튼 줄은 **서로 다른 행**으로 분리하고(Figma가 그렇게 되어 있다 — 같은 행에 나란히 두지 않는다), 둘 다 `max-width: var(--content-max)` + `padding: 0 var(--space-page-x)`로 감싼 `.headerWrap` 안에 둔다.
+- 카드 트랙만 **그 padding 밖으로 뺀다**: `.trackOuter`는 `width:100%`(제약 없음), `.track` 자체에 `padding: 0 var(--space-page-x)`를 걸어서 카드가 화면 진짜 가장자리까지 스크롤되지만 쉬는 위치에서는 첫 카드가 본문 여백과 맞춰 보이게 한다.
+- 스크롤은 세 가지 입력을 모두 지원한다: 버튼 클릭(`scrollBy({behavior:'smooth'})`), 트랙패드/터치(네이티브 `overflow-x:auto`), **마우스 클릭 드래그**(`onPointerDown/Move/Up`로 `scrollLeft`를 직접 갱신). 드래그 중에는 `.track`에 `scroll-behavior: smooth`를 걸지 않는다 — 걸려 있으면 매 `mousemove`마다 애니메이션이 끼어들어 드래그가 끈적하게 느껴진다(smooth는 버튼 클릭의 `scrollBy` 호출에만 inline 옵션으로 준다).
+- `cursor: grab` (드래그 중엔 `grabbing`)으로 스와이프 가능함을 알려준다.
+
+### 4.13 6-컬럼 그리드로 텍스트를 오른쪽에 정렬하기 (`Promises`)
+"첫째, 둘째, 셋째"처럼 구분선은 전체 폭을 채우지만 텍스트 그룹은 화면 오른쪽에 붙어야 하는 레이아웃:
+```css
+.item {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  column-gap: var(--gap-sm); /* 40px 마진 안에서 20px 간격 6컬럼 */
+}
+.itemNumber { grid-column: 3 / 4; text-align: right; }
+.itemBody   { grid-column: 4 / 7; }
+```
+넘버가 자기 컬럼 안에서 `text-align:right`로 오른쪽 붙기 때문에, 넘버 텍스트와 본문 사이에 큰 여백이 자동으로 생긴다(컬럼 폭 - 텍스트 폭만큼) — 이 여백을 `gap`으로 억지로 만들지 않는다. 1024px 미만에서는 그리드를 풀고 세로 스택으로 바꾼다.
+
+### 4.14 스크롤 등장 애니메이션 (`components/Reveal.tsx`)
+새로 등장할 때 fade + 위로 슬라이드되는 요소는 전부 이 컴포넌트로 감싼다. 절대 새 애니메이션 라이브러리(GSAP 등)를 설치하지 않고 `IntersectionObserver` + CSS transition만 쓴다.
+```tsx
+<Reveal as="li" className={styles.card} delay={index * 100}>...</Reveal>
+```
+- `as`로 실제 렌더링할 태그를 지정한다(그리드/리스트의 직계 자식이어야 할 때 `li`처럼 지정 — 불필요한 wrapper `div`를 만들지 않기 위함).
+- 한 번 보이면 옵저버가 `disconnect()`되어 다시 숨겨지지 않는다(스크롤을 왔다갔다해도 재생 안 됨).
+- `delay`(ms)로 리스트 아이템을 스태거링한다. `distance`(기본 24px)로 슬라이드 거리를 조절한다(Section 3처럼 더 크게 "아래에서 위로" 보이려면 40 정도).
+- 이 컴포넌트는 **스크롤 위치를 읽거나 바꾸지 않는다** — `entry.isIntersecting`만 보고 클래스를 토글하므로 4.8의 scroll-snap과 절대 충돌하지 않는다.
+- `app/globals.css`의 `.revealHidden`/`.revealVisible`가 실제 스타일(opacity/transform)을 담당하고, `@media (prefers-reduced-motion: reduce)`에서 자동으로 무효화된다.
+- 히어로 타이틀처럼 **스크롤 트리거 없이 로드 즉시** 페이드인해야 하면 Reveal을 쓰지 말고 CSS `@keyframes` + `animation`을 직접 건다 (`Hero.module.css`의 `heroFadeIn` 참고) — IntersectionObserver를 굳이 쓸 이유가 없다.
+- **JS 없는 환경 대비**: `revealHidden`은 SSR 시 이미 `opacity:0`으로 렌더링되므로, `app/layout.tsx`의 `<noscript>` 블록이 JS가 없을 때 강제로 보이게 처리한다. 새로운 스크롤-트리거 애니메이션을 추가해도 이 안전장치는 그대로 유효하다.
+
+### 4.15 hover 인터랙션
+- **카드** (`DevelopmentPlan`, `PolicyCarousel`): `transform: translateY(-6px)` + `box-shadow`, `transition: 300ms cubic-bezier(0.16,1,0.3,1)`. 카드 안 이미지가 있으면 `transform: scale(1.04)`도 같이 (별도 `transition-duration` 500ms로 조금 더 느리게).
+- **"자세히 보기" 류 링크** (`cardLink`, `itemLink`): `gap`을 8px→9px 정도로 늘려서 화살표가 살짝 앞으로 나가는 느낌 + `color`를 포인트 컬러로 전환. `transition: gap 200ms ease, color 200ms ease;`
+- 전부 `@media (prefers-reduced-motion: reduce)`에서 `transform` 애니메이션은 끈다(그림자/색 전환은 순간적이라 굳이 끄지 않아도 됨).
 
 ---
 
@@ -233,9 +257,10 @@ Footer 자체의 상하 패딩도 이 섹션의 세로 예산을 나눠 쓰므�
 
 1. Figma 소스를 먼저 확인(`get_design_context`)하고, 이 문서에 대응하는 토큰이 있는지 확인한다.
 2. 색상/타이포/spacing은 **기존 토큰을 재사용**한다. 새 값이 꼭 필요하면 위 표에 추가하고 이 문서를 갱신한다.
-3. 좌우 패딩 `--space-page-x`, 콘텐츠 wrapper `max-width: var(--content-max)` 패턴을 따른다. 화면 단위로 스냅되어야 하는 섹션이면 4.8의 스니펫(데스크톱 `height:100dvh` + 모바일 `min-height:100dvh` 복귀)을 그대로 적용한다.
+3. 좌우 패딩 `--space-page-x`, 콘텐츠 wrapper `max-width: var(--content-max)` 패턴을 따른다. 화면 단위로 스냅되어야 하는 섹션이면 4.8의 스니펫(`min-height:100dvh` + 헤더 높이를 포함한 `padding-top`)을 그대로 적용한다 — `height`로 고정하지 않는다.
 4. 1024 / 640 분기 기준으로 다단 → 스택 반응형을 기본으로 검토한다(필요시 768 분기 추가).
 5. 이미지·아이콘은 전부 실제 에셋만 사용한다. 구할 수 없으면 사용자에게 먼저 알린다.
 6. 과한 그라디언트/글로우/불필요한 둥근 카드/장식 요소를 새로 추가하지 않는다.
-7. `html`에 `scroll-behavior: smooth`를 걸지 않는다 (4.8 참고 — scroll-snap과 충돌). 스크롤 위치를 읽어야 하는 컴포넌트는 `scroll` 리스너보다 `IntersectionObserver`를 우선 검토한다 (4.7 참고).
-8. 작업 후 `npm run lint && npm run build`로 검증하고, 최소 1개 데스크톱(1366x768처럼 짧은 뷰포트 포함) + 1개 모바일 뷰포트로 스크린샷 확인한다. `height:100dvh` 섹션을 추가/수정했다면 `section.getBoundingClientRect().height`와 `section.scrollHeight`가 같은지 실측한다.
+7. `html`에 `scroll-behavior: smooth`를 걸지 않고, 섹션에 `scroll-snap-stop: always`도 걸지 않는다 (4.8 참고 — 둘 다 스냅을 뻑뻑하게 만든 원인이었다). 스크롤 위치를 읽어야 하는 컴포넌트는 `scroll` 리스너보다 `IntersectionObserver`를 우선 검토한다 (4.7 참고).
+8. 등장 애니메이션이 필요하면 새 라이브러리를 깔지 말고 `components/Reveal.tsx`를 재사용한다 (4.14). hover 인터랙션은 4.15의 값(카드 lift, 링크 gap)을 기본값으로 삼는다.
+9. 작업 후 `npm run lint && npm run build`로 검증하고, 최소 1개 데스크톱 + 1개 모바일 뷰포트로 스크린샷 확인한다. 가로 스크롤 발생 여부(`document.documentElement.scrollWidth === clientWidth`)와, 한 줄로 강제한 텍스트가 있다면 `element.scrollWidth > element.clientWidth`(줄바꿈/잘림 여부)를 실측한다. `fullPage` 스크린샷은 `IntersectionObserver` 기반 등장 애니메이션을 제대로 트리거하지 않을 수 있으니, Reveal 요소 확인은 실제 `scrollTo` 반복으로 검증한다.

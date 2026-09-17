@@ -1,37 +1,23 @@
 .section {
   width: 100%;
-  height: 100dvh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   gap: 0;
-  /* top padding reserves space for the fixed header; bottom has no
-     padding of its own — the Footer nested at the end of this section
-     supplies its own bottom spacing so the two don't stack. */
   padding-top: calc(var(--header-height) + var(--space-section-y));
   background-color: #141414;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
-.inner {
+.headerWrap {
+  flex: 0 0 auto;
   width: 100%;
   max-width: var(--content-max);
   margin: 0 auto;
   padding: 0 var(--space-page-x);
-  flex: 1 1 auto;
-  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--gap-md);
-}
-
-.headerRow {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-sm);
-  flex-wrap: wrap;
+  gap: clamp(24px, 3.5vw, 60px);
 }
 
 .heading {
@@ -53,6 +39,11 @@
   font-weight: 400;
   font-size: var(--fs-section-title);
   line-height: 1.4;
+}
+
+.navRow {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .navButtons {
@@ -91,18 +82,37 @@
   transform: rotate(180deg);
 }
 
-.track {
+/* Full-bleed wrapper: no side margin, so the swipeable area visually
+   reaches both screen edges (the cue that it scrolls). Only the track's
+   own padding pulls the resting card position back in to line up with
+   the page margin. */
+.trackOuter {
   flex: 1 1 auto;
   min-height: 0;
+  width: 100%;
+  margin-top: clamp(24px, 3.5vw, 60px);
+}
+
+.track {
+  height: 100%;
   display: flex;
   align-items: stretch;
   gap: var(--gap-md);
+  padding: 0 var(--space-page-x) 8px;
   overflow-x: auto;
   scroll-snap-type: x proximity;
-  scroll-behavior: smooth;
-  padding-bottom: 8px;
+  cursor: grab;
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.track:active {
+  cursor: grabbing;
+}
+
+.trackDragging {
+  scroll-snap-type: none;
+  user-select: none;
 }
 
 .track::-webkit-scrollbar {
@@ -112,13 +122,26 @@
 .card {
   scroll-snap-align: start;
   flex: 0 0 auto;
-  width: min(85vw, 420px);
+  width: clamp(360px, 42vw, 521px);
   display: flex;
   flex-direction: column;
   background-color: var(--color-white);
   border-radius: 14px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   overflow: hidden;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    transform: none;
+  }
 }
 
 .cardHead {
@@ -126,80 +149,87 @@
   display: flex;
   align-items: baseline;
   gap: 14px;
-  padding: clamp(16px, 2.2vh, 40px) clamp(24px, 2.6vw, 40px) clamp(12px, 1.6vh, 24px);
+  padding: clamp(20px, 1.82vw, 35px) clamp(24px, 2.6vw, 50px);
 }
 
 .cardNumber {
   font-family: var(--font-kr);
   font-weight: 600;
-  font-size: var(--fs-card-title);
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.625rem);
   color: var(--color-key);
+  white-space: nowrap;
 }
 
 .cardTitle {
   font-family: var(--font-kr);
   font-weight: 600;
-  font-size: var(--fs-card-title);
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.625rem);
   color: var(--color-key);
+  white-space: nowrap;
 }
 
 .cardLine {
   flex: 0 0 auto;
   height: 1px;
   background-color: rgba(0, 0, 0, 0.1);
-  margin: 0 clamp(24px, 2.6vw, 40px);
 }
 
 .cardCategories {
   flex: 1 1 auto;
-  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: clamp(10px, 1.8vh, 26px);
-  padding: clamp(10px, 1.8vh, 24px) clamp(24px, 2.6vw, 40px);
+  gap: clamp(16px, 1.56vw, 30px);
+  padding: clamp(14px, 1.3vw, 25px) clamp(24px, 2.6vw, 50px);
 }
 
 .category {
   display: flex;
   flex-direction: column;
-  gap: clamp(4px, 0.8vh, 10px);
+  gap: clamp(4px, 0.35vw, 6.8px);
 }
 
 .categoryLabel {
   font-family: var(--font-kr);
   font-weight: 400;
-  font-size: var(--fs-xsmall);
+  font-size: clamp(0.7rem, 0.65rem + 0.2vw, 0.875rem);
   color: var(--color-label);
+  white-space: nowrap;
 }
 
 .categoryItems {
   display: flex;
   flex-direction: column;
-  gap: clamp(3px, 0.6vh, 8px);
 }
 
 .categoryItem {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
-  font-family: var(--font-kr);
-  font-weight: 300;
-  font-size: var(--fs-plan-item);
-  line-height: 1.35;
-  color: var(--color-charcoal);
+  height: clamp(22px, 1.46vw, 28px);
 }
 
 .categoryItem svg {
-  width: 11px;
+  width: 10px;
   height: auto;
   flex-shrink: 0;
-  margin-top: 5px;
   color: var(--color-key);
+}
+
+.categoryItem span {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-kr);
+  font-weight: 300;
+  font-size: clamp(0.72rem, 0.6rem + 0.45vw, 1.125rem);
+  color: var(--color-charcoal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cardFoot {
   flex: 0 0 auto;
-  padding: clamp(10px, 1.6vh, 24px) clamp(24px, 2.6vw, 40px);
+  padding: clamp(14px, 1.3vw, 25px) clamp(24px, 2.6vw, 50px);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -210,6 +240,12 @@
   font-family: var(--font-en);
   font-size: var(--fs-btn);
   color: var(--color-line);
+  transition: gap 200ms ease, color 200ms ease;
+}
+
+.cardLink:hover {
+  gap: 9px;
+  color: var(--color-key);
 }
 
 .cardLink svg {
@@ -217,30 +253,23 @@
   height: auto;
 }
 
-/* Short desktop viewports (1366x768 laptops etc.) — trim card font size
-   a bit further so the fullest card (multiple categories, many items)
-   fits without its own internal scroll area. */
-@media (max-height: 940px) {
-  .categoryItem {
-    font-size: clamp(0.8rem, 0.7rem + 0.4vw, 1rem);
-  }
-}
-
-@media (max-height: 700px) {
-  .cardHead {
-    padding-top: 12px;
-    padding-bottom: 8px;
-  }
-
-  .categoryItem {
-    font-size: clamp(0.75rem, 0.68rem + 0.35vw, 0.9rem);
-    line-height: 1.25;
-  }
-}
-
 @media (max-width: 640px) {
   .section {
-    height: auto;
     min-height: 100dvh;
+  }
+
+  .card {
+    width: min(92vw, 430px);
+  }
+
+  .cardHead,
+  .cardCategories,
+  .cardFoot {
+    padding-left: clamp(16px, 4vw, 24px);
+    padding-right: clamp(16px, 4vw, 24px);
+  }
+
+  .categoryItem span {
+    font-size: clamp(0.72rem, 0.66rem + 1vw, 0.9rem);
   }
 }

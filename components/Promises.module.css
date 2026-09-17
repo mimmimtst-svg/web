@@ -1,18 +1,15 @@
 .section {
   position: relative;
   width: 100%;
-  height: 100dvh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: var(--gap-lg);
   padding: calc(var(--header-height) + var(--space-section-y)) var(--space-page-x)
     var(--space-section-y);
   overflow: hidden;
   background-color: #201a1a;
   isolation: isolate;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 .bgImage {
@@ -36,7 +33,6 @@
   width: 100%;
   max-width: var(--content-max);
   margin: 0 auto;
-  min-height: 0;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -67,27 +63,26 @@
 }
 
 .list {
-  flex: 0 1 auto;
-  min-height: 0;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: var(--gap-md);
-  overflow: hidden;
 }
 
+/* 6-column grid (40px page margin + 20px column gap, matching the
+   Figma guide frame): the number+title+desc group starts at column 3
+   so it lines up flush with the right side of the layout instead of
+   floating in the middle. */
 .item {
-  display: flex;
-  gap: clamp(24px, 6vw, 200px);
-  padding-top: clamp(12px, 2.5vh, 32px);
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  column-gap: var(--gap-sm);
+  padding-top: clamp(16px, 2vw, 32px);
   border-top: 1px solid var(--color-muted);
-  align-items: flex-start;
-  flex-wrap: wrap;
 }
 
 .itemNumber {
-  flex: 0 0 auto;
-  min-width: 96px;
+  grid-column: 3 / 4;
   font-family: var(--font-en);
   font-weight: 700;
   font-size: var(--fs-promise-num);
@@ -97,11 +92,10 @@
 }
 
 .itemBody {
-  flex: 1 1 480px;
+  grid-column: 4 / 7;
   display: flex;
   flex-direction: column;
-  gap: clamp(8px, 1.4vh, 20px);
-  max-width: 907px;
+  gap: clamp(10px, 1.6vw, 20px);
 }
 
 .itemTitle {
@@ -127,6 +121,12 @@
   font-family: var(--font-en);
   font-size: var(--fs-btn);
   color: var(--color-muted);
+  transition: gap 200ms ease, color 200ms ease;
+}
+
+.itemLink:hover {
+  gap: 9px;
+  color: var(--color-white);
 }
 
 .itemLink svg {
@@ -134,39 +134,14 @@
   height: auto;
 }
 
-/* Short desktop viewports (1366x768 laptops etc.) — truncate the long
-   body copy so three items + heading always fit inside one 100dvh
-   screen without an internal scroll area. */
-@media (max-height: 760px) {
-  .itemDesc {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-}
-
-@media (max-height: 640px) {
-  .itemTitle {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .itemDesc {
-    -webkit-line-clamp: 1;
-  }
-}
-
-@media (max-width: 640px) {
-  .section {
-    height: auto;
-    min-height: 100dvh;
+@media (max-width: 1023px) {
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 2vh, 16px);
   }
 
   .itemNumber {
     text-align: left;
-    min-width: unset;
   }
 }
