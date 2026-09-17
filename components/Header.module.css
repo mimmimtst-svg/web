@@ -1,0 +1,87 @@
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  width: 100%;
+}
+
+.wrapper {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  padding: clamp(20px, 3vw, 40px) var(--space-page-x);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(8px, 1.2vw, 15px);
+  color: var(--color-white);
+  flex-wrap: wrap;
+}
+
+.brandLabel {
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: var(--fs-header-label);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.brandName {
+  font-family: var(--font-kr);
+  font-weight: 800;
+  font-size: var(--fs-header-name);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.5vw, 20px);
+}
+
+.contactButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px clamp(14px, 1.6vw, 20px);
+  border: 1px solid var(--color-white);
+  border-radius: 999px;
+  color: var(--color-white);
+  font-family: var(--font-kr);
+  font-size: clamp(0.8rem, 0.7rem + 0.35vw, 1.125rem);
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.contactButton:hover {
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+.contactButton svg {
+  width: 12px;
+  height: auto;
+}
+
+.menuToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-white);
+  flex-shrink: 0;
+}
+
+.menuToggle svg {
+  width: 22px;
+  height: auto;
+}

@@ -1,0 +1,158 @@
+.section {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(40px, 6vw, 80px);
+  padding: var(--space-section-y) var(--space-page-x);
+  background-color: var(--color-white);
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 6vw, 80px);
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.sectionTitle {
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: var(--fs-section-title);
+  line-height: 1.4;
+  color: var(--color-black);
+}
+
+.sectionLine {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-black);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap-sm);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-card-bg);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  min-height: 480px;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.6vw, 20px);
+  padding: clamp(28px, 3vw, 50px);
+  flex: 1 1 auto;
+}
+
+.cardTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cardTitle {
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: var(--fs-card-title);
+  color: var(--color-black);
+}
+
+.cardDivider {
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: var(--fs-card-title-sub);
+  color: var(--color-charcoal-30);
+}
+
+.cardSubtitle {
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: var(--fs-card-title-sub);
+  color: var(--color-black);
+}
+
+.cardLine {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-black);
+}
+
+.cardFooter {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(16px, 2vw, 32px);
+  flex: 1 1 auto;
+}
+
+.cardDesc {
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: var(--fs-card-desc);
+  line-height: 1.4;
+  color: var(--color-black);
+  max-width: 46ch;
+}
+
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-en);
+  font-size: var(--fs-btn);
+  color: var(--color-line);
+}
+
+.cardLink svg {
+  width: 13px;
+  height: auto;
+}
+
+.cardImageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 600 / 338;
+  flex-shrink: 0;
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  display: block;
+}
+
+@media (max-width: 1023px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    min-height: unset;
+  }
+}
