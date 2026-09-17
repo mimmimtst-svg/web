@@ -36,6 +36,7 @@
   flex-direction: column;
   gap: clamp(4px, 1vw, 12px);
   width: 66.66%;
+  transform: translateY(-50px);
 }
 
 .headlineKr {
@@ -45,7 +46,7 @@
   line-height: 1.2;
   color: var(--color-white);
   opacity: 0;
-  animation: heroFadeIn 900ms cubic-bezier(0.16, 1, 0.3, 1) 150ms forwards;
+  animation: heroFadeIn 1700ms cubic-bezier(0.19, 1, 0.22, 1) 200ms forwards;
 }
 
 .headlineEn {
@@ -55,13 +56,13 @@
   line-height: 1.2;
   color: var(--color-white);
   opacity: 0;
-  animation: heroFadeIn 900ms cubic-bezier(0.16, 1, 0.3, 1) 350ms forwards;
+  animation: heroFadeIn 1700ms cubic-bezier(0.19, 1, 0.22, 1) 500ms forwards;
 }
 
 @keyframes heroFadeIn {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(28px);
   }
   to {
     opacity: 1;
@@ -112,6 +113,7 @@
 
   .headline {
     width: 100%;
+    transform: none;
   }
 
   .portraitWrap {

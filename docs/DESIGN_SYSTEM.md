@@ -165,6 +165,7 @@ intercept = min - slope * 390
 - 전환은 `transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;`
 - 자식 요소(브랜드 텍스트, 버튼, 아이콘)는 색을 하드코딩하지 않고 전부 `color: inherit` / `border-color: currentColor`로 상속받아야 상태 전환이 한 번에 적용된다.
 - `ResizeObserver`로 헤더의 실제 렌더링 높이를 재서 `--header-height` CSS 변수에 반영하고, 그 값이 바뀔 때마다 IntersectionObserver도 새 `rootMargin`으로 재생성한다 (fluid 타이포로 헤더 높이가 브레이크포인트마다 달라지기 때문).
+- **새로고침하면 항상 맨 위(히어로)로 돌아간다.** 브라우저가 기본으로 스크롤 위치를 복원하는 걸 막으려고, 마운트 시 `history.scrollRestoration = 'manual'`을 설정하고 `window.scrollTo(0, 0)`을 호출한다(`Header.tsx`의 별도 `useEffect`). 이 프로젝트는 페이지가 하나뿐이라 Header가 곧 앱 전체의 최상위 마운트 지점이라 여기 둬도 안전하지만, 라우트가 여러 개인 프로젝트에서 이 패턴을 가져다 쓸 때는 클라이언트 사이드 네비게이션마다 재실행되지 않도록 주의한다.
 
 ### 4.8 전체 페이지 스크롤 스냅
 `Section 1~4`(`<section>` 태그, `Footer`는 Section 4 내부로 병합 — 4.10 참고)는 화면 단위로 스냅된다:
@@ -202,6 +203,8 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 - 이미지는 `.inner`가 아니라 **섹션 자체의 직계 자식**으로 두고 `position: absolute; right:0; bottom:0;` (패딩된 컨테이너 안에 두면 그 패딩만큼 가장자리에서 밀려나므로 반드시 섹션 바로 아래에 배치)
 - 원본 이미지를 좌우 반전해야 하면 `transform: scaleX(-1)`을 이미지 자체에 적용 (컨테이너에는 걸지 않는다)
 - 1024px 미만에서는 절대 위치를 해제하고(`position: static`) 텍스트 아래로 자연스럽게 쌓는다 — 겹침 방지
+- 텍스트 블록(`.headline`)은 데스크톱에서 `transform: translateY(-50px)`로 살짝 위로 올려 시각적 중심을 맞춘다 (모바일 `@media (max-width: 1023px)`에서는 `transform: none`으로 되돌린다 — 모바일은 이미 하단 정렬 레이아웃이라 별도 보정이 필요 없다).
+- fade-in은 `heroFadeIn` 키프레임(`opacity 0→1` + `translateY(28px→0)`)을 국문/영문 줄에 각각 살짝 다른 delay로 건다. **duration은 짧게 잡지 않는다** — 처음에 900ms로 했더니 "뚝 끊기는" 느낌이라는 피드백을 받고 1700ms(`cubic-bezier(0.19,1,0.22,1)`, ease-out 계열)로 늘렸다. 다른 곳에서도 로드 즉시 재생되는 fade-in은 1.2~1.8s 정도로 여유 있게 잡는 걸 기본값으로 삼는다(4.14의 스크롤 트리거 Reveal은 700ms로 더 짧아도 된다 — 사용자가 스크롤하는 동작 자체가 이미 "빠른 입력"이라 성격이 다르다).
 
 ### 4.12 엣지-투-엣지 스와이프 캐러셀 (`PolicyCarousel`)
 카드가 화면 가장자리까지 닿아서 "옆으로 더 있다"는 걸 시각적으로 알려주는 가로 캐러셀 패턴:
@@ -210,6 +213,7 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 - 스크롤은 세 가지 입력을 모두 지원한다: 버튼 클릭(`scrollBy({behavior:'smooth'})`), 트랙패드/터치(네이티브 `overflow-x:auto`), **마우스 클릭 드래그**(`onPointerDown/Move/Up`로 `scrollLeft`를 직접 갱신). 드래그 중에는 `.track`에 `scroll-behavior: smooth`를 걸지 않는다 — 걸려 있으면 매 `mousemove`마다 애니메이션이 끼어들어 드래그가 끈적하게 느껴진다(smooth는 버튼 클릭의 `scrollBy` 호출에만 inline 옵션으로 준다).
 - `cursor: grab` (드래그 중엔 `grabbing`)으로 스와이프 가능함을 알려준다.
 - 세로 여백 배분: 버튼 줄→트랙 간격은 좁게(`margin-top: clamp(16px, 2vw, 32px)`), 트랙→Footer 간격은 넉넉하게(`.trackOuter`의 `padding-bottom: clamp(24px, 3.5vh, 40px)`) — "카드 밑 여백이 없어 보인다"는 피드백을 받고 이 비율로 조정했다. 새로 세로 캐러셀형 섹션을 만들 때도 상단보다 하단 여백을 더 확보하는 쪽이 자연스럽다.
+- ⚠️ **`scroll-snap-align`이 걸린 요소 자체에는 `transform`을 걸지 않는다** (hover 포함). `.card`(li, snap 대상)에 직접 `:hover{transform:translateY(-6px)}`를 걸었더니, 호버할 때 트랙의 `scroll-snap-type: x proximity`가 스크롤 위치를 다시 계산하면서 카드가 왼쪽 여백 없이 화면에 완전히 붙어버리는 버그가 있었다(브라우저가 transform 이후의 지오메트리로 근접 스냅을 재평가하는 것으로 추정). 고친 방법: `.card`는 스냅 대상으로만 두고 `transform`을 전혀 주지 않고, 그 **안에 `.cardInner`를 한 겹 더 두어 배경·radius·overflow·hover transform을 전부 `.cardInner`로 옮겼다**. 가로 스크롤 캐러셀에 카드 hover 효과를 넣을 땐 항상 이 2단 구조(바깥 = snap 대상, 안쪽 = 비주얼/transform)를 쓴다.
 
 ### 4.13 6-컬럼 그리드로 텍스트를 오른쪽에 정렬하기 (`Promises`)
 "첫째, 둘째, 셋째"처럼 구분선은 전체 폭을 채우지만 텍스트 그룹은 화면 오른쪽에 붙어야 하는 레이아웃:

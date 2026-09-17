@@ -9,6 +9,15 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    // Browsers restore the previous scroll position on refresh by default;
+    // force every load/reload back to the hero at the top instead.
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const headerEl = headerRef.current;
     const heroEl = document.getElementById("hero");
     if (!headerEl || !heroEl) return;

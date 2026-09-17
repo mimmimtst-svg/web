@@ -111,31 +111,33 @@ export default function PolicyCarousel() {
         >
           {policyCards.map((card) => (
             <li className={styles.card} key={card.number}>
-              <div className={styles.cardHead}>
-                <span className={styles.cardNumber}>{card.number}</span>
-                <span className={styles.cardTitle}>{card.title}</span>
-              </div>
-              <div className={styles.cardLine} />
-              <div className={styles.cardCategories}>
-                {card.categories.map((category) => (
-                  <div className={styles.category} key={category.label}>
-                    <p className={styles.categoryLabel}>{category.label}</p>
-                    <ul className={styles.categoryItems}>
-                      {category.items.map((item) => (
-                        <li className={styles.categoryItem} key={item}>
-                          <CheckIcon />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-              <div className={styles.cardFoot}>
-                <a className={styles.cardLink} href="#">
-                  <span>자세히 보기</span>
-                  <ArrowRightIcon />
-                </a>
+              <div className={styles.cardInner}>
+                <div className={styles.cardHead}>
+                  <span className={styles.cardNumber}>{card.number}</span>
+                  <span className={styles.cardTitle}>{card.title}</span>
+                </div>
+                <div className={styles.cardLine} />
+                <div className={styles.cardCategories}>
+                  {card.categories.map((category) => (
+                    <div className={styles.category} key={category.label}>
+                      <p className={styles.categoryLabel}>{category.label}</p>
+                      <ul className={styles.categoryItems}>
+                        {category.items.map((item) => (
+                          <li className={styles.categoryItem} key={item}>
+                            <CheckIcon />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+                <div className={styles.cardFoot}>
+                  <a className={styles.cardLink} href="#">
+                    <span>자세히 보기</span>
+                    <ArrowRightIcon />
+                  </a>
+                </div>
               </div>
             </li>
           ))}
