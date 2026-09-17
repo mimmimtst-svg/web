@@ -9,6 +9,7 @@ type RevealProps = {
   delay?: number;
   distance?: number;
   scale?: number;
+  duration?: number;
 };
 
 /**
@@ -25,6 +26,7 @@ export default function Reveal({
   delay = 0,
   distance = 24,
   scale = 1,
+  duration = 700,
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
@@ -47,6 +49,7 @@ export default function Reveal({
       className={`reveal ${className} ${visible ? "revealVisible" : "revealHidden"}`}
       style={{
         transitionDelay: visible ? `${delay}ms` : "0ms",
+        transitionDuration: `${duration}ms`,
         ["--reveal-distance" as string]: `${distance}px`,
         ["--reveal-scale" as string]: scale,
       }}

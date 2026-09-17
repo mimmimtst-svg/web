@@ -213,7 +213,8 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 - 스크롤은 세 가지 입력을 모두 지원한다: 버튼 클릭(`scrollBy({behavior:'smooth'})`), 트랙패드/터치(네이티브 `overflow-x:auto`), **마우스 클릭 드래그**(`onPointerDown/Move/Up`로 `scrollLeft`를 직접 갱신). 드래그 중에는 `.track`에 `scroll-behavior: smooth`를 걸지 않는다 — 걸려 있으면 매 `mousemove`마다 애니메이션이 끼어들어 드래그가 끈적하게 느껴진다(smooth는 버튼 클릭의 `scrollBy` 호출에만 inline 옵션으로 준다).
 - `cursor: grab` (드래그 중엔 `grabbing`)으로 스와이프 가능함을 알려준다.
 - 세로 여백 배분: 버튼 줄→트랙 간격은 좁게(`margin-top: clamp(16px, 2vw, 32px)`), 트랙→Footer 간격은 넉넉하게(`.trackOuter`의 `padding-bottom: clamp(24px, 3.5vh, 40px)`) — "카드 밑 여백이 없어 보인다"는 피드백을 받고 이 비율로 조정했다. 새로 세로 캐러셀형 섹션을 만들 때도 상단보다 하단 여백을 더 확보하는 쪽이 자연스럽다.
-- ⚠️ **`scroll-snap-align`이 걸린 요소 자체에는 `transform`을 걸지 않는다** (hover 포함). `.card`(li, snap 대상)에 직접 `:hover{transform:translateY(-6px)}`를 걸었더니, 호버할 때 트랙의 `scroll-snap-type: x proximity`가 스크롤 위치를 다시 계산하면서 카드가 왼쪽 여백 없이 화면에 완전히 붙어버리는 버그가 있었다(브라우저가 transform 이후의 지오메트리로 근접 스냅을 재평가하는 것으로 추정). 고친 방법: `.card`는 스냅 대상으로만 두고 `transform`을 전혀 주지 않고, 그 **안에 `.cardInner`를 한 겹 더 두어 배경·radius·overflow·hover transform을 전부 `.cardInner`로 옮겼다**. 가로 스크롤 캐러셀에 카드 hover 효과를 넣을 땐 항상 이 2단 구조(바깥 = snap 대상, 안쪽 = 비주얼/transform)를 쓴다.
+- ⚠️ **`scroll-snap-align`이 걸린 요소 자체에는 `transform`을 걸지 않는다** (hover 포함). `.card`(li, snap 대상)에 직접 `:hover{transform:translateY(-6px)}`를 걸었더니, 호버할 때 트랙의 스크롤 위치가 왼쪽 끝으로 튀는 버그가 있었다. 고친 방법: `.card`는 스냅 대상으로만 두고 `transform`을 전혀 주지 않고, 그 **안에 `.cardInner`를 한 겹 더 두어 배경·radius·overflow·hover transform을 전부 `.cardInner`로 옮겼다**. 가로 스크롤 캐러셀에 카드 hover 효과를 넣을 땐 항상 이 2단 구조(바깥 = snap 대상, 안쪽 = 비주얼/transform)를 쓴다.
+- ⚠️ **가로 스크롤 컨테이너에 좌우 여백을 줄 때는 `padding`만으로 끝내지 말고 `scroll-padding-left`/`scroll-padding-right`도 같은 값으로 같이 건다.** `padding`만 걸어두면 `scroll-snap-type: x proximity`가 첫 로드 시(버튼을 한 번도 안 눌렀을 때) 그 패딩을 무시하고 scrollLeft를 자동으로 보정해버려서, 첫 카드가 여백 없이 화면 끝에 붙어 있다가 버튼을 한 번 누르면 그제서야 여백이 "생기는" 것처럼 보이는 버그가 있었다. `scroll-padding`은 브라우저에게 "스냅 계산에서 이 여백은 의도된 것"이라고 알려주는 역할이라, 이걸 같이 걸면 최초 페인트부터 `scrollLeft: 0`에서 패딩이 정확히 보인다. 새로 가로 스크롤 캐러셀을 만들 때 이 둘을 한 세트로 기억한다.
 
 ### 4.13 6-컬럼 그리드로 텍스트를 오른쪽에 정렬하기 (`Promises`)
 "첫째, 둘째, 셋째"처럼 구분선은 전체 폭을 채우지만 텍스트 그룹은 화면 오른쪽에 붙어야 하는 레이아웃:
@@ -231,11 +232,13 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 ### 4.14 스크롤 등장 애니메이션 (`components/Reveal.tsx`)
 새로 등장할 때 fade + 위로 슬라이드되는 요소는 전부 이 컴포넌트로 감싼다. 절대 새 애니메이션 라이브러리(GSAP 등)를 설치하지 않고 `IntersectionObserver` + CSS transition만 쓴다.
 ```tsx
-<Reveal as="li" className={styles.card} delay={index * 120} distance={64} scale={0.92}>...</Reveal>
+<Reveal as="li" className={styles.card} delay={index * 180} distance={56} scale={0.95} duration={1100}>...</Reveal>
 ```
 - `as`로 실제 렌더링할 태그를 지정한다(그리드/리스트의 직계 자식이어야 할 때 `li`처럼 지정 — 불필요한 wrapper `div`를 만들지 않기 위함).
 - **매번 재생된다.** 뷰포트에 들어올 때 `revealVisible`, 벗어나면 `revealHidden`으로 되돌아가므로 위아래로 스크롤할 때마다 트랜지션이 다시 보인다 (전에는 최초 1회만 재생하고 `disconnect()`했는데, 사용자 피드백으로 매번 재생하는 쪽으로 바꿨다). 스크롤 위치를 읽거나 바꾸지 않는 건 동일하므로 4.8의 scroll-snap과는 여전히 충돌하지 않는다.
-- `delay`(ms)로 리스트 아이템을 스태거링한다. `distance`(기본 24px)로 슬라이드 거리를, `scale`(기본 1 = 없음)로 살짝 커지며 나타나는 정도를 조절한다 — 효과를 더 과감하게 하고 싶으면 이 둘을 같이 키운다(`DevelopmentPlan` 카드가 `distance:64, scale:0.92` 예시).
+- `delay`(ms)로 리스트 아이템을 스태거링하고, `duration`(기본 700ms)으로 재생 속도를 조절한다. `distance`(기본 24px)로 슬라이드 거리를, `scale`(기본 1 = 없음)로 살짝 커지며 나타나는 정도를 조절한다.
+- **`distance`/`scale`을 키울수록 `duration`도 같이 늘린다.** 거리·스케일만 키우고 `duration`(기본 700ms)을 그대로 두면 움직임의 양에 비해 너무 빨리 끝나서 "뚝 끊기는"/오류처럼 보이는 느낌이 난다 — `DevelopmentPlan` 카드가 처음에 `distance:64, scale:0.92`인데 `duration`을 안 늘렸다가 이 문제를 겪었고, `distance:56, scale:0.95, duration:1100`으로 조정해서 해결했다. 새 Reveal 효과를 과감하게 만들 때는 항상 이 셋을 같이 조율한다.
+- 기본 easing은 `app/globals.css`의 `.reveal`에 `cubic-bezier(0.22, 0.61, 0.36, 1)`로 정의되어 있다 (전에는 처음에 너무 급격히 감속하는 곡선이라 "팝" 하듯 튀어 보였다 — 더 완만한 곡선으로 바꿨다). 개별 인스턴스마다 다른 easing이 필요하면 `duration`처럼 prop으로 빼서 inline style로 넘기는 패턴을 추가한다.
 - **`transform`을 쓰는 다른 CSS(예: `:hover`)와 절대 충돌하지 않는다.** `app/globals.css`의 `.revealHidden`/`.revealVisible`는 `:where()`로 감싸서 명시도를 0으로 낮춰뒀다 — 그래서 `.card:hover { transform: ... }`처럼 일반 클래스 규칙이 소스 순서와 무관하게 항상 이긴다. 새 컴포넌트에 Reveal + hover transform을 같이 쓸 때 이 패턴이 깨지지 않도록 주의한다(둘 다 `:where()` 밖에 있는 특정도가 있는 선택자를 쓰면 안전).
 - 트랜지션 자체는 `.reveal` 클래스(모든 Reveal 인스턴스에 항상 붙음)에 정의되어 있어서 숨겨질 때도 같은 easing으로 애니메이션된다.
 - 히어로 타이틀처럼 **스크롤 트리거 없이 로드 즉시** 페이드인해야 하면 Reveal을 쓰지 말고 CSS `@keyframes` + `animation`을 직접 건다 (`Hero.module.css`의 `heroFadeIn` 참고) — IntersectionObserver를 굳이 쓸 이유가 없다.

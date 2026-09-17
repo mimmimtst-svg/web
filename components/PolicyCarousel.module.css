@@ -102,6 +102,14 @@
   padding: 0 var(--space-page-x) 8px;
   overflow-x: auto;
   scroll-snap-type: x proximity;
+  /* Without this, proximity snapping ignores the padding above and
+     auto-corrects scrollLeft on first paint so card 1 sits flush
+     against the true edge — the left margin only "appeared" after a
+     scrollBy() (button click) forced a recompute. scroll-padding tells
+     the snap calculation the inset is intentional, so it settles at
+     scrollLeft 0 (padding visible) instead of scrolling past it. */
+  scroll-padding-left: var(--space-page-x);
+  scroll-padding-right: var(--space-page-x);
   cursor: grab;
   -ms-overflow-style: none;
   scrollbar-width: none;

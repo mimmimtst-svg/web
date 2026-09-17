@@ -133,8 +133,12 @@ ol {
    directions (hidden->visible and visible->hidden).
 --------------------------------------------------- */
 .reveal {
-  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  /* duration comes from the inline transitionDuration Reveal.tsx sets per
+     instance (700ms default); the easing curve here is shared. A gentler
+     ease-out (vs. the earlier 0.16/0.3 curve, which decelerated so hard
+     right at the start it read as an abrupt "pop" instead of a glide). */
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 /* :where() keeps these at zero specificity so a component's own
