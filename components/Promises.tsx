@@ -13,7 +13,7 @@ export default function Promises() {
       <div className={styles.inner}>
         <div className={styles.heading}>
           <PlusIcon />
-          <h2 className={styles.headingTitle}>유병현의 세 가지 약속</h2>
+          <h2 className={styles.headingTitle}>유병현의 여섯 가지 약속</h2>
         </div>
         <ol className={styles.list}>
           {promises.map((item, index) => (
@@ -21,8 +21,9 @@ export default function Promises() {
               as="li"
               key={item.index}
               className={styles.item}
-              delay={index * 120}
-              distance={40}
+              delay={index * 150}
+              distance={254}
+              duration={950}
             >
               <span className={styles.itemNumber}>{item.index}</span>
               <div className={styles.itemBody}>

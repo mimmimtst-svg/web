@@ -41,13 +41,16 @@
   --fs-card-desc: clamp(0.95rem, 0.87rem + 0.4vw, 1.25rem); /* 15.2 → 20 */
   --fs-btn: 0.844rem; /* 13.5 */
   --fs-promise-num: clamp(1.5rem, 1.14rem + 1.8vw, 2.5rem); /* 24 → 40 */
-  --fs-promise-title: clamp(0.9375rem, 0.571rem + 0.67vw, 1.375rem); /* tuned so the longest promise title stays on one line at 1024px+ */
+  --fs-promise-title: clamp(1.25rem, 1.03rem + 0.92vw, 2.125rem); /* 20 → 34, matches the number label size in the 2x3 promises grid */
   --fs-promise-body: clamp(0.95rem, 0.87rem + 0.4vw, 1.125rem); /* 15.2 → 18 */
   --fs-small: 0.875rem; /* 14 */
   --fs-xsmall: clamp(0.75rem, 0.72rem + 0.15vw, 0.85rem); /* 12 → 13.6 */
   --fs-header-name: clamp(1.25rem, 1.1rem + 0.75vw, 1.875rem); /* 20 → 30 */
   --fs-header-label: clamp(0.8rem, 0.74rem + 0.3vw, 1.125rem); /* 12.8 → 18 */
   --fs-plan-item: clamp(0.95rem, 0.87rem + 0.4vw, 1.25rem); /* 15.2 → 20 */
+  --fs-plan-card-title: clamp(3rem, 1.853rem + 4.706vw, 7.5rem); /* 48 → 120, section2's full-bleed card title */
+  --fs-plan-card-subtitle: clamp(1.125rem, 0.902rem + 0.915vw, 2rem); /* 18 → 32 */
+  --fs-plan-card-desc: clamp(0.95rem, 0.842rem + 0.444vw, 1.375rem); /* 15.2 → 22 */
 
   /* fluid spacing scale — max values match the Figma frame exactly
      (measured at the 1920px reference frame after the Sep round of

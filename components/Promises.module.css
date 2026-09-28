@@ -62,40 +62,39 @@
   line-height: 1.4;
 }
 
+/* 2-column x 3-row grid (Figma node 614:6269, synced 2026-09-28) — replaces
+   the previous single-column, right-aligned 6-col list now that there are
+   six promises instead of three. Items fill left-to-right, top-to-bottom
+   in DOM order, so no explicit grid-column/row placement is needed. */
 .list {
   flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-md);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: clamp(24px, 5.2vw, 100px);
+  row-gap: clamp(16px, 1.6vw, 30px);
 }
 
-/* 6-column grid (40px page margin + 20px column gap, matching the
-   Figma guide frame): the number+title+desc group starts at column 3
-   so it lines up flush with the right side of the layout instead of
-   floating in the middle. */
 .item {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  column-gap: var(--gap-sm);
-  padding-top: clamp(16px, 2vw, 32px);
-  border-top: 1px solid var(--color-muted);
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(20px, 2.1vw, 40px);
 }
 
 .itemNumber {
-  grid-column: 3 / 4;
-  font-family: var(--font-en);
-  font-weight: 700;
-  font-size: var(--fs-promise-num);
+  flex: 0 0 clamp(56px, 5.1vw, 98px);
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: var(--fs-promise-title);
   line-height: 1.19;
   color: var(--color-white);
-  text-align: right;
 }
 
 .itemBody {
-  grid-column: 4 / 7;
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: clamp(10px, 1.6vw, 20px);
+  gap: clamp(12px, 1.05vw, 20px);
 }
 
 .itemTitle {
@@ -135,14 +134,18 @@
 }
 
 @media (max-width: 1023px) {
+  .list {
+    grid-template-columns: 1fr;
+    row-gap: clamp(16px, 2vh, 28px);
+  }
+
   .item {
-    display: flex;
     flex-direction: column;
     gap: clamp(10px, 2vh, 16px);
   }
 
   .itemNumber {
-    text-align: left;
+    flex-basis: auto;
   }
 }
 

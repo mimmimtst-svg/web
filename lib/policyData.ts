@@ -140,6 +140,11 @@ export type Promise = {
   body: string;
 };
 
+// Figma (node 614:6269, synced 2026-09-28) expanded this from 3 to 6
+// promises. Items 4-6 still carry the file's own placeholder copy for both
+// title and body ("Your bold vision, our trusted craft...") — the designer
+// hasn't written real Korean copy for them yet, so it's reproduced here
+// verbatim rather than invented. Swap these in once real text lands in Figma.
 export const promises: Promise[] = [
   {
     index: "첫째,",
@@ -156,6 +161,21 @@ export const promises: Promise[] = [
     title: "행정혁신TF를 설치하여 학교 행정을 원점에서부터 살피겠습니다",
     body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
   },
+  {
+    index: "넷째,",
+    title: "Your bold vision, our trusted craft. We partner with forward-thinking companies",
+    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
+  },
+  {
+    index: "다섯째,",
+    title: "Your bold vision, our trusted craft. We partner with forward-thinking companies",
+    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
+  },
+  {
+    index: "여섯째,",
+    title: "Your bold vision, our trusted craft. We partner with forward-thinking companies",
+    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
+  },
 ];
 
 export type PlanCard = {
@@ -165,26 +185,29 @@ export type PlanCard = {
   image: string;
 };
 
+// Figma (node 612:1416, synced 2026-09-28) reordered these to 다함께 →
+// 나답게 → 앞으로 and gave all three the same full-bleed background photo
+// (previously campus-tiger/campus-aerial alternated per card).
 export const planCards: PlanCard[] = [
-  {
-    title: "나답게",
-    subtitle: "대학의 본질 회복",
-    description:
-      "내적 충실함을 바탕으로 고려대학교가 더욱 고려대학교답게 발전하도록 하겠습니다",
-    image: "/images/campus-tiger.png",
-  },
   {
     title: "다함께",
     subtitle: "조화로운 다양성",
     description:
       "서로 다르기 때문에 더 강하고, 함께하기 때문에 더 멀리 나아가는 고려대학교를 만들겠습니다",
-    image: "/images/campus-aerial.png",
+    image: "/images/plan-card-bg.png",
+  },
+  {
+    title: "나답게",
+    subtitle: "대학의 본질 회복",
+    description:
+      "내적 충실함을 바탕으로 고려대학교가 더욱 고려대학교답게 발전하도록 하겠습니다",
+    image: "/images/plan-card-bg.png",
   },
   {
     title: "앞으로",
     subtitle: "한계를 넘는 도약",
     description:
       "우리 스스로 키운 실력과 함께 모은 힘으로 한계를 넘어 도약하는 고려대학교를 만들겠습니다",
-    image: "/images/campus-tiger.png",
+    image: "/images/plan-card-bg.png",
   },
 ];

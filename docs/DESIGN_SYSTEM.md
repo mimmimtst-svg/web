@@ -125,11 +125,19 @@ intercept = min - slope * 390
 새 컴포넌트를 만들 때는 기존 컴포넌트 중 가장 가까운 패턴을 복제해서 시작한다.
 
 ### 4.1 섹션 헤더 (`heading` 패턴)
-- 모든 섹션이 동일한 패턴을 쓴다: `+` 아이콘(`PlusIcon`) + 제목 텍스트, 밑줄 없음. 아이콘/텍스트 색은 섹션 배경에 맞춰 바꾼다 — 흰 배경(`DevelopmentPlan`)은 `--color-charcoal`, 다크 배경(`Promises`)은 아이콘 `#ABB8C3`/텍스트 `--color-light-gray`, `PolicyCarousel`은 아이콘 `#F4F2ED`/텍스트 `--color-white`. (예전엔 `DevelopmentPlan`만 아이콘 없이 밑줄 스타일이었지만, Figma가 세 섹션 모두 이 아이콘+텍스트 패턴으로 통일되어 코드도 맞췄다.)
+- `Promises`와 `PolicyCarousel`은 `+` 아이콘(`PlusIcon`) + 제목 텍스트, 밑줄 없음. 아이콘/텍스트 색은 섹션 배경에 맞춰 바꾼다 — 다크 배경(`Promises`)은 아이콘 `#ABB8C3`/텍스트 `--color-light-gray`, `PolicyCarousel`은 아이콘 `#F4F2ED`/텍스트 `--color-white`.
+- **`DevelopmentPlan`(section2)은 섹션 헤더가 없다.** 예전엔 여기도 "유병현의 세 가지 약속" 타이틀을 달고 있었는데, `Promises`의 제목과 완전히 같은 문구라 중복이었다 — Figma가 2026-09-28 동기화에서 이 중복을 없애면서 section2의 헤더 자체를 지웠다. 새 섹션을 만들 때 Figma에 헤더가 없으면 억지로 만들어 넣지 않는다.
 - 제목 폰트 크기: `--fs-section-title`, weight 400, `text-transform: uppercase`(국문에는 영향 없음, 영문 대비용으로 유지)
 
 ### 4.2 카드
-- **콘텐츠 카드** (`DevelopmentPlan`): 배경 `--color-card-bg`, radius `--radius-card`(10px), 상단 텍스트 + 하단 이미지(`aspect-ratio` 고정, `object-fit: cover`)
+- **풀블리드 포토 카드** (`DevelopmentPlan`): Figma 2026-09-28 동기화로 "상단 텍스트 + 하단 이미지" 구조에서 바뀐 새 기본형. 카드 전체를 사진 한 장이 채우고(`position:absolute;inset:0;object-fit:cover`) 그 위에 `rgba(0,0,0,0.5)` 오버레이, 그 위에 중앙 정렬된 흰 텍스트(제목 굵고 아주 크게 + 부제 + 설명 + 링크)가 얹힌다. radius 20px(카드형 콘텐츠 중 가장 큰 radius — 예전 `--radius-card` 10px보다 두 배 크다). 구조:
+  ```
+  .card { position: relative; aspect-ratio: <w>/<h>; border-radius: 20px; overflow: hidden; isolation: isolate; }
+  .cardBg      { position: absolute; inset: 0; object-fit: cover; z-index: -2; }
+  .cardOverlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: -1; }
+  .cardContent { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  ```
+  여러 카드가 같은 배경 사진을 공유할 수 있다(Figma가 실제로 그렇게 되어 있으면 억지로 카드마다 다른 사진을 배정하지 않는다 — `lib/policyData.ts`의 `planCards`가 셋 다 `plan-card-bg.png`를 쓰는 게 그 예).
 - **데이터 카드** (`PolicyCarousel`): 흰 배경, radius 14px(모던화 허용 범위), 상단 넘버+제목(key 컬러), 카테고리별 체크리스트, 하단 링크. **텍스트/구조는 Figma 그대로, 비주얼만 모던화된 예시**이므로 향후 카드형 콘텐츠 추가 시 이 패턴을 기본값으로 쓴다.
 
 ### 4.3 버튼 / 링크
@@ -219,18 +227,27 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 - ⚠️ **가로 스크롤 컨테이너에 좌우 여백을 줄 때는 `padding`만으로 끝내지 말고 `scroll-padding-left`/`scroll-padding-right`도 같은 값으로 같이 건다.** `padding`만 걸어두면 `scroll-snap-type: x proximity`가 첫 로드 시(버튼을 한 번도 안 눌렀을 때) 그 패딩을 무시하고 scrollLeft를 자동으로 보정해버려서, 첫 카드가 여백 없이 화면 끝에 붙어 있다가 버튼을 한 번 누르면 그제서야 여백이 "생기는" 것처럼 보이는 버그가 있었다. `scroll-padding`은 브라우저에게 "스냅 계산에서 이 여백은 의도된 것"이라고 알려주는 역할이라, 이걸 같이 걸면 최초 페인트부터 `scrollLeft: 0`에서 패딩이 정확히 보인다. 새로 가로 스크롤 캐러셀을 만들 때 이 둘을 한 세트로 기억한다.
 - ⚠️ **가로 스크롤 트랙에 `overflow-x: auto`를 걸면 `overflow-y`도 자동으로 `auto`(클립)가 된다** (스펙상 한쪽 축이 `visible`이 아니게 되면 다른 축도 `visible`을 유지할 수 없다). `.cardInner:hover`처럼 세로로 살짝 움직이는 hover 효과가 있으면, 트랙의 세로 여백이 `padding-bottom`에만 있고 `padding-top`이 0일 때 위로 움직이는 hover가 잘려 보인다(카드 상단 모서리가 잘리는 버그). 오버플로우 클리핑은 **content box가 아니라 padding box 가장자리**에서 일어나므로, `.track`에 hover 이동량만큼(또는 그 이상) `padding-top`을 주면 그 여백 안에서는 잘리지 않는다. 시각적 여백이 늘어나 보이지 않도록, 그만큼을 바깥 wrapper(`.trackOuter`)의 `margin-top`에서 `calc()`로 빼서 상쇄한다.
 
-### 4.13 6-컬럼 그리드로 텍스트를 오른쪽에 정렬하기 (`Promises`)
-"첫째, 둘째, 셋째"처럼 구분선은 전체 폭을 채우지만 텍스트 그룹은 화면 오른쪽에 붙어야 하는 레이아웃:
+### 4.13 2-컬럼 x 3-로우 약속 그리드 (`Promises`)
+Figma가 (node 614:6269, 2026-09-28 동기화) 3개였던 "약속"을 6개로 늘리면서, 예전의 "6컬럼 그리드 + 오른쪽 정렬 + 구분선" 레이아웃을 진짜 2열 카드형 그리드로 바꿨다. 새 패턴:
 ```css
-.item {
+.list {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  column-gap: var(--gap-sm); /* 40px 마진 안에서 20px 간격 6컬럼 */
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: clamp(24px, 5.2vw, 100px);
+  row-gap: clamp(16px, 1.6vw, 30px);
 }
-.itemNumber { grid-column: 3 / 4; text-align: right; }
-.itemBody   { grid-column: 4 / 7; }
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(20px, 2.1vw, 40px);
+}
+.itemNumber { flex: 0 0 clamp(56px, 5.1vw, 98px); }
 ```
-넘버가 자기 컬럼 안에서 `text-align:right`로 오른쪽 붙기 때문에, 넘버 텍스트와 본문 사이에 큰 여백이 자동으로 생긴다(컬럼 폭 - 텍스트 폭만큼) — 이 여백을 `gap`으로 억지로 만들지 않는다. 1024px 미만에서는 그리드를 풀고 세로 스택으로 바꾼다.
+- 아이템을 DOM 순서대로만 나열하면 그리드가 알아서 2열씩 채운다(1→col1/row1, 2→col2/row1, 3→col1/row2 ...) — `grid-column`/`grid-row`를 수동 지정할 필요 없다.
+- 구분선(`border-top`)은 새 디자인에 없다 — 세로 `row-gap`만으로 행을 분리한다.
+- 번호(`itemNumber`)와 제목(`itemTitle`)이 같은 폰트 크기(`--fs-promise-title`, 34px 기준)를 공유한다 — 예전처럼 번호만 더 큰 별도 크기를 쓰지 않는다.
+- 콘텐츠가 늘어나 섹션이 `100dvh`를 넘으면(6개 항목 × 큰 글자) 그대로 넘치게 둔다 — 4.8/4.9에서 정한 "min-height만 걸고 강제로 한 화면에 우겨넣지 않는다" 원칙을 그대로 따른다.
+- **Figma 텍스트가 플레이스홀더인 항목은 그대로 플레이스홀더로 구현한다.** 6개 중 4~6번째는 Figma 파일에 아직 실제 한글 카피가 없고 영문 Lorem-스타일 placeholder("Your bold vision, our trusted craft...")가 제목/본문 모두에 그대로 남아있다 — 이럴 때 절대 그럴듯한 한글 문구를 지어내지 않는다. Figma에 있는 텍스트를 있는 그대로(placeholder라도) 옮기고, 코드 주석과 최종 응답으로 "이 항목들은 아직 실제 카피가 없다"는 걸 명시적으로 알린다.
 
 ### 4.14 스크롤 등장 애니메이션 (`components/Reveal.tsx`)
 새로 등장할 때 fade + 위로 슬라이드되는 요소는 전부 이 컴포넌트로 감싼다. 절대 새 애니메이션 라이브러리(GSAP 등)를 설치하지 않고 `IntersectionObserver` + CSS transition만 쓴다.
@@ -245,6 +262,7 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 - **`transform`을 쓰는 다른 CSS(예: `:hover`)와 절대 충돌하지 않는다.** `app/globals.css`의 `.revealHidden`/`.revealVisible`는 `:where()`로 감싸서 명시도를 0으로 낮춰뒀다 — 그래서 `.card:hover { transform: ... }`처럼 일반 클래스 규칙이 소스 순서와 무관하게 항상 이긴다. 새 컴포넌트에 Reveal + hover transform을 같이 쓸 때 이 패턴이 깨지지 않도록 주의한다(둘 다 `:where()` 밖에 있는 특정도가 있는 선택자를 쓰면 안전).
 - 트랜지션 자체는 `.reveal` 클래스(모든 Reveal 인스턴스에 항상 붙음)에 정의되어 있어서 숨겨질 때도 같은 easing으로 애니메이션된다.
 - 히어로 타이틀처럼 **스크롤 트리거 없이 로드 즉시** 페이드인해야 하면 Reveal을 쓰지 말고 CSS `@keyframes` + `animation`을 직접 건다 (`Hero.module.css`의 `heroFadeIn` 참고) — IntersectionObserver를 굳이 쓸 이유가 없다.
+- **Figma에서 `get_motion_context`로 받은 모션을 그대로 복사하지 않는다 — 값만 참고해서 Reveal prop으로 번역한다.** Figma 프로토타입은 스크롤 트리거가 없어서, 디자이너가 애니메이션을 미리보기 하려고 "6초짜리 무한 반복 타임라인"처럼 만들어두는 경우가 있다(`Promises`의 `motion.dev` 코드가 실제로 이랬다: `repeat: Infinity`, 각 아이템이 6초 타임라인의 한 구간을 차지). 이 `repeat: Infinity`나 `times` 배열의 절대 시간을 그대로 옮기면 실제 사이트에서 콘텐츠가 계속 제멋대로 튀는 이상한 애니메이션이 된다. 대신 값에서 의미 있는 부분만 뽑는다: 각 아이템 자체의 `initial`→`animate` 값(예: `opacity: 0→1`, `y: 254→0`)을 `distance`/`opacity` 삼아 쓰고, 아이템 간 상대적 시간차만 `delay` 스태거링 비율로 반영한다(전체를 무한 반복시키지 않고 IntersectionObserver 1회성 트리거로 바꾼다). `Promises`의 6개 아이템이 `distance={254} duration={950} delay={index * 150}`로 구현된 게 이 사례다.
 - **JS 없는 환경 대비**: `revealHidden`은 SSR 시 이미 `opacity:0`으로 렌더링되므로, `app/layout.tsx`의 `<noscript>` 블록이 JS가 없을 때 강제로 보이게 처리한다.
 - `@media (prefers-reduced-motion: reduce)`에서 자동으로 무효화된다(항상 보이는 상태로 고정).
 

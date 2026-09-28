@@ -16,32 +16,12 @@
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: var(--gap-lg);
+  justify-content: center;
 }
 
-.heading {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: clamp(10px, 1.2vw, 16px);
-  color: var(--color-charcoal);
-}
-
-.heading svg {
-  width: clamp(20px, 2vw, 32px);
-  height: clamp(20px, 2vw, 32px);
-  flex-shrink: 0;
-  color: var(--color-charcoal);
-}
-
-.headingTitle {
-  font-family: var(--font-kr);
-  font-weight: 400;
-  font-size: var(--fs-section-title);
-  line-height: 1.4;
-}
-
+/* No section heading here — Figma's updated file (synced 2026-09-28)
+   dropped section2's title entirely, leaving "유병현의 OO 가지 약속" as
+   section3/Promises's alone (they used to duplicate each other). */
 .gridWrap {
   flex: 0 0 auto;
   display: flex;
@@ -61,19 +41,22 @@
   display: none;
 }
 
+/* Full-bleed photo card: bg image + dark overlay fill the whole box,
+   content sits centered on top. Matches Figma's "works-item" card —
+   all three cards share one background photo (lib/policyData.ts). */
 .card {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-card-bg);
-  border-radius: var(--radius-card);
+  position: relative;
+  aspect-ratio: 587 / 767;
+  border-radius: 20px;
   overflow: hidden;
+  isolation: isolate;
   transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.45);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -82,60 +65,60 @@
   }
 }
 
-.cardBody {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(10px, 1.6vw, 20px);
-  padding: clamp(24px, 2.6vw, 50px);
+.cardBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
 }
 
-.cardTitleRow {
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.cardContent {
+  height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(24px, 2.6vw, 50px);
+  padding: clamp(28px, 2.6vw, 50px) clamp(24px, 2.6vw, 50px) clamp(36px, 3.6vw, 70px);
+  text-align: center;
+  color: var(--color-white);
+}
+
+.cardTitleBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(24px, 2.6vw, 50px);
 }
 
 .cardTitle {
   font-family: var(--font-kr);
-  font-weight: 700;
-  font-size: var(--fs-card-title);
-  color: var(--color-black);
-}
-
-.cardDivider {
-  font-family: var(--font-kr);
-  font-weight: 400;
-  font-size: var(--fs-card-title-sub);
-  color: var(--color-charcoal-30);
+  font-weight: 800;
+  font-size: var(--fs-plan-card-title);
+  line-height: 0.93;
+  letter-spacing: 0.16px;
 }
 
 .cardSubtitle {
   font-family: var(--font-kr);
-  font-weight: 400;
-  font-size: var(--fs-card-title-sub);
-  color: var(--color-black);
-}
-
-.cardLine {
-  width: 100%;
-  height: 1px;
-  background-color: var(--color-black);
-}
-
-.cardFooter {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(16px, 2vw, 32px);
+  font-weight: 500;
+  font-size: var(--fs-plan-card-subtitle);
 }
 
 .cardDesc {
   font-family: var(--font-kr);
   font-weight: 400;
-  font-size: var(--fs-card-desc);
-  line-height: 1.4;
-  color: var(--color-black);
-  max-width: 46ch;
+  font-size: var(--fs-plan-card-desc);
+  line-height: 1.36;
 }
 
 .cardLink {
@@ -144,39 +127,18 @@
   gap: 5px;
   font-family: var(--font-en);
   font-size: var(--fs-btn);
-  color: var(--color-line);
-  transition: gap 200ms ease, color 200ms ease;
+  color: var(--color-white);
+  transition: gap 200ms ease, opacity 200ms ease;
 }
 
 .cardLink:hover {
   gap: 9px;
-  color: var(--color-key);
+  opacity: 0.8;
 }
 
 .cardLink svg {
   width: 13px;
   height: auto;
-}
-
-.cardImageWrap {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 600 / 338;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.cardImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center bottom;
-  display: block;
-  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.card:hover .cardImage {
-  transform: scale(1.04);
 }
 
 @media (max-width: 1023px) {
