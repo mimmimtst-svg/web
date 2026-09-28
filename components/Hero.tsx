@@ -1,9 +1,15 @@
+"use client";
+
 import styles from "./Hero.module.css";
 import { withBasePath } from "@/lib/basePath";
+import { useSectionSettled } from "@/hooks/useSectionSettled";
+import ScrollDownIndicator from "./ScrollDownIndicator";
 
 export default function Hero() {
+  const { ref, settled } = useSectionSettled<HTMLElement>();
+
   return (
-    <section className={styles.hero} id="hero">
+    <section className={styles.hero} id="hero" ref={ref}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         className={styles.bgImage}
@@ -28,6 +34,7 @@ export default function Hero() {
           alt="유병현 교수"
         />
       </div>
+      <ScrollDownIndicator active={settled} />
     </section>
   );
 }

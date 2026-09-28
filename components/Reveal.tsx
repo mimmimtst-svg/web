@@ -10,6 +10,18 @@ type RevealProps = {
   distance?: number;
   scale?: number;
   duration?: number;
+  /** 'y' (default) slides up from `distance`px below; 'x' slides in
+      horizontally from `distance`px away (negative = from the left,
+      positive = from the right). */
+  axis?: "x" | "y";
+  /**
+   * Externally controlled visibility. When provided, Reveal renders
+   * purely off this prop instead of running its own IntersectionObserver
+   * — for cases where a parent needs several Reveal children to share one
+   * trigger (e.g. "the whole section has fully settled into view") rather
+   * than each one reacting to its own individual visibility.
+   */
+  visible?: boolean;
 };
 
 /**
@@ -27,21 +39,26 @@ export default function Reveal({
   distance = 24,
   scale = 1,
   duration = 700,
+  axis = "y",
+  visible: controlledVisible,
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [observedVisible, setObservedVisible] = useState(false);
+  const isControlled = controlledVisible !== undefined;
+  const visible = isControlled ? controlledVisible : observedVisible;
 
   useEffect(() => {
+    if (isControlled) return;
     const el = ref.current;
     if (!el) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
+      ([entry]) => setObservedVisible(entry.isIntersecting),
       { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [isControlled]);
 
   return (
     <Tag
@@ -50,7 +67,8 @@ export default function Reveal({
       style={{
         transitionDelay: visible ? `${delay}ms` : "0ms",
         transitionDuration: `${duration}ms`,
-        ["--reveal-distance" as string]: `${distance}px`,
+        ["--reveal-distance-y" as string]: axis === "y" ? `${distance}px` : "0px",
+        ["--reveal-distance-x" as string]: axis === "x" ? `${distance}px` : "0px",
         ["--reveal-scale" as string]: scale,
       }}
     >

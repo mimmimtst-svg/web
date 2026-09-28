@@ -54,6 +54,32 @@ export function MenuIcon({ className }: IconProps) {
   );
 }
 
+/** Double chevron used by the "SCROLL DOWN" indicator */
+export function ScrollChevronIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 49.5004 24.5634"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M0.750195 13.6877L24.7507 23.7502L48.7502 13.6877"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M0.750195 0.750195L24.7507 10.8127L48.7502 0.750195"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 /** Carousel prev/next chevron */
 export function ChevronIcon({ className }: IconProps) {
   return (

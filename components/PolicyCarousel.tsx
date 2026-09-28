@@ -4,6 +4,7 @@ import styles from "./PolicyCarousel.module.css";
 import { ArrowRightIcon, CheckIcon, ChevronIcon, PlusIcon } from "./icons";
 import { policyCards } from "@/lib/policyData";
 import { useHorizontalCarousel } from "@/hooks/useHorizontalCarousel";
+import { withBasePath } from "@/lib/basePath";
 import CarouselDots from "./CarouselDots";
 import Footer from "./Footer";
 
@@ -26,7 +27,7 @@ export default function PolicyCarousel() {
       <div className={styles.headerWrap}>
         <div className={styles.heading}>
           <PlusIcon />
-          <h2 className={styles.headingTitle}>나답게・다함께・앞으로</h2>
+          <h2 className={styles.headingTitle}>나답게・다함께・앞으로 핵심 공약</h2>
         </div>
         <div className={styles.navRow}>
           <div className={styles.navButtons}>
@@ -65,11 +66,22 @@ export default function PolicyCarousel() {
           {policyCards.map((card) => (
             <li className={styles.card} key={card.number}>
               <div className={styles.cardInner}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  className={styles.cardBg}
+                  src={withBasePath("/images/hero-bg.png")}
+                  alt=""
+                  aria-hidden="true"
+                />
                 <div className={styles.cardHead}>
-                  <span className={styles.cardNumber}>{card.number}</span>
-                  <span className={styles.cardTitle}>{card.title}</span>
+                  <span className={styles.cardTitleRow}>
+                    <span className={styles.cardNumber}>{card.number}</span>
+                    <span className={styles.cardTitle}>{card.title}</span>
+                  </span>
+                  <a className={styles.cardHeadLink} href="#" aria-label="자세히 보기">
+                    <ArrowRightIcon />
+                  </a>
                 </div>
-                <div className={styles.cardLine} />
                 <div className={styles.cardCategories}>
                   {card.categories.map((category) => (
                     <div className={styles.category} key={category.label}>
@@ -84,12 +96,6 @@ export default function PolicyCarousel() {
                       </ul>
                     </div>
                   ))}
-                </div>
-                <div className={styles.cardFoot}>
-                  <a className={styles.cardLink} href="#">
-                    <span>자세히 보기</span>
-                    <ArrowRightIcon />
-                  </a>
                 </div>
               </div>
             </li>

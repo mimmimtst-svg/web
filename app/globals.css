@@ -149,12 +149,13 @@ ol {
    always wins over the reveal state, regardless of CSS source order. */
 :where(.revealHidden) {
   opacity: 0;
-  transform: translateY(var(--reveal-distance, 24px)) scale(var(--reveal-scale, 1));
+  transform: translate(var(--reveal-distance-x, 0px), var(--reveal-distance-y, 24px))
+    scale(var(--reveal-scale, 1));
 }
 
 :where(.revealVisible) {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translate(0, 0) scale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {

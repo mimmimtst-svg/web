@@ -54,42 +54,6 @@
   white-space: nowrap;
 }
 
-.actions {
-  display: flex;
-  align-items: center;
-  gap: clamp(10px, 1.5vw, 20px);
-}
-
-.contactButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px clamp(14px, 1.6vw, 20px);
-  border: 1px solid currentColor;
-  border-radius: 999px;
-  color: inherit;
-  font-family: var(--font-kr);
-  font-size: clamp(0.8rem, 0.7rem + 0.35vw, 1.125rem);
-  white-space: nowrap;
-  transition: background-color 200ms ease, color 200ms ease,
-    border-color 300ms ease;
-}
-
-.contactButton:hover {
-  background-color: var(--color-white);
-  color: var(--color-black);
-}
-
-.scrolled .contactButton:hover {
-  background-color: var(--color-charcoal);
-  color: var(--color-white);
-}
-
-.contactButton svg {
-  width: 12px;
-  height: auto;
-}
-
 .menuToggle {
   display: flex;
   align-items: center;

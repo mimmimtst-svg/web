@@ -1,12 +1,18 @@
+"use client";
+
 import styles from "./Promises.module.css";
 import { ArrowRightIcon, PlusIcon } from "./icons";
 import { promises } from "@/lib/policyData";
 import { withBasePath } from "@/lib/basePath";
+import { useSectionSettled } from "@/hooks/useSectionSettled";
 import Reveal from "./Reveal";
+import ScrollDownIndicator from "./ScrollDownIndicator";
 
 export default function Promises() {
+  const { ref, settled } = useSectionSettled<HTMLElement>();
+
   return (
-    <section className={styles.section} id="promises">
+    <section className={styles.section} id="promises" ref={ref}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} alt="" aria-hidden="true" />
       <div className={styles.overlay} aria-hidden="true" />
@@ -21,7 +27,13 @@ export default function Promises() {
               as="li"
               key={item.index}
               className={styles.item}
-              delay={index * 150}
+              /* Nothing observes (and so nothing can fire mid-transition)
+                 until the section has fully settled into view — once it
+                 has, each item reveals on its own as the user scrolls it
+                 into view, one at a time, matching how a taller-than-
+                 viewport section naturally scrolls in steps. */
+              visible={settled ? undefined : false}
+              delay={(index % 2) * 150}
               distance={254}
               duration={950}
             >
@@ -38,6 +50,7 @@ export default function Promises() {
           ))}
         </ol>
       </div>
+      <ScrollDownIndicator active={settled} />
     </section>
   );
 }

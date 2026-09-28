@@ -10,6 +10,19 @@
   background-color: #201a1a;
   isolation: isolate;
   scroll-snap-align: start;
+  /* This is the one section whose own content is reliably taller than
+     the viewport (6 promises). Without scroll-snap-stop, a strong wheel
+     tick from Section 2 can skip straight past this section's snap point
+     to Section 4 — the browser doesn't have to stop at every intermediate
+     snap point, only the nearest one a fling's momentum reaches. `always`
+     forces a stop here specifically, so the six items are guaranteed to
+     scroll past (and their reveal animations play) before the page can
+     continue to Section 4. Deliberately not applied to the other
+     sections — this project's earlier scroll-snap tuning found
+     scroll-snap-stop made fast section-to-section jumps feel stiff, and
+     that's still desirable everywhere it isn't needed to guarantee content
+     is seen. */
+  scroll-snap-stop: always;
 }
 
 .bgImage {
@@ -85,8 +98,9 @@
   font-family: var(--font-kr);
   font-weight: 600;
   font-size: var(--fs-promise-title);
-  line-height: 1.19;
+  line-height: 1.41; /* 34px → 48px per Figma */
   color: var(--color-white);
+  text-align: justify;
 }
 
 .itemBody {
@@ -101,8 +115,9 @@
   font-family: var(--font-kr);
   font-weight: 600;
   font-size: var(--fs-promise-title);
-  line-height: 1.19;
+  line-height: 1.41; /* 34px → 48px per Figma */
   color: var(--color-white);
+  text-align: justify;
 }
 
 .itemDesc {
@@ -111,6 +126,7 @@
   font-size: var(--fs-promise-body);
   line-height: 1.6;
   color: var(--color-white);
+  text-align: justify;
 }
 
 .itemLink {
@@ -133,7 +149,25 @@
   height: auto;
 }
 
-@media (max-width: 1023px) {
+/* The 2-column grid + row layout stays intact through tablet widths
+   (iPad included) — collapsing to a single column here used to roughly
+   double the section's total height right in the iPad range, pushing
+   items 5-6 far enough below the fold that they were easy to miss. */
+@media (max-width: 1024px) and (min-width: 641px) {
+  .list {
+    row-gap: clamp(14px, 1.8vh, 24px);
+  }
+
+  .item {
+    gap: clamp(16px, 2vw, 28px);
+  }
+
+  .itemBody {
+    gap: clamp(8px, 1.4vh, 14px);
+  }
+}
+
+@media (max-width: 640px) {
   .list {
     grid-template-columns: 1fr;
     row-gap: clamp(16px, 2vh, 28px);

@@ -125,7 +125,7 @@ intercept = min - slope * 390
 새 컴포넌트를 만들 때는 기존 컴포넌트 중 가장 가까운 패턴을 복제해서 시작한다.
 
 ### 4.1 섹션 헤더 (`heading` 패턴)
-- `Promises`와 `PolicyCarousel`은 `+` 아이콘(`PlusIcon`) + 제목 텍스트, 밑줄 없음. 아이콘/텍스트 색은 섹션 배경에 맞춰 바꾼다 — 다크 배경(`Promises`)은 아이콘 `#ABB8C3`/텍스트 `--color-light-gray`, `PolicyCarousel`은 아이콘 `#F4F2ED`/텍스트 `--color-white`.
+- `Promises`와 `PolicyCarousel`은 `+` 아이콘(`PlusIcon`) + 제목 텍스트, 밑줄 없음. 아이콘/텍스트 색은 섹션 배경에 맞춰 바꾼다 — 다크 배경(`Promises`)은 아이콘 `#ABB8C3`/텍스트 `--color-light-gray`. **`PolicyCarousel`은 2026-09-28 동기화로 섹션 배경이 다크(`#141414`)에서 흰색(`--color-white`)으로 바뀌면서, 헤딩 색도 `--color-white`에서 `--color-line`(#333)으로 함께 바뀌었다** — 배경이 바뀌면 헤딩·아이콘 색은 항상 같이 재검토한다(하드코딩된 흰색이 새 배경에 묻히는 사고를 막기 위함). 제목 텍스트도 "나답게・다함께・앞으로"에서 "나답게・다함께・앞으로 핵심 공약"으로 바뀌었다.
 - **`DevelopmentPlan`(section2)은 섹션 헤더가 없다.** 예전엔 여기도 "유병현의 세 가지 약속" 타이틀을 달고 있었는데, `Promises`의 제목과 완전히 같은 문구라 중복이었다 — Figma가 2026-09-28 동기화에서 이 중복을 없애면서 section2의 헤더 자체를 지웠다. 새 섹션을 만들 때 Figma에 헤더가 없으면 억지로 만들어 넣지 않는다.
 - 제목 폰트 크기: `--fs-section-title`, weight 400, `text-transform: uppercase`(국문에는 영향 없음, 영문 대비용으로 유지)
 
@@ -141,9 +141,10 @@ intercept = min - slope * 390
 - **데이터 카드** (`PolicyCarousel`): 흰 배경, radius 14px(모던화 허용 범위), 상단 넘버+제목(key 컬러), 카테고리별 체크리스트, 하단 링크. **텍스트/구조는 Figma 그대로, 비주얼만 모던화된 예시**이므로 향후 카드형 콘텐츠 추가 시 이 패턴을 기본값으로 쓴다.
 
 ### 4.3 버튼 / 링크
-- **Pill 버튼** (Contact Us): `border: 1px solid`, `border-radius: 999px`, hover 시 배경/글자색 반전
 - **텍스트 링크** ("자세히 보기"): `--font-en`, `--fs-btn`(13.5px), 화살표 아이콘(`ArrowRightIcon`) 동반, 배경 톤에 따라 색만 다르게(`--color-line` / `--color-muted`)
+- **아이콘-온리 링크** (`PolicyCarousel` 카드 헤더): 텍스트 라벨 없이 `ArrowRightIcon`만, `aria-label`로 접근성 라벨을 대신 단다. Figma가 텍스트 링크를 아이콘 하나로 교체한 곳(2026-09-28 동기화)에서는 억지로 텍스트를 남기지 않고 그대로 따른다.
 - **원형 아이콘 버튼** (캐러셀 prev/next): `border: 1px solid`, `border-radius: 999px`, hover 시 반전, `:disabled`일 때 `opacity: 0.3`
+- **헤더의 Contact Us 버튼은 삭제되었다** (Figma 2026-09-28 동기화 — 모든 섹션 헤더가 브랜드 텍스트 + 햄버거 메뉴만 남기는 것으로 통일됨). 새로 헤더를 건드릴 때 이 버튼을 되살리지 않는다.
 
 ### 4.4 가로 스크롤 캐러셀 (`PolicyCarousel`)
 새로운 가로 스크롤 콘텐츠가 필요하면 이 패턴을 재사용:
@@ -226,6 +227,7 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 - ⚠️ **`scroll-snap-align`이 걸린 요소 자체에는 `transform`을 걸지 않는다** (hover 포함). `.card`(li, snap 대상)에 직접 `:hover{transform:translateY(-6px)}`를 걸었더니, 호버할 때 트랙의 스크롤 위치가 왼쪽 끝으로 튀는 버그가 있었다. 고친 방법: `.card`는 스냅 대상으로만 두고 `transform`을 전혀 주지 않고, 그 **안에 `.cardInner`를 한 겹 더 두어 배경·radius·overflow·hover transform을 전부 `.cardInner`로 옮겼다**. 가로 스크롤 캐러셀에 카드 hover 효과를 넣을 땐 항상 이 2단 구조(바깥 = snap 대상, 안쪽 = 비주얼/transform)를 쓴다.
 - ⚠️ **가로 스크롤 컨테이너에 좌우 여백을 줄 때는 `padding`만으로 끝내지 말고 `scroll-padding-left`/`scroll-padding-right`도 같은 값으로 같이 건다.** `padding`만 걸어두면 `scroll-snap-type: x proximity`가 첫 로드 시(버튼을 한 번도 안 눌렀을 때) 그 패딩을 무시하고 scrollLeft를 자동으로 보정해버려서, 첫 카드가 여백 없이 화면 끝에 붙어 있다가 버튼을 한 번 누르면 그제서야 여백이 "생기는" 것처럼 보이는 버그가 있었다. `scroll-padding`은 브라우저에게 "스냅 계산에서 이 여백은 의도된 것"이라고 알려주는 역할이라, 이걸 같이 걸면 최초 페인트부터 `scrollLeft: 0`에서 패딩이 정확히 보인다. 새로 가로 스크롤 캐러셀을 만들 때 이 둘을 한 세트로 기억한다.
 - ⚠️ **가로 스크롤 트랙에 `overflow-x: auto`를 걸면 `overflow-y`도 자동으로 `auto`(클립)가 된다** (스펙상 한쪽 축이 `visible`이 아니게 되면 다른 축도 `visible`을 유지할 수 없다). `.cardInner:hover`처럼 세로로 살짝 움직이는 hover 효과가 있으면, 트랙의 세로 여백이 `padding-bottom`에만 있고 `padding-top`이 0일 때 위로 움직이는 hover가 잘려 보인다(카드 상단 모서리가 잘리는 버그). 오버플로우 클리핑은 **content box가 아니라 padding box 가장자리**에서 일어나므로, `.track`에 hover 이동량만큼(또는 그 이상) `padding-top`을 주면 그 여백 안에서는 잘리지 않는다. 시각적 여백이 늘어나 보이지 않도록, 그만큼을 바깥 wrapper(`.trackOuter`)의 `margin-top`에서 `calc()`로 빼서 상쇄한다.
+- **카드 비주얼 (2026-09-28 동기화)**: `.cardInner`에 `border`(예전 `1px solid rgba(0,0,0,0.06)`) 대신 **항상 켜져 있는** `box-shadow: 0 12px 15px rgba(0,0,0,0.15)`를 기본값으로 건다(하나 더 진한 그림자를 hover에 추가). radius도 14px→10px로 줄었다. 카드 배경에는 Hero와 같은 라인 패턴 텍스처(`/images/hero-bg.png`, Hero에서는 `mix-blend-mode:multiply`로 빨간 배경과 섞지만 여기서는 그냥 `opacity:0.8; object-fit:cover; object-position:bottom;`로 아주 은은하게)를 깔아 브랜드 일관성을 준다. 하단의 "자세히 보기" 텍스트 링크는 없어지고, 카드 헤더 우측에 **아이콘만 있는** `ArrowRightIcon` 링크(`aria-label`로 접근성 보완)로 대체됐다 — 텍스트 링크가 있던 자리에 아이콘만 남으면 그게 Figma의 의도인지 먼저 확인하고, 확인되면 텍스트를 억지로 유지하지 않는다.
 
 ### 4.13 2-컬럼 x 3-로우 약속 그리드 (`Promises`)
 Figma가 (node 614:6269, 2026-09-28 동기화) 3개였던 "약속"을 6개로 늘리면서, 예전의 "6컬럼 그리드 + 오른쪽 정렬 + 구분선" 레이아웃을 진짜 2열 카드형 그리드로 바꿨다. 새 패턴:
@@ -293,6 +295,36 @@ Figma가 (node 614:6269, 2026-09-28 동기화) 3개였던 "약속"을 6개로 �
 - **"자세히 보기" 류 링크** (`cardLink`, `itemLink`): `gap`을 8px→9px 정도로 늘려서 화살표가 살짝 앞으로 나가는 느낌 + `color`를 포인트 컬러로 전환. `transition: gap 200ms ease, color 200ms ease;`
 - 전부 `@media (prefers-reduced-motion: reduce)`에서 `transform` 애니메이션은 끈다(그림자/색 전환은 순간적이라 굳이 끄지 않아도 됨).
 
+### 4.17 "SCROLL DOWN" 인디케이터 (`components/ScrollDownIndicator.tsx`)
+섹션 하단에 고정된 "SCROLL DOWN" 텍스트 + 더블 쉐브론 아이콘. Figma에는 `Promises`/`PolicyCarousel`에만 있었지만, 일관성을 위해 `Hero`/`DevelopmentPlan`/`Promises` 세 곳 모두에 단다(사용자 요청 — Figma에 없다고 자동으로 빼지 않는다, 이 항목은 명시적 추가 지시였다).
+```tsx
+<ScrollDownIndicator active={settled} />
+```
+- `position: absolute; bottom: 24px; left: 0; width: 100%;` — 부모(`<section>`)가 `position: relative`여야 한다.
+- **바운스 애니메이션은 섹션이 뷰포트에 나타나자마자 시작하지 않는다.** `active`가 `true`가 된 순간부터 `.bobbing` 클래스가 붙는데, 그 클래스 자체의 `animation-delay`(1.6s)가 "머문 뒤에 움직이기 시작"하는 딜레이를 담당한다 — JS `setTimeout`으로 흉내내지 않는다(그러면 effect 안에서 동기 `setState`를 호출하게 되어 린트 규칙에 걸리고, 로직도 더 복잡해진다). `active`가 `false`로 바뀌면 클래스가 빠지면서 애니메이션이 그냥 멈추고, 다음에 다시 `true`가 될 때 `animation-delay`부터 새로 재생된다 — 이게 "다시 들어왔을 때 또 딜레이 후 움직임"을 만드는 전부다.
+- `active`는 4.18의 `useSectionSettled`가 준다 — 섹션에 진입만 해도가 아니라 스냅이 실제로 자리잡은 뒤에 움직이기 시작해야 자연스럽다.
+
+### 4.18 섹션이 "자리잡았는지" 판정하기 (`hooks/useSectionSettled.ts`)
+카드 등장 애니메이션이나 스크롤다운 인디케이터처럼 "이 섹션이 스크롤 스냅으로 완전히 자리잡은 뒤"에만 시작해야 하는 효과에 쓴다.
+```tsx
+const { ref, settled } = useSectionSettled<HTMLElement>();
+// <section ref={ref}> ... </section>
+```
+- ⚠️ **"보이는 비율(threshold)이 98% 이상"으로 판정하면 안 된다.** `IntersectionObserver`의 `intersectionRatio`는 "보이는 넓이 / 타겟 자신의 전체 넓이"라서, 섹션 내용이 뷰포트보다 크면(예: `Promises`가 항목 6개로 늘어난 뒤, 짧은 화면에서) 아무리 스크롤해도 이 비율이 "뷰포트 높이 / 섹션 높이"를 절대 못 넘는다 — 즉 `settled`가 영원히 `true`가 안 돼서 콘텐츠가 영원히 숨어 있는 버그가 난다(데스크톱에서만 테스트하고 넘어갔다가 아이패드 크기에서 이 버그를 놓칠 뻔했다).
+- 대신 **섹션 자신의 위쪽 모서리가 뷰포트 위쪽 모서리 근처(±6px)에 왔는지**를 본다(`entry.boundingClientRect.top`). `scroll-snap-align: start`가 정확히 이 위치로 스냅시키므로, 섹션이 뷰포트보다 크든 작든 상관없이 옳다. 콜백이 자주 불리도록 `threshold`를 0~1을 100등분한 배열로 촘촘히 등록한다(성긴 threshold로는 큰 섹션에서 "top이 0 근처"인 순간을 놓치고 지나칠 수 있다).
+- 새 섹션에 이 훅을 쓸 때는 반드시 **실제 콘텐츠 높이가 뷰포트보다 큰 뷰포트 크기**(짧은 노트북 창, 아이패드 등)에서도 `settled`가 결국 `true`가 되는지 확인한다.
+
+### 4.19 방향성 있는 카드 등장 모션 (`DevelopmentPlan`)과 Figma 모션 그대로 옮기지 않기
+Figma의 `get_motion_context`(node 612:1416)가 준 값: 가운데 카드는 아래에서(`y: 909→0`), 양옆 카드는 각자의 바깥쪽에서(`x: ∓666.667→0`) 들어오며 셋 다 동시에 `opacity: 0→1`. `components/Reveal.tsx`에 두 가지를 추가해서 옮겼다:
+- **`axis` prop** (`'x' | 'y'`, 기본 `'y'`): `translate(x, y)` 두 축을 각각 별도 CSS 변수(`--reveal-distance-x`/`--reveal-distance-y`)로 관리해서, 같은 컴포넌트로 세로 슬라이드(기존 카드/리스트)와 가로 슬라이드(이번 카드)를 둘 다 표현한다. `axis="x"`일 때 `distance`는 부호가 방향이다 — 음수면 왼쪽에서, 양수면 오른쪽에서 들어온다.
+- **`visible` prop** (선택): 넘기면 `Reveal`이 자기 `IntersectionObserver`를 아예 돌리지 않고 이 값을 그대로 쓴다. 여러 `Reveal` 인스턴스가 "섹션 하나가 자리잡았다"는 같은 트리거를 공유해야 할 때 쓴다 — `DevelopmentPlan`의 카드 3장이 각자 따로 관찰하는 대신 `visible={settled}`(4.18) 하나로 동시에 트리거되고, `delay` prop으로만 "가운데가 먼저, 양옆이 조금 뒤에"라는 순서를 표현한다.
+- ⚠️ **Figma 모션 데이터를 곧이곧대로 복사하지 않는다.** Figma 프로토타입엔 스크롤 트리거가 없어서, 디자이너가 미리보기용으로 "6초짜리 무한 반복(`repeat: Infinity`)" 타임라인을 만들어두는 경우가 흔하다(이 카드 모션도, `Promises`의 6개 아이템 모션도 둘 다 이런 형태였다). 그 `repeat`나 절대 시간(`times` 배열)을 그대로 옮기면 실제 사이트에서 계속 제멋대로 움직이는 이상한 애니메이션이 된다. 옮길 건 ① 각 요소 자신의 `initial`→`animate` 오프셋(거리/축/방향), ② 요소들 사이의 **상대적** 시작 시점 차이(→ `delay` 스태거링 비율)뿐이고, 트리거 자체는 항상 IntersectionObserver(또는 4.18의 `settled`) 1회성으로 바꾼다.
+
+### 4.20 스크롤이 콘텐츠를 건너뛰지 못하게 막기 — `scroll-snap-stop`
+6개로 늘어난 `Promises`처럼 섹션 내용이 뷰포트보다 큰 경우, 강하게(빠르게) 스크롤하면 `scroll-snap-type: y mandatory`가 이 섹션의 스냅 지점에서 전혀 멈추지 않고 바로 다음 섹션(`PolicyCarousel`)으로 넘어가버릴 수 있다 — 사용자가 4~6번째 항목을 볼 기회 자체가 없어지는 문제. `#promises`의 `.section`에만 `scroll-snap-stop: always;`를 건다: 아무리 강하게 스크롤해도 이 섹션의 스냅 지점은 반드시 거쳐가게 만든다.
+- ⚠️ **다른 섹션에는 걸지 않는다.** 4.8에서 이미 "빠르게 스크롤하면 여러 섹션을 자연스럽게 지나칠 수 있어야 한다"고 정했고, `scroll-snap-stop: always`를 아무 데나 걸면 그 자유로움이 사라져 전체적으로 뻑뻑해진다. 콘텐츠가 뷰포트보다 커서 "반드시 다 보여줘야 하는" 섹션에만 예외적으로 쓴다.
+- ⚠️ **자동화 테스트에서 이 동작을 검증할 때 `page.mouse.wheel()`은 못 믿는다.** 이 프로젝트를 테스트한 헤드리스 Chromium 환경에서 합성 wheel 이벤트는 scroll-snap과 타이밍이 안 맞아 스크롤이 아예 안 움직이거나(멈춰버리거나) 들쭉날쭉하게 움직였다. 대신 `page.evaluate(() => window.scrollBy({ top, behavior: 'instant' }))`로 "한 번에 크게" 이동시켜서 그 지점에서 `getBoundingClientRect()`가 스냅 지점에 정확히 멈췄는지 확인하는 쪽이 안정적이다.
+
 ---
 
 ## 5. 코드 컨벤션
@@ -313,6 +345,7 @@ Figma가 (node 614:6269, 2026-09-28 동기화) 3개였던 "약속"을 6개로 �
 4. 1024 / 640 분기 기준으로 다단 → 스택 반응형을 기본으로 검토한다(필요시 768 분기 추가).
 5. 이미지·아이콘은 전부 실제 에셋만 사용한다. 구할 수 없으면 사용자에게 먼저 알린다.
 6. 과한 그라디언트/글로우/불필요한 둥근 카드/장식 요소를 새로 추가하지 않는다.
-7. `html`에 `scroll-behavior: smooth`를 걸지 않고, 섹션에 `scroll-snap-stop: always`도 걸지 않는다 (4.8 참고 — 둘 다 스냅을 뻑뻑하게 만든 원인이었다). 스크롤 위치를 읽어야 하는 컴포넌트는 `scroll` 리스너보다 `IntersectionObserver`를 우선 검토한다 (4.7 참고).
-8. 등장 애니메이션이 필요하면 새 라이브러리를 깔지 말고 `components/Reveal.tsx`를 재사용한다 (4.14). hover 인터랙션은 4.15의 값(카드 lift, 링크 gap)을 기본값으로 삼는다.
+7. `html`에 `scroll-behavior: smooth`를 걸지 않는다 (4.8 참고). `scroll-snap-stop: always`는 기본적으로 걸지 않되, 섹션 내용이 뷰포트보다 커서 "반드시 다 보여줘야" 하는 경우만 4.20의 패턴으로 예외를 둔다. 스크롤 위치를 읽어야 하는 컴포넌트는 `scroll` 리스너보다 `IntersectionObserver`를 우선 검토한다 (4.7 참고).
+8. 등장 애니메이션이 필요하면 새 라이브러리를 깔지 말고 `components/Reveal.tsx`를 재사용한다 (4.14, 4.19). hover 인터랙션은 4.16의 값(카드 lift, 링크 gap)을 기본값으로 삼는다. "섹션이 자리잡은 뒤에만" 시작해야 하는 효과는 4.18의 `useSectionSettled`로 게이팅한다.
 9. 작업 후 `npm run lint && npm run build`로 검증하고, 최소 1개 데스크톱 + 1개 모바일 뷰포트로 스크린샷 확인한다. 가로 스크롤 발생 여부(`document.documentElement.scrollWidth === clientWidth`)와, 한 줄로 강제한 텍스트가 있다면 `element.scrollWidth > element.clientWidth`(줄바꿈/잘림 여부)를 실측한다. `fullPage` 스크린샷은 `IntersectionObserver` 기반 등장 애니메이션을 제대로 트리거하지 않을 수 있으니, Reveal 요소 확인은 실제 `scrollTo` 반복으로 검증한다.
+10. 섹션에 콘텐츠가 늘어날 수 있는 컴포넌트(리스트, 그리드 등)는 **뷰포트보다 콘텐츠가 커지는 짧은 화면**(작은 노트북 높이, 아이패드 가로/세로)에서도 확인한다 — `useSectionSettled` 같은 "섹션이 다 보이는지" 판정 로직은 섹션이 뷰포트보다 커지는 순간 조용히 깨질 수 있다 (4.18 참고).
