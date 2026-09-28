@@ -4,9 +4,11 @@ import styles from "./PolicyCarousel.module.css";
 import { ArrowRightIcon, CheckIcon, ChevronIcon, PlusIcon } from "./icons";
 import { policyCards } from "@/lib/policyData";
 import { useHorizontalCarousel } from "@/hooks/useHorizontalCarousel";
+import { useSectionSettled } from "@/hooks/useSectionSettled";
 import { withBasePath } from "@/lib/basePath";
 import CarouselDots from "./CarouselDots";
 import Footer from "./Footer";
+import ScrollDownIndicator from "./ScrollDownIndicator";
 
 export default function PolicyCarousel() {
   const {
@@ -21,9 +23,11 @@ export default function PolicyCarousel() {
     onPointerMove,
     endDrag,
   } = useHorizontalCarousel<HTMLUListElement>();
+  const { ref: sectionRef, settled } = useSectionSettled<HTMLElement>();
 
   return (
-    <section className={styles.section} id="policies">
+    <section className={styles.section} id="policies" ref={sectionRef}>
+      <div className={styles.contentWrap}>
       <div className={styles.headerWrap}>
         <div className={styles.heading}>
           <PlusIcon />
@@ -69,7 +73,7 @@ export default function PolicyCarousel() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   className={styles.cardBg}
-                  src={withBasePath("/images/hero-bg.png")}
+                  src={withBasePath("/images/policy-card-bg.jpg")}
                   alt=""
                   aria-hidden="true"
                 />
@@ -127,6 +131,9 @@ export default function PolicyCarousel() {
         >
           <ChevronIcon />
         </button>
+      </div>
+
+      <ScrollDownIndicator active={settled} />
       </div>
 
       <Footer />

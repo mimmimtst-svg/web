@@ -1,12 +1,30 @@
 .section {
   width: 100%;
-  min-height: 100dvh;
+  /* Fixed (not min-) height + overflow:hidden is the hard backstop that
+     guarantees this section — header, cards and footer together — never
+     exceeds one screen on any tablet/PC width, matching Promises (see its
+     CSS module for the fuller rationale). Everything below is sized with
+     vh-blended clamp()s so it already fits before this backstop would
+     ever need to actually clip anything. */
+  height: 100dvh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding-top: calc(var(--header-height) + var(--space-section-y));
+  padding-top: calc(var(--header-height) + clamp(8px, 1.6vh, var(--space-section-y)));
   background-color: var(--color-white);
   scroll-snap-align: start;
+}
+
+/* Wraps everything except <Footer> so ScrollDownIndicator (position:
+   absolute; bottom: 24px) anchors just above the footer instead of at
+   the very bottom of the whole section (which Footer itself occupies). */
+.contentWrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .headerWrap {
@@ -17,7 +35,9 @@
   padding: 0 var(--space-page-x);
   display: flex;
   flex-direction: column;
-  gap: clamp(24px, 3.5vw, 60px);
+  /* vh-blended (not just vw) so this closes up on short screens too —
+     see .section's height:100dvh + overflow:hidden backstop comment. */
+  gap: clamp(12px, 1.8vw + 1.6vh, 60px);
 }
 
 .heading {
@@ -28,16 +48,19 @@
 }
 
 .heading svg {
-  width: clamp(20px, 2vw, 32px);
-  height: clamp(20px, 2vw, 32px);
+  width: clamp(16px, 1.2vw + 1vh, 32px);
+  height: clamp(16px, 1.2vw + 1vh, 32px);
   flex-shrink: 0;
 }
 
 .headingTitle {
   font-family: var(--font-kr);
   font-weight: 400;
-  font-size: var(--fs-section-title);
-  line-height: 1.4;
+  /* Locally vh-blended override of --fs-section-title (that shared token
+     is vw-only) — on a short screen the title needs to give up space
+     before the cards do, per the "shrink the heading first" rule. */
+  font-size: clamp(0.9rem, 0.3rem + 1vw + 1vh, 2.4938rem);
+  line-height: 1.3;
 }
 
 .navRow {
@@ -99,11 +122,15 @@
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
-  /* .track carries an equal padding-top (see below) that eats into this
-     gap, so the resting position above the cards stays the same as
-     before that padding was added. */
-  margin-top: calc(clamp(16px, 2vw, 32px) - 12px);
-  padding-bottom: clamp(24px, 3.5vh, 40px);
+  /* .track carries a much larger top/bottom padding (see below) that eats
+     into this gap, so the resting position above the cards stays the
+     same as before that padding existed. */
+  margin-top: calc(clamp(16px, 2vw, 32px) - 16px);
+  /* Reserves room for ScrollDownIndicator, which is `position: absolute;
+     bottom: 24px` within .contentWrap (see that component) — without this,
+     a card's shadow/edge sits close enough to .contentWrap's bottom that
+     the indicator's label + bobbing chevron visually overlap the card. */
+  padding-bottom: clamp(70px, 6vw + 2vh, 100px);
 }
 
 .track {
@@ -111,12 +138,13 @@
   display: flex;
   align-items: stretch;
   gap: var(--gap-md);
-  /* Overflow clipping happens at the padding edge, not the content edge —
-     giving the track a top padding equal to (or larger than) the hover
-     lift lets .cardInner's translateY(-6px) move into that padding
-     without being clipped by overflow-x: auto (which forces overflow-y
-     to auto too, per spec, once it's non-"visible" on either axis). */
-  padding: 12px var(--space-page-x) 8px;
+  /* Overflow clipping happens at the padding edge, not the content edge.
+     .cardInner now carries a permanent box-shadow (0 12px 15px, growing to
+     0 20px 30px on hover) rather than only-on-hover — that shadow reaches
+     up to ~10px above and ~50px below the card at its largest (hover),
+     which overflow-x: auto (forcing overflow-y to auto too, per spec)
+     will clip unless the track's own padding gives it that much room. */
+  padding: 16px var(--space-page-x) 56px;
   overflow-x: auto;
   scroll-snap-type: x proximity;
   /* Without this, proximity snapping ignores the padding above and
@@ -155,7 +183,11 @@
 .card {
   scroll-snap-align: start;
   flex: 0 0 auto;
-  width: clamp(340px, 26.25vw, 504px);
+  /* Wider than Figma's flat 504px reference — at that width the longest
+     title ("전문적 행정과 인사경영") ran into the header icon. Wrapping
+     the title (see .cardTitle) is the real fix; the extra width just
+     keeps most cards on one line so wrapping is the exception. */
+  width: clamp(340px, 30vw, 560px);
 }
 
 .cardInner {
@@ -203,14 +235,18 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 14px;
-  padding: clamp(24px, 2.08vw, 40px) clamp(18px, 1.56vw, 30px) clamp(12px, 1.04vw, 20px)
-    clamp(24px, 2.08vw, 40px);
+  /* vh-blended so this (and .cardCategories below) gives up room on a
+     short screen before .cardInner's overflow:hidden has to start
+     clipping category text — see .section's height:100dvh backstop. */
+  padding: clamp(10px, 1vw + 0.7vh, 40px) clamp(18px, 1.56vw, 30px)
+    clamp(6px, 0.6vw + 0.3vh, 20px) clamp(10px, 1vw + 0.7vh, 40px);
 }
 
 .cardTitleRow {
   display: flex;
-  align-items: baseline;
-  gap: 15px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 6px 15px;
   min-width: 0;
 }
 
@@ -218,26 +254,35 @@
   font-family: var(--font-kr);
   font-weight: 600;
   font-size: clamp(1.15rem, 0.9rem + 1.02vw, 2.125rem);
+  line-height: 1.2;
   color: var(--color-key);
   white-space: nowrap;
 }
 
+/* white-space stays normal (not nowrap) so the longest title ("전문적
+   행정과 인사경영") wraps onto a second line instead of overlapping
+   .cardHeadLink — see the .card width comment for the other half of
+   this fix. */
 .cardTitle {
+  flex: 1 1 auto;
+  min-width: 0;
   font-family: var(--font-kr);
   font-weight: 600;
   font-size: clamp(1.15rem, 0.9rem + 1.02vw, 2.125rem);
+  line-height: 1.2;
   color: var(--color-key);
-  white-space: nowrap;
 }
 
 /* Replaces the old bottom "자세히 보기" text link — Figma's updated card
-   only has this single icon-only affordance, top-right of the head row. */
+   only has this single icon-only affordance, top-right of the head row.
+   Color is the icon's own literal Figma fill (#AEA89B / --color-muted),
+   not the card's key-red text color. */
 .cardHeadLink {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-key);
+  color: var(--color-muted);
   transition: opacity 200ms ease;
 }
 
@@ -254,14 +299,15 @@
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(16px, 1.56vw, 30px);
-  padding: clamp(12px, 1.04vw, 20px) clamp(24px, 2.08vw, 40px) clamp(20px, 1.82vw, 35px);
+  gap: clamp(4px, 0.5vw + 0.4vh, 30px);
+  padding: clamp(4px, 0.5vw + 0.3vh, 20px) clamp(24px, 2.08vw, 40px)
+    clamp(6px, 0.6vw + 0.4vh, 35px);
 }
 
 .category {
   display: flex;
   flex-direction: column;
-  gap: clamp(4px, 0.35vw, 6.8px);
+  gap: clamp(1px, 0.2vw + 0.15vh, 6.8px);
 }
 
 .categoryLabel {
@@ -281,7 +327,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  height: clamp(22px, 1.46vw, 28px);
+  height: clamp(12px, 0.7vw + 0.75vh, 28px);
 }
 
 .categoryItem svg {

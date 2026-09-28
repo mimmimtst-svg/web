@@ -5,11 +5,18 @@ import { ArrowRightIcon, PlusIcon } from "./icons";
 import { promises } from "@/lib/policyData";
 import { withBasePath } from "@/lib/basePath";
 import { useSectionSettled } from "@/hooks/useSectionSettled";
+import { useSequentialReveal } from "@/hooks/useSequentialReveal";
 import Reveal from "./Reveal";
 import ScrollDownIndicator from "./ScrollDownIndicator";
 
 export default function Promises() {
   const { ref, settled } = useSectionSettled<HTMLElement>();
+  /* The section is fixed to exactly one screen (see .section in the CSS
+     module) with no internal scroll of its own, so a position-based
+     "scrolled into view" trigger has nothing to react to for items 2-6 —
+     they'd stay stuck mid-transition forever. Each discrete scroll while
+     settled instead reveals one more item by count. */
+  const revealedCount = useSequentialReveal(promises.length, settled);
 
   return (
     <section className={styles.section} id="promises" ref={ref}>
@@ -27,13 +34,11 @@ export default function Promises() {
               as="li"
               key={item.index}
               className={styles.item}
-              /* Nothing observes (and so nothing can fire mid-transition)
-                 until the section has fully settled into view — once it
-                 has, each item reveals on its own as the user scrolls it
-                 into view, one at a time, matching how a taller-than-
-                 viewport section naturally scrolls in steps. */
-              visible={settled ? undefined : false}
-              delay={(index % 2) * 150}
+              /* Explicitly controlled by the discrete reveal count above —
+                 item N becomes visible once N scroll gestures have
+                 happened since the section settled into view. */
+              visible={index < revealedCount}
+              delay={0}
               distance={254}
               duration={950}
             >

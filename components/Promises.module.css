@@ -1,28 +1,18 @@
 .section {
   position: relative;
   width: 100%;
-  min-height: 100dvh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
-  padding: calc(var(--header-height) + var(--space-section-y)) var(--space-page-x)
-    var(--space-section-y);
+  /* Locally tighter than the shared --space-section-y (used by every
+     other section) — with six items to fit on one screen, this section
+     needs a smaller vertical budget spent on padding than the others do. */
+  padding: calc(var(--header-height) + clamp(2px, 0.5vh, 20px)) var(--space-page-x)
+    clamp(1px, 0.35vh, 14px);
   overflow: hidden;
   background-color: #201a1a;
   isolation: isolate;
   scroll-snap-align: start;
-  /* This is the one section whose own content is reliably taller than
-     the viewport (6 promises). Without scroll-snap-stop, a strong wheel
-     tick from Section 2 can skip straight past this section's snap point
-     to Section 4 — the browser doesn't have to stop at every intermediate
-     snap point, only the nearest one a fling's momentum reaches. `always`
-     forces a stop here specifically, so the six items are guaranteed to
-     scroll past (and their reveal animations play) before the page can
-     continue to Section 4. Deliberately not applied to the other
-     sections — this project's earlier scroll-snap tuning found
-     scroll-snap-stop made fast section-to-section jumps feel stiff, and
-     that's still desirable everywhere it isn't needed to guarantee content
-     is seen. */
-  scroll-snap-stop: always;
 }
 
 .bgImage {
@@ -47,32 +37,40 @@
   max-width: var(--content-max);
   margin: 0 auto;
   flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: var(--gap-lg);
+  /* Locally tighter than --gap-lg — the heading needs to sit close to the
+     grid rather than centered with its usual generous breathing room, so
+     six items' worth of grid has room to fit under it. */
+  gap: clamp(3px, 0.85vh, 20px);
 }
 
 .heading {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: clamp(10px, 1.2vw, 16px);
+  gap: clamp(8px, 1vw, 16px);
   color: var(--color-light-gray);
 }
 
 .heading svg {
-  width: clamp(20px, 2vw, 32px);
-  height: clamp(20px, 2vw, 32px);
+  width: clamp(14px, 0.7vw + 0.85vh, 30px);
+  height: clamp(14px, 0.7vw + 0.85vh, 30px);
   flex-shrink: 0;
   color: #abb8c3;
 }
 
+/* Smaller than the shared --fs-section-title (used by Promises/Policy-
+   Carousel's headings elsewhere) and blended with vh so it's the first
+   thing to give up space on a short screen — matching the instruction to
+   shrink the heading/title before touching body text. */
 .headingTitle {
   font-family: var(--font-kr);
   font-weight: 400;
-  font-size: var(--fs-section-title);
-  line-height: 1.4;
+  font-size: clamp(0.85rem, 0.3rem + 1.3vh, 1.75rem);
+  line-height: 1.25;
 }
 
 /* 2-column x 3-row grid (Figma node 614:6269, synced 2026-09-28) — replaces
@@ -83,24 +81,34 @@
   flex: 0 0 auto;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  column-gap: clamp(24px, 5.2vw, 100px);
-  row-gap: clamp(16px, 1.6vw, 30px);
+  column-gap: clamp(16px, 3vw, 56px);
+  row-gap: clamp(2px, 0.7vh, 18px);
 }
 
 .item {
   display: flex;
   align-items: flex-start;
-  gap: clamp(20px, 2.1vw, 40px);
+  gap: clamp(10px, 1vw, 20px);
 }
 
 .itemNumber {
-  flex: 0 0 clamp(56px, 5.1vw, 98px);
+  flex: 0 0 clamp(28px, 2vw, 50px);
   font-family: var(--font-kr);
   font-weight: 600;
-  font-size: var(--fs-promise-title);
-  line-height: 1.41; /* 34px → 48px per Figma */
+  /* Smaller than Figma's flat 34px and blended with vh so it shrinks on
+     short screens — priority target for "shrink the title before body
+     text" per the one-screen-fit requirement. */
+  font-size: clamp(0.56rem, 0.14rem + 0.75vh, 1.3rem);
+  line-height: 1;
   color: var(--color-white);
   text-align: justify;
+  /* Global word-break: keep-all (globals.css) forbids breaking inside a
+     Korean phrase, so justify only has a couple of full-phrase gaps to
+     stretch to fill each line — the gaps end up huge. Overriding back to
+     normal breaking gives justify far more break points, so it fills
+     lines by wrapping (even mid-word) instead of stretching whitespace. */
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .itemBody {
@@ -108,25 +116,29 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: clamp(12px, 1.05vw, 20px);
+  gap: clamp(1px, 0.35vh, 8px);
 }
 
 .itemTitle {
   font-family: var(--font-kr);
   font-weight: 600;
-  font-size: var(--fs-promise-title);
-  line-height: 1.41; /* 34px → 48px per Figma */
+  font-size: clamp(0.56rem, 0.14rem + 0.75vh, 1.3rem);
+  line-height: 1;
   color: var(--color-white);
   text-align: justify;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .itemDesc {
   font-family: var(--font-kr);
   font-weight: 300;
-  font-size: var(--fs-promise-body);
-  line-height: 1.6;
+  font-size: clamp(0.38rem, 0.08rem + 0.36vh, 0.9rem);
+  line-height: 1.05;
   color: var(--color-white);
   text-align: justify;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .itemLink {
@@ -149,42 +161,19 @@
   height: auto;
 }
 
-/* The 2-column grid + row layout stays intact through tablet widths
-   (iPad included) — collapsing to a single column here used to roughly
-   double the section's total height right in the iPad range, pushing
-   items 5-6 far enough below the fold that they were easy to miss. */
-@media (max-width: 1024px) and (min-width: 641px) {
-  .list {
-    row-gap: clamp(14px, 1.8vh, 24px);
-  }
-
-  .item {
-    gap: clamp(16px, 2vw, 28px);
-  }
-
-  .itemBody {
-    gap: clamp(8px, 1.4vh, 14px);
-  }
-}
-
-@media (max-width: 640px) {
-  .list {
-    grid-template-columns: 1fr;
-    row-gap: clamp(16px, 2vh, 28px);
-  }
-
-  .item {
-    flex-direction: column;
-    gap: clamp(10px, 2vh, 16px);
-  }
-
-  .itemNumber {
-    flex-basis: auto;
-  }
-}
-
+/* The 2-column grid stays intact at every width, phones included — the
+   base sizing above is already vh-aware (shrinks on short screens), and
+   collapsing to a single column here would double the row count, which
+   with a fixed height:100dvh + overflow:hidden (see .section) would
+   clip items 5-6 off the bottom entirely instead of just making them
+   small. Two columns is the more reliable way to fit six items on any
+   one screen. */
 @media (max-width: 480px) {
-  .itemTitle {
-    font-size: 0.78rem;
+  .list {
+    column-gap: clamp(12px, 4vw, 24px);
+  }
+
+  .item {
+    gap: clamp(8px, 3vw, 16px);
   }
 }

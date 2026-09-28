@@ -8,6 +8,14 @@
     var(--space-section-y);
   background-color: var(--color-white);
   scroll-snap-align: start;
+  /* Before a card settles, Reveal hides it with `transform: translateX(±667px)`
+     (see CARD_MOTION in DevelopmentPlan.tsx) — that pushes the side cards'
+     painted position hundreds of px past the section's own edge, which
+     without local clipping expands `<html>`'s real scrollable width (this
+     project can't fix that with `overflow-x: hidden` on `html`/`body` —
+     see 4.8's scroll-snap-breaks-on-html-overflow-x-hidden note). Clipping
+     it here, one component-scoped level down, avoids that entirely. */
+  overflow-x: hidden;
 }
 
 .inner {
@@ -48,6 +56,14 @@
 .card {
   position: relative;
   aspect-ratio: 587 / 767;
+  /* Below the 1023px breakpoint, 3 cards wrap into a 2-column x 2-row
+     grid — at that point the aspect-ratio (locked to card *width*) can
+     make two stacked rows taller than a short/portrait viewport has
+     room for. This caps it; object-fit: cover on .cardBg means a
+     shorter box just crops the photo a little tighter, nothing
+     distorts or gets clipped off. Wide/short single-row layouts (grid
+     stays 3-column above 1023px) rarely hit this ceiling in practice. */
+  max-height: clamp(280px, 42vh, 900px);
   border-radius: 20px;
   overflow: hidden;
   isolation: isolate;
