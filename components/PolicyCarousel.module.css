@@ -15,8 +15,8 @@
   background-color: var(--color-white);
 }
 
-/* Everything except <Footer>, so ScrollDownIndicator (absolute, bottom)
-   anchors just above the footer. */
+/* Everything except <Footer>. This is the last page, so it has no
+   ScrollDownIndicator — there's nowhere further to scroll. */
 .contentWrap {
   position: relative;
   flex: 1 1 auto;
@@ -25,15 +25,20 @@
   flex-direction: column;
 }
 
-/* h2 + arrow row: 40px apart, 40px side padding. */
+/* h2 with the arrow buttons at its right end, 40px side padding.
+   Figma stacks the arrows in their own 98px row under the h2; they share
+   the title's row here so the cards sit higher on the page (user request,
+   2026-09-29). The 24u margin + the track's 16cu top padding keep
+   Figma's 40px between this row and the cards. */
 .headerWrap {
   flex: 0 0 auto;
   width: 100%;
   max-width: var(--content-max);
-  margin: 0 auto;
+  margin: 0 auto calc(24 * var(--u));
   padding: 0 calc(40 * var(--u));
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   gap: calc(40 * var(--u));
 }
 
@@ -58,15 +63,9 @@
   line-height: 1.4;
 }
 
-/* Figma "Arrow" row: 98px tall, buttons right-aligned 20px apart. */
-.navRow {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  height: max(calc(98 * var(--u)), 44px);
-}
-
+/* Figma "Arrow" buttons, 20px apart. */
 .navButtons {
+  flex-shrink: 0;
   display: flex;
   gap: max(calc(20 * var(--u)), 10px);
 }
@@ -110,14 +109,12 @@
 }
 
 /* Full-bleed, so the swipeable track visually reaches both screen edges.
-   padding-bottom reserves ScrollDownIndicator's footprint (~90u incl. its
-   24u bottom offset) minus the track's own bottom padding, plus a small gap.
-   It's a size container so the cards can scale to the height left over. */
+   It's a size container so the cards can scale to the height left over
+   above the footer (the track's own 44cu bottom padding is the gap). */
 .trackOuter {
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
-  padding-bottom: calc(62 * var(--u));
   container-type: size;
 }
 
@@ -197,13 +194,16 @@
   }
 }
 
-/* Faint line-pattern texture (the card's own Figma image asset). */
+/* Faint line-pattern texture (the card's own Figma image asset). Figma
+   stretches the landscape image to the portrait card (no crop), which
+   thins the lines into a soft wash; `cover` instead zoomed into the
+   middle and made the curves read far too strong. */
 .cardBg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
   object-position: bottom;
   opacity: 0.8;
   z-index: -1;
@@ -332,7 +332,7 @@
     min-height: 100dvh;
   }
 
-  .navRow {
+  .headerWrap .navButtons {
     display: none;
   }
 
@@ -360,7 +360,7 @@
     align-items: center;
     justify-content: center;
     gap: 18px;
-    padding: 0 var(--space-page-x) 96px;
+    padding: 0 var(--space-page-x) 48px;
     color: var(--color-charcoal);
   }
 }

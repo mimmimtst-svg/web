@@ -4,11 +4,9 @@ import styles from "./PolicyCarousel.module.css";
 import { ArrowRightIcon, CheckIcon, ChevronIcon, PlusIcon } from "./icons";
 import { policyCards } from "@/lib/policyData";
 import { useHorizontalCarousel } from "@/hooks/useHorizontalCarousel";
-import { useSectionSettled } from "@/hooks/useSectionSettled";
 import { withBasePath } from "@/lib/basePath";
 import CarouselDots from "./CarouselDots";
 import Footer from "./Footer";
-import ScrollDownIndicator from "./ScrollDownIndicator";
 
 export default function PolicyCarousel() {
   const {
@@ -23,37 +21,34 @@ export default function PolicyCarousel() {
     onPointerMove,
     endDrag,
   } = useHorizontalCarousel<HTMLUListElement>();
-  const { ref: sectionRef, settled } = useSectionSettled<HTMLElement>();
 
   return (
-    <section className={styles.section} id="policies" ref={sectionRef}>
+    <section className={styles.section} id="policies">
       <div className={styles.contentWrap}>
       <div className={styles.headerWrap}>
         <div className={styles.heading}>
           <PlusIcon />
           <h2 className={styles.headingTitle}>나답게・다함께・앞으로 핵심 공약</h2>
         </div>
-        <div className={styles.navRow}>
-          <div className={styles.navButtons}>
-            <button
-              type="button"
-              className={styles.navButton}
-              onClick={() => scrollByCard(-1)}
-              disabled={atStart}
-              aria-label="이전 카드"
-            >
-              <ChevronIcon />
-            </button>
-            <button
-              type="button"
-              className={`${styles.navButton} ${styles.navButtonNext}`}
-              onClick={() => scrollByCard(1)}
-              disabled={atEnd}
-              aria-label="다음 카드"
-            >
-              <ChevronIcon />
-            </button>
-          </div>
+        <div className={styles.navButtons}>
+          <button
+            type="button"
+            className={styles.navButton}
+            onClick={() => scrollByCard(-1)}
+            disabled={atStart}
+            aria-label="이전 카드"
+          >
+            <ChevronIcon />
+          </button>
+          <button
+            type="button"
+            className={`${styles.navButton} ${styles.navButtonNext}`}
+            onClick={() => scrollByCard(1)}
+            disabled={atEnd}
+            aria-label="다음 카드"
+          >
+            <ChevronIcon />
+          </button>
         </div>
       </div>
 
@@ -73,7 +68,7 @@ export default function PolicyCarousel() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   className={styles.cardBg}
-                  src={withBasePath("/images/policy-card-bg.jpg")}
+                  src={withBasePath("/images/policy-card-bg.png")}
                   alt=""
                   aria-hidden="true"
                 />
@@ -132,8 +127,6 @@ export default function PolicyCarousel() {
           <ChevronIcon />
         </button>
       </div>
-
-      <ScrollDownIndicator active={settled} />
       </div>
 
       <Footer />
