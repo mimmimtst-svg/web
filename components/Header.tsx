@@ -1,13 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Header.module.css";
 import { MenuIcon } from "./icons";
 import { goToSection } from "@/lib/pageNav";
+import SiteMenu from "./SiteMenu";
 
 export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+    menuButtonRef.current?.focus({ preventScroll: true });
+  }, []);
 
   useEffect(() => {
     // Browsers restore the previous scroll position on refresh by default;
@@ -80,26 +87,38 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      ref={headerRef}
-      className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}
-    >
-      <div className={styles.wrapper}>
-        <a
-          className={styles.brand}
-          href="#hero"
-          onClick={(e) => {
-            e.preventDefault();
-            goToSection("hero");
-          }}
-        >
-          <span className={styles.brandLabel}>고려대학교 제22대 총장 후보</span>
-          <span className={styles.brandName}>유병현</span>
-        </a>
-        <button className={styles.menuToggle} type="button" aria-label="메뉴 열기">
-          <MenuIcon />
-        </button>
-      </div>
-    </header>
+    <>
+      <header
+        ref={headerRef}
+        className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}
+      >
+        <div className={styles.wrapper}>
+          <a
+            className={styles.brand}
+            href="#hero"
+            onClick={(e) => {
+              e.preventDefault();
+              goToSection("hero");
+            }}
+          >
+            <span className={styles.brandLabel}>고려대학교 제22대 총장 후보</span>
+            <span className={styles.brandName}>유병현</span>
+          </a>
+          <button
+            className={styles.menuToggle}
+            type="button"
+            ref={menuButtonRef}
+            aria-label="메뉴 열기"
+            aria-haspopup="dialog"
+            aria-expanded={menuOpen}
+            aria-controls="site-menu"
+            onClick={() => setMenuOpen(true)}
+          >
+            <MenuIcon />
+          </button>
+        </div>
+      </header>
+      <SiteMenu id="site-menu" open={menuOpen} onClose={closeMenu} />
+    </>
   );
 }

@@ -391,6 +391,15 @@ const revealedCount = useSequentialReveal(promises.length, settled, entered);
 
 ---
 
+### 4.22 사이트 메뉴 — 햄버거 버튼 (`components/SiteMenu.tsx`, Figma `697:6208`)
+헤더의 햄버거 버튼(`aria-expanded`/`aria-controls`)이 여는 오른쪽 슬라이드 패널. `Header.tsx`가 열림 상태를 갖고 `<SiteMenu>`를 헤더 옆에 렌더링한다.
+- **디자인(Figma)**: 흰 패널 폭 456px·화면 전체 높이, 패딩 20/40, 그림자 `-10px 0 10px rgba(0,0,0,.25)`. 상단: 브랜드 두 줄(12px Regular / 20px ExtraBold, 간격 8, `#333`) + 24px X(`CloseIcon`, 1px 선). 40 아래로 메뉴 5개(22px SemiBold `#333`, 위아래 10 패딩, 간격 10). 맨 아래 E-MAIL(12px Space Mono) + 이메일(16px 대문자), 둘 다 `--color-muted`. 폰에서는 폭 `min(456px, 100vw - 48px)` — 어두운 배경이 한 줄 남아 탭해서 닫을 수 있다.
+- **메뉴 항목 → 섹션**: 유 병 현 → `#hero`, (비전/리더십) → `#plan`, (주요 공약) → `#promises`, (발전 계획서) → `#policies`, (언론 보도 자료) → 아직 연결할 섹션이 없어 닫기만 한다. 라벨의 괄호는 Figma 문구 그대로(가제). 이동은 `goToSection()`(페이지 넘김과 같은 애니메이션).
+- **배경**: 검정 50%(`rgba(0,0,0,.5)`, 사용자 지정). 클릭하면 닫힌다.
+- **모션**: 열림 — 배경 500ms fade, 패널 오른쪽에서 650ms `cubic-bezier(0.16,1,0.3,1)`(빠르게 나와서 부드럽게 멈춤), 메뉴 항목은 180ms 뒤부터 60ms 간격으로 24px 옆에서 fade-in. 닫힘 — 패널 450ms ease-in으로 빠져나가고 항목은 지연 없이 함께 사라진다. 패널은 항상 마운트해 두고 `visibility`(닫힘 전환이 끝난 뒤 숨김) + `inert`로 닫힌 상태에서 포커스·클릭을 막는다.
+- **X hover**: 600ms `cubic-bezier(0.65,0,0.35,1)`로 한 바퀴(360°) 회전. 메뉴 링크 hover는 키 컬러 + 오른쪽 6px.
+- **열려 있는 동안**: `<html data-menu-open>`(`lib/menuState.ts`). window capture 단계에서 wheel/touchmove와 스크롤 키를 막아 뒤 페이지가 움직이지 않고, `SectionPager`·`useSequentialReveal`도 이 속성을 보고 아무것도 하지 않는다(페이지가 넘어가거나 공약 항목이 열리지 않도록). Esc로 닫힘, Tab은 패널 안에서만 돈다, 열면 X에 포커스·닫으면 햄버거로 포커스 복귀.
+
 ## 5. 코드 컨벤션
 
 - **스타일링**: CSS Modules (`*.module.css`), Tailwind 미사용

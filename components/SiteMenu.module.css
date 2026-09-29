@@ -1,0 +1,196 @@
+/* Site menu — Figma "hamburger" (697:6208): a 456px white panel the full
+   height of the screen on the right edge, 40px side / 20px top-bottom
+   padding, shadow -10 0 10 rgba(0,0,0,.25). Over a 50% black backdrop.
+
+   Motion: the backdrop fades while the panel slides in from the right on
+   an expo-out curve; the five links follow in a short stagger. Closing
+   runs the same in reverse, a little quicker and without the stagger.
+   `visibility` waits for the close transition to finish before hiding. */
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  visibility: hidden;
+  transition: visibility 0s linear 500ms;
+}
+
+.root.open {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.open .backdrop {
+  opacity: 1;
+  transition-duration: 500ms;
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  /* On phones a strip of the dimmed page stays visible (tap to close). */
+  width: min(456px, calc(100vw - 48px));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 40px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: var(--color-white);
+  box-shadow: -10px 0 10px rgba(0, 0, 0, 0.25);
+  transform: translateX(calc(100% + 20px));
+  transition: transform 450ms cubic-bezier(0.55, 0, 0.75, 0.2);
+}
+
+.open .panel {
+  transform: translateX(0);
+  transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* div.c-header__wrapper: 20px vertical padding, brand left, X right. */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  color: #333;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.brandLabel {
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.brandName {
+  font-family: var(--font-kr);
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* 24px X. Hover spins it one full turn. */
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-right: -8px;
+  color: #333;
+  transition: transform 600ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.close svg {
+  width: 24px;
+  height: 24px;
+}
+
+@media (hover: hover) {
+  .close:hover {
+    transform: rotate(360deg);
+  }
+}
+
+.close:focus-visible {
+  outline: 1px solid #333;
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+
+/* menu1 rows: 10px vertical padding, 10px apart; 22px SemiBold. */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+}
+
+.item {
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity 250ms ease, transform 250ms ease;
+}
+
+.open .item {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 500ms ease, transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(180ms + var(--i) * 60ms);
+}
+
+.link {
+  display: inline-block;
+  padding: 10px 0;
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.2;
+  color: #333;
+  transition: color 200ms ease, transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+  .link:hover {
+    color: var(--color-key);
+    transform: translateX(6px);
+  }
+}
+
+/* div.footer-detail: 20px top padding, 9px gap, #AEA89B. */
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding-top: 20px;
+  color: var(--color-muted);
+}
+
+.footerLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.footerEmail {
+  font-family: var(--font-kr);
+  font-size: 16px;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .panel,
+  .item,
+  .close {
+    transition-duration: 1ms !important;
+    transition-delay: 0s !important;
+  }
+}

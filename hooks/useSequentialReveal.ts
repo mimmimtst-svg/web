@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { isNewWheelGesture } from "@/lib/wheelGesture";
+import { isMenuOpen } from "@/lib/menuState";
 
 /**
  * Drives a "reveal one more item per discrete scroll" sequence, for a
@@ -62,13 +63,14 @@ export function useSequentialReveal(total: number, active: boolean, present: boo
     };
 
     const onWheel = (e: WheelEvent) => {
-      if (e.deltaY <= 0) return;
+      if (e.deltaY <= 0 || isMenuOpen()) return;
       e.preventDefault();
       // One flick = one step: its momentum tail (including the tail of the
       // flick that paged into this section) is swallowed, not counted.
       if (isNewWheelGesture(e)) step();
     };
     const onKeyDown = (e: KeyboardEvent) => {
+      if (isMenuOpen()) return;
       if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === " ") {
         e.preventDefault();
         advance();
@@ -78,6 +80,7 @@ export function useSequentialReveal(total: number, active: boolean, present: boo
       touchYRef.current = e.touches[0]?.clientY ?? null;
     };
     const onTouchMove = (e: TouchEvent) => {
+      if (isMenuOpen()) return;
       const startY = touchYRef.current;
       const currentY = e.touches[0]?.clientY;
       if (startY == null || currentY == null) return;

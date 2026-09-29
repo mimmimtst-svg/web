@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { isNewWheelGesture } from "@/lib/wheelGesture";
 import { GOTO_EVENT } from "@/lib/pageNav";
 import { PORTRAIT } from "@/hooks/useMediaQuery";
+import { isMenuOpen } from "@/lib/menuState";
 
 /** One page turn: the next section slides up into place over this long. */
 const DURATION_MS = 850;
@@ -107,7 +108,7 @@ export default function SectionPager() {
     };
 
     const onWheel = (e: WheelEvent) => {
-      if (mobile.matches) return;
+      if (mobile.matches || isMenuOpen()) return;
       // A trackpad flick's momentum tail belongs to the gesture that
       // already turned the page (lib/wheelGesture.ts).
       const newGesture = isNewWheelGesture(e);
@@ -131,7 +132,7 @@ export default function SectionPager() {
     };
 
     const onTouchStart = (e: TouchEvent) => {
-      if (mobile.matches) {
+      if (mobile.matches || isMenuOpen()) {
         touch = null;
         return;
       }
@@ -171,7 +172,7 @@ export default function SectionPager() {
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (mobile.matches) return;
+      if (mobile.matches || isMenuOpen()) return;
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || isTyping(e.target)) return;
       const onButton = e.target instanceof HTMLElement && /^(BUTTON|A)$/.test(e.target.tagName);
       let dir: 1 | -1 | 0 = 0;
