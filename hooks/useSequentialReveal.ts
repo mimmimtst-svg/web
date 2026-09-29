@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { isNewWheelGesture } from "@/lib/wheelGesture";
 
 /**
  * Drives a "reveal one more item per discrete scroll" sequence, for a
@@ -18,9 +19,10 @@ import { useEffect, useRef, useState } from "react";
  *
  * `active` (section snapped into place) gates the interception; `present`
  * (section at least partly on screen) gates the reset. They're separate
- * on purpose: a short scroll that ScrollMagnet pulls back briefly
- * un-settles the section without it ever leaving, and resetting on that
- * would throw away the reveal the user just stepped through. Only
+ * on purpose: anything that briefly nudges the page (a resize realign,
+ * a partial swipe) un-settles the section without it leaving, and
+ * resetting on that would throw away the reveal the user just stepped
+ * through. Only
  * scrolling the section fully off screen replays it from the start.
  */
 export function useSequentialReveal(total: number, active: boolean, present: boolean) {
@@ -47,10 +49,13 @@ export function useSequentialReveal(total: number, active: boolean, present: boo
     }
     if (revealedCount >= total) return;
 
+    const step = () => setRevealedCount((count) => Math.min(count + 1, total));
+    // Touch and key input have no gesture boundaries to go by, so they're
+    // rate-limited instead.
     const advance = () => {
       if (cooldownRef.current) return;
       cooldownRef.current = true;
-      setRevealedCount((count) => Math.min(count + 1, total));
+      step();
       window.setTimeout(() => {
         cooldownRef.current = false;
       }, 700);
@@ -59,7 +64,9 @@ export function useSequentialReveal(total: number, active: boolean, present: boo
     const onWheel = (e: WheelEvent) => {
       if (e.deltaY <= 0) return;
       e.preventDefault();
-      advance();
+      // One flick = one step: its momentum tail (including the tail of the
+      // flick that paged into this section) is swallowed, not counted.
+      if (isNewWheelGesture(e)) step();
     };
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === " ") {
@@ -81,15 +88,18 @@ export function useSequentialReveal(total: number, active: boolean, present: boo
       }
     };
 
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    // Capture phase, so these run before SectionPager's (bubble-phase)
+    // listeners on the same window and can claim the gesture first —
+    // SectionPager leaves anything already `preventDefault`ed alone.
+    window.addEventListener("wheel", onWheel, { passive: false, capture: true });
+    window.addEventListener("keydown", onKeyDown, { capture: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true, capture: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false, capture: true });
     return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("wheel", onWheel, { capture: true });
+      window.removeEventListener("keydown", onKeyDown, { capture: true });
+      window.removeEventListener("touchstart", onTouchStart, { capture: true });
+      window.removeEventListener("touchmove", onTouchMove, { capture: true });
     };
   }, [active, present, revealedCount, total]);
 

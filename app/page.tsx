@@ -3,13 +3,13 @@ import Hero from "@/components/Hero";
 import DevelopmentPlan from "@/components/DevelopmentPlan";
 import Promises from "@/components/Promises";
 import PolicyCarousel from "@/components/PolicyCarousel";
-import ScrollMagnet from "@/components/ScrollMagnet";
+import SectionPager from "@/components/SectionPager";
 
 export default function Home() {
   return (
     <>
       <Header />
-      <ScrollMagnet />
+      <SectionPager />
       <main>
         <Hero />
         <DevelopmentPlan />

@@ -1,23 +1,22 @@
+/* Section 4 — sized from Figma section4 (node 614:6270) at the 1920x1080
+   frame. Heading and nav use the page-wide Figma unit --u (globals.css),
+   so the title matches section 3's exactly; the cards use --cu (below),
+   which is --u capped by the height the carousel actually has, because
+   this section also carries the footer and the scroll indicator. */
 .section {
   width: 100%;
-  /* Fixed (not min-) height + overflow:hidden is the hard backstop that
-     guarantees this section — header, cards and footer together — never
-     exceeds one screen on any tablet/PC width, matching Promises (see its
-     CSS module for the fuller rationale). Everything below is sized with
-     vh-blended clamp()s so it already fits before this backstop would
-     ever need to actually clip anything. */
+  /* Fixed height + overflow hidden: the one-screen-fit backstop
+     (docs/DESIGN_SYSTEM.md 4.9). */
   height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 0;
-  padding-top: calc(var(--header-height) + clamp(8px, 1.6vh, var(--space-section-y)));
+  padding-top: calc(var(--header-height) + 40 * var(--u));
   background-color: var(--color-white);
 }
 
-/* Wraps everything except <Footer> so ScrollDownIndicator (position:
-   absolute; bottom: 24px) anchors just above the footer instead of at
-   the very bottom of the whole section (which Footer itself occupies). */
+/* Everything except <Footer>, so ScrollDownIndicator (absolute, bottom)
+   anchors just above the footer. */
 .contentWrap {
   position: relative;
   flex: 1 1 auto;
@@ -26,57 +25,58 @@
   flex-direction: column;
 }
 
+/* h2 + arrow row: 40px apart, 40px side padding. */
 .headerWrap {
   flex: 0 0 auto;
   width: 100%;
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 0 var(--space-page-x);
+  padding: 0 calc(40 * var(--u));
   display: flex;
   flex-direction: column;
-  /* vh-blended (not just vw) so this closes up on short screens too —
-     see .section's height:100dvh + overflow:hidden backstop comment. */
-  gap: clamp(12px, 1.8vw + 1.6vh, 60px);
+  gap: calc(40 * var(--u));
 }
 
 .heading {
   display: flex;
   align-items: center;
-  gap: clamp(10px, 1.2vw, 16px);
+  gap: max(calc(16 * var(--u)), 8px);
   color: var(--color-line);
 }
 
 .heading svg {
-  width: clamp(16px, 1.2vw + 1vh, 32px);
-  height: clamp(16px, 1.2vw + 1vh, 32px);
+  width: max(calc(32 * var(--u)), 20px);
+  height: max(calc(32 * var(--u)), 20px);
   flex-shrink: 0;
 }
 
 .headingTitle {
   font-family: var(--font-kr);
   font-weight: 400;
-  /* Shared with Promises's .headingTitle — see the token's comment in
-     globals.css for why this must not be a component-local value. */
+  /* Shared with Promises's .headingTitle (globals.css). */
   font-size: var(--fs-section-title-fit);
-  line-height: 1.3;
+  line-height: 1.4;
 }
 
+/* Figma "Arrow" row: 98px tall, buttons right-aligned 20px apart. */
 .navRow {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  height: max(calc(98 * var(--u)), 44px);
 }
 
 .navButtons {
   display: flex;
-  gap: 10px;
+  gap: max(calc(20 * var(--u)), 10px);
 }
 
 .navButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(36px, 3vw, 50px);
-  height: clamp(36px, 3vw, 50px);
+  width: max(calc(50 * var(--u)), 36px);
+  height: max(calc(50 * var(--u)), 36px);
   border: 1px solid var(--color-muted);
   border-radius: 999px;
   color: var(--color-charcoal);
@@ -96,7 +96,7 @@
 }
 
 .navButton svg {
-  width: 40%;
+  width: 50%;
   height: auto;
 }
 
@@ -104,55 +104,43 @@
   transform: rotate(180deg);
 }
 
-/* Bottom prev/dots/next bar shown only on phones (see the max-width:640px
-   block below), replacing the top-right nav buttons once a card fills
-   almost the entire viewport width and the top row gets cramped next to
-   the title. */
+/* Phones only (see the max-width: 640px block). */
 .mobileNav {
   display: none;
 }
 
-/* Full-bleed wrapper: no side margin, so the swipeable area visually
-   reaches both screen edges (the cue that it scrolls). Only the track's
-   own padding pulls the resting card position back in to line up with
-   the page margin. */
+/* Full-bleed, so the swipeable track visually reaches both screen edges.
+   padding-bottom reserves ScrollDownIndicator's footprint (~90u incl. its
+   24u bottom offset) minus the track's own bottom padding, plus a small gap.
+   It's a size container so the cards can scale to the height left over. */
 .trackOuter {
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
-  /* .track carries a much larger top/bottom padding (see below) that eats
-     into this gap, so the resting position above the cards stays the
-     same as before that padding existed. */
-  margin-top: calc(clamp(16px, 2vw, 32px) - 16px);
-  /* Reserves room for ScrollDownIndicator, which is `position: absolute;
-     bottom: 24px` within .contentWrap (see that component) — without this,
-     a card's shadow/edge sits close enough to .contentWrap's bottom that
-     the indicator's label + bobbing chevron visually overlap the card. */
-  padding-bottom: clamp(70px, 6vw + 2vh, 100px);
+  padding-bottom: calc(62 * var(--u));
+  container-type: size;
 }
 
+/* div.swiper: 40px gap, 40px side padding. The 16/44 vertical padding
+   (Figma: 20/20 around the 584px cards) leaves room for the card's
+   drop shadow, which overflow-x: auto would otherwise clip. */
 .track {
+  /* Figma px -> screen px for the cards. The carousel scrolls
+     sideways, so width isn't the constraint — the cards take the height
+     the carousel has (card + 60 Figma px of padding = 644), capped at
+     Figma's own size and at one card fitting across the screen. */
+  --cu: min(1px, calc(100cqh / 644), calc((100vw - 80px) / 504));
   height: 100%;
   display: flex;
-  align-items: stretch;
-  gap: var(--gap-md);
-  /* Overflow clipping happens at the padding edge, not the content edge.
-     .cardInner now carries a permanent box-shadow (0 12px 15px, growing to
-     0 20px 30px on hover) rather than only-on-hover — that shadow reaches
-     up to ~10px above and ~50px below the card at its largest (hover),
-     which overflow-x: auto (forcing overflow-y to auto too, per spec)
-     will clip unless the track's own padding gives it that much room. */
-  padding: 16px var(--space-page-x) 56px;
+  align-items: flex-start;
+  gap: calc(40 * var(--cu));
+  padding: calc(16 * var(--cu)) calc(40 * var(--u)) calc(44 * var(--cu));
   overflow-x: auto;
   scroll-snap-type: x proximity;
-  /* Without this, proximity snapping ignores the padding above and
-     auto-corrects scrollLeft on first paint so card 1 sits flush
-     against the true edge — the left margin only "appeared" after a
-     scrollBy() (button click) forced a recompute. scroll-padding tells
-     the snap calculation the inset is intentional, so it settles at
-     scrollLeft 0 (padding visible) instead of scrolling past it. */
-  scroll-padding-left: var(--space-page-x);
-  scroll-padding-right: var(--space-page-x);
+  /* Without this, proximity snapping ignores the side padding on first
+     paint and parks card 1 flush against the screen edge. */
+  scroll-padding-left: calc(40 * var(--u));
+  scroll-padding-right: calc(40 * var(--u));
   cursor: grab;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -171,30 +159,15 @@
   display: none;
 }
 
-/* .card is the scroll-snap-align target — it must never receive its own
-   `transform` (hover, etc.). Applying a transform directly to a
-   scroll-snap target can make some browsers re-evaluate proximity
-   snapping against its post-transform box, which was observed pulling
-   the track's scroll position flush left on hover. The hover lift lives
-   on .cardInner instead, one level down, so the snap target itself stays
-   inert. */
+/* .card is the scroll-snap target and must never get its own transform
+   (some browsers re-evaluate snapping against the transformed box, which
+   yanked the track flush-left on hover). Visuals + hover live on
+   .cardInner. Figma card: 504 x 584. */
 .card {
   scroll-snap-align: start;
   flex: 0 0 auto;
-  /* Wider than Figma's flat 504px reference — at that width the longest
-     title ("전문적 행정과 인사경영") ran into the header icon. Wrapping
-     the title (see .cardTitle) is the real fix; the extra width just
-     keeps most cards on one line so wrapping is the exception. */
-  width: clamp(340px, 30vw, 560px);
-  /* .cardInner is height:100% of this, which is itself stretched
-     (align-items: stretch) to fill .track's full cross-axis height —
-     on a short/wide viewport that's exactly right, but on a tall
-     portrait tablet (.trackOuter has a LOT of vertical room to fill)
-     it stretched cards to 800px+ with all their actual content
-     (title + category list) crammed into the top ~200px and a huge
-     empty gap below — looked broken, not just "roomy". This caps it at
-     roughly the 1920x1080 reference proportions. */
-  max-height: clamp(280px, 55vh, 620px);
+  width: calc(504 * var(--cu));
+  height: calc(584 * var(--cu));
 }
 
 .cardInner {
@@ -211,14 +184,20 @@
     box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cardInner:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.22);
+@media (hover: hover) {
+  .cardInner:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 24px rgba(0, 0, 0, 0.2);
+  }
 }
 
-/* Same subtle line-pattern texture as the Hero background, at low
-   opacity behind the card content — a decorative echo rather than a
-   photo, matching Figma's own (very faint) treatment here. */
+@media (prefers-reduced-motion: reduce) {
+  .cardInner:hover {
+    transform: none;
+  }
+}
+
+/* Faint line-pattern texture (the card's own Figma image asset). */
 .cardBg {
   position: absolute;
   inset: 0;
@@ -230,60 +209,44 @@
   z-index: -1;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .cardInner:hover {
-    transform: none;
-  }
-}
-
+/* div.p-3: 40 / 30 / 20 / 40 padding; number + title, arrow icon right. */
 .cardHead {
   flex: 0 0 auto;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 14px;
-  /* vh-blended so this (and .cardCategories below) gives up room on a
-     short screen before .cardInner's overflow:hidden has to start
-     clipping category text — see .section's height:100dvh backstop. */
-  padding: clamp(10px, 1vw + 0.7vh, 40px) clamp(18px, 1.56vw, 30px)
-    clamp(6px, 0.6vw + 0.3vh, 20px) clamp(10px, 1vw + 0.7vh, 40px);
+  gap: calc(14 * var(--cu));
+  padding: calc(40 * var(--cu)) calc(30 * var(--cu)) calc(20 * var(--cu))
+    calc(40 * var(--cu));
 }
 
 .cardTitleRow {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
   flex-wrap: wrap;
-  gap: 6px 15px;
+  gap: calc(6 * var(--cu)) calc(15 * var(--cu));
   min-width: 0;
+}
+
+/* 34px SemiBold, key color. */
+.cardNumber,
+.cardTitle {
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: max(calc(34 * var(--cu)), 1rem);
+  line-height: 1.2;
+  color: var(--color-key);
 }
 
 .cardNumber {
-  font-family: var(--font-kr);
-  font-weight: 600;
-  font-size: clamp(1.15rem, 0.9rem + 1.02vw, 2.125rem);
-  line-height: 1.2;
-  color: var(--color-key);
   white-space: nowrap;
 }
 
-/* white-space stays normal (not nowrap) so the longest title ("전문적
-   행정과 인사경영") wraps onto a second line instead of overlapping
-   .cardHeadLink — see the .card width comment for the other half of
-   this fix. */
 .cardTitle {
-  flex: 1 1 auto;
   min-width: 0;
-  font-family: var(--font-kr);
-  font-weight: 600;
-  font-size: clamp(1.15rem, 0.9rem + 1.02vw, 2.125rem);
-  line-height: 1.2;
-  color: var(--color-key);
 }
 
-/* Replaces the old bottom "자세히 보기" text link — Figma's updated card
-   only has this single icon-only affordance, top-right of the head row.
-   Color is the icon's own literal Figma fill (#AEA89B / --color-muted),
-   not the card's key-red text color. */
+/* Icon-only link, the icon's own Figma fill (#AEA89B). */
 .cardHeadLink {
   flex: 0 0 auto;
   display: flex;
@@ -298,49 +261,56 @@
 }
 
 .cardHeadLink svg {
-  width: clamp(18px, 1.56vw, 30px);
+  width: max(calc(30 * var(--cu)), 18px);
   height: auto;
 }
 
+/* contents: 25 / 50 / 40 padding, 35px between category groups. */
 .cardCategories {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(4px, 0.5vw + 0.4vh, 30px);
-  padding: clamp(4px, 0.5vw + 0.3vh, 20px) clamp(24px, 2.08vw, 40px)
-    clamp(6px, 0.6vw + 0.4vh, 35px);
+  gap: calc(35 * var(--cu));
+  padding: calc(25 * var(--cu)) calc(50 * var(--cu)) calc(40 * var(--cu));
 }
 
+/* Label, then 6.8px, then the item list. */
 .category {
   display: flex;
   flex-direction: column;
-  gap: clamp(1px, 0.2vw + 0.15vh, 6.8px);
+  gap: calc(6.8 * var(--cu));
 }
 
+/* 14px / 19.6px Medium, key color. */
 .categoryLabel {
   font-family: var(--font-kr);
   font-weight: 500;
-  font-size: clamp(0.7rem, 0.65rem + 0.2vw, 0.875rem);
+  font-size: max(calc(14 * var(--cu)), 0.625rem);
+  line-height: 1.4;
   color: var(--color-key);
-  white-space: nowrap;
+  white-space: pre-wrap;
 }
 
+/* 4px between items. */
 .categoryItems {
   display: flex;
   flex-direction: column;
+  gap: calc(4 * var(--cu));
 }
 
+/* Check icon + 18px Light text on a 28px row. */
 .categoryItem {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  height: clamp(12px, 0.7vw + 0.75vh, 28px);
+  align-items: flex-start;
+  gap: calc(10 * var(--cu));
 }
 
 .categoryItem svg {
-  width: 10px;
-  height: auto;
   flex-shrink: 0;
+  width: max(calc(10 * var(--cu)), 8px);
+  height: auto;
+  /* Centers the check on the first 28px text line. */
+  margin-top: calc(10.6 * var(--cu));
   color: var(--color-key);
 }
 
@@ -349,15 +319,16 @@
   min-width: 0;
   font-family: var(--font-kr);
   font-weight: 300;
-  font-size: clamp(0.72rem, 0.6rem + 0.45vw, 1.125rem);
+  font-size: max(calc(18 * var(--cu)), 0.6875rem);
+  line-height: 1.556;
   color: var(--color-charcoal);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
+/* Phones: one card at a time (width-driven), prev/dots/next underneath,
+   and the section grows past one screen instead of shrinking cards. */
 @media (max-width: 640px) {
   .section {
+    height: auto;
     min-height: 100dvh;
   }
 
@@ -365,22 +336,23 @@
     display: none;
   }
 
-  .card {
-    width: min(92vw, 430px);
-  }
-
   .trackOuter {
-    padding-bottom: clamp(10px, 2vh, 18px);
+    container-type: normal;
+    padding-bottom: 0;
   }
 
-  .cardHead,
-  .cardCategories {
-    padding-left: clamp(16px, 4vw, 24px);
-    padding-right: clamp(16px, 4vw, 24px);
+  .track {
+    --cu: calc(min(92vw, 430px) / 504);
+    height: auto;
   }
 
-  .categoryItem span {
-    font-size: clamp(0.72rem, 0.66rem + 1vw, 0.9rem);
+  .card {
+    height: auto;
+    min-height: calc(584 * var(--cu));
+  }
+
+  .categoryItem svg {
+    margin-top: 0.55em;
   }
 
   .mobileNav {
@@ -388,8 +360,7 @@
     align-items: center;
     justify-content: center;
     gap: 18px;
-    padding: 0 var(--space-page-x);
-    margin-top: 14px;
+    padding: 0 var(--space-page-x) 96px;
     color: var(--color-charcoal);
   }
 }

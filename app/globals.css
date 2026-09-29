@@ -100,11 +100,9 @@
 
 html {
   height: 100%;
-  /* No CSS scroll-snap here. `scroll-snap-type: y mandatory` commits to
-     the next section after even a tiny scroll; section snapping is done
-     by components/ScrollMagnet.tsx instead, which only pulls the next
-     section in once it's ~80% on screen and otherwise returns. Also no
-     `scroll-behavior: smooth` — ScrollMagnet animates its own snaps. */
+  /* No CSS scroll-snap and no `scroll-behavior: smooth`: section paging
+     (one gesture = one page, sliding the next section up) is driven by
+     components/SectionPager.tsx, which animates its own transitions. */
   /* Self-hosted Pretendard swapping in after the fallback font (or a
      mobile toolbar changing 100dvh) can nudge scrollY by a few px right
      after load; scroll anchoring is what performs that nudge. Turning it
