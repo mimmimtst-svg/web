@@ -180,11 +180,14 @@
    neighbours peeking in at 50% opacity, then 10px dots (20px apart,
    #AEA89B, inactive at 50%) and 40px bottom padding. */
 @media (orientation: portrait) {
-  /* 10u of the top padding and the dots' 10u gap move into the track's
-     own padding (below), so the layout is unchanged. */
+  /* Figma's section2_body pt 40, straight under the hero — not under a
+     header-height gap too (Figma draws a header inside section2, but here
+     the real header floats over the page; adding its height left ~124u of
+     blank white above the cards). 10u of the 40 and the dots' 10u gap
+     move into the track's own padding (below). */
   .section {
     height: auto;
-    padding: calc(var(--header-height) + 30 * var(--mu)) 0 calc(40 * var(--mu));
+    padding: calc(30 * var(--mu)) 0 calc(40 * var(--mu));
   }
 
   .inner {
@@ -235,6 +238,15 @@
 
   .cardActive .cardInner {
     opacity: 1;
+  }
+
+  /* The desktop hover shadow (0 20 40 -20) reaches ~20px under the card,
+     past the track's 10u bottom padding, and got cut off. Tighter and
+     higher so it stays inside. */
+  @media (hover: hover) {
+    .cardInner:hover {
+      box-shadow: 0 calc(8 * var(--mu)) calc(12 * var(--mu)) calc(-6 * var(--mu)) rgba(0, 0, 0, 0.4);
+    }
   }
 
   /* div.works-item__txt: 75 / 30 / 50 padding, spread top to bottom. */
