@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Header.module.css";
 import { MenuIcon } from "./icons";
+import { goToSection } from "@/lib/pageNav";
 
 export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
@@ -84,10 +85,17 @@ export default function Header() {
       className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}
     >
       <div className={styles.wrapper}>
-        <p className={styles.brand}>
+        <a
+          className={styles.brand}
+          href="#hero"
+          onClick={(e) => {
+            e.preventDefault();
+            goToSection("hero");
+          }}
+        >
           <span className={styles.brandLabel}>고려대학교 제22대 총장 후보</span>
           <span className={styles.brandName}>유병현</span>
-        </p>
+        </a>
         <button className={styles.menuToggle} type="button" aria-label="메뉴 열기">
           <MenuIcon />
         </button>

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { isNewWheelGesture } from "@/lib/wheelGesture";
+import { GOTO_EVENT } from "@/lib/pageNav";
 
 /** One page turn: the next section slides up into place over this long. */
 const DURATION_MS = 850;
@@ -59,7 +60,7 @@ export default function SectionPager() {
       document.documentElement.toggleAttribute("data-paged", fits);
     };
 
-    const animateTo = (rawTarget: number) => {
+    const animateTo = (rawTarget: number, duration = DURATION_MS) => {
       const target = Math.max(0, Math.min(rawTarget, maxScroll()));
       const start = window.scrollY;
       const distance = target - start;
@@ -71,7 +72,7 @@ export default function SectionPager() {
       animating = true;
       const startedAt = performance.now();
       const step = (now: number) => {
-        const progress = Math.min(1, (now - startedAt) / DURATION_MS);
+        const progress = Math.min(1, (now - startedAt) / duration);
         window.scrollTo(0, start + distance * easeInOutCubic(progress));
         if (progress < 1) frame = requestAnimationFrame(step);
         else {
@@ -207,6 +208,20 @@ export default function SectionPager() {
       if (y - from < 2 || to <= from || to - from > vh * 1.05) return;
       animateTo(y - from < to - y ? from : to);
     };
+    // goToSection() (lib/pageNav.ts): a link to a page glides there with
+    // the same page-turn animation.
+    const onGoto = (e: Event) => {
+      const el = document.getElementById((e as CustomEvent<string>).detail);
+      if (!el) return;
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
+      animating = false;
+      const target = el.getBoundingClientRect().top + window.scrollY;
+      // A jump across several pages gets a little longer, not 3x as fast.
+      const pages = Math.abs(target - window.scrollY) / window.innerHeight;
+      animateTo(target, Math.min(1400, DURATION_MS + Math.max(0, pages - 1) * 250));
+    };
+
     const onResize = () => {
       updatePaged();
       scheduleRealign();
@@ -227,6 +242,7 @@ export default function SectionPager() {
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("scroll", scheduleRealign, { passive: true });
     window.addEventListener("resize", onResize);
+    window.addEventListener(GOTO_EVENT, onGoto);
     return () => {
       document.documentElement.removeAttribute("data-paged");
       if (frame) cancelAnimationFrame(frame);
@@ -239,6 +255,7 @@ export default function SectionPager() {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("scroll", scheduleRealign);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener(GOTO_EVENT, onGoto);
     };
   }, []);
 
