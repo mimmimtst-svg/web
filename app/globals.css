@@ -110,6 +110,18 @@ html {
   overflow-anchor: none;
 }
 
+/* Set by SectionPager while every section fits one screen: the page then
+   moves only by whole pages, so the browser's own vertical panning is
+   off (horizontal carousel swipes and pinch-zoom stay). A native pan on
+   iOS can't be cancelled once it starts, and its momentum carried the page
+   past the next section before the page turn pulled it back. No rubber-band
+   bounce at the first/last page either. */
+html[data-paged],
+html[data-paged] body {
+  touch-action: pan-x pinch-zoom;
+  overscroll-behavior-y: none;
+}
+
 /* overflow-x: hidden lives on body only — the same rule on html
    disables CSS scroll-snap in some Chromium builds. */
 body {

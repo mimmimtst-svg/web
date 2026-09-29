@@ -32,7 +32,13 @@ export default function SectionPager() {
     let animating = false;
     let frame = 0;
     let gestureUsed = false;
-    let touch: { x: number; y: number; axis: "x" | "y" | null; claimed: boolean } | null = null;
+    let touch: {
+      x: number;
+      y: number;
+      scrollY: number;
+      axis: "x" | "y" | null;
+      claimed: boolean;
+    } | null = null;
     let idleTimer: ReturnType<typeof setTimeout> | undefined;
 
     const sections = () =>
@@ -41,6 +47,17 @@ export default function SectionPager() {
         return { top, bottom: top + el.offsetHeight };
       });
     const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight;
+
+    // Every section fits one screen: the page only ever moves by whole
+    // pages, so native vertical panning is switched off in CSS
+    // (html[data-paged], globals.css). On iOS a pan that has started can't
+    // be cancelled from JS any more, and its momentum carried the page past
+    // the next section before the page turn pulled it back.
+    const updatePaged = () => {
+      const vh = window.innerHeight;
+      const fits = sections().every((s) => s.bottom - s.top <= vh + 2);
+      document.documentElement.toggleAttribute("data-paged", fits);
+    };
 
     const animateTo = (rawTarget: number) => {
       const target = Math.max(0, Math.min(rawTarget, maxScroll()));
@@ -68,8 +85,7 @@ export default function SectionPager() {
     /** Where one page turn in `dir` should go, or null to let the
         browser scroll natively (inside a section taller than the screen,
         or already at the first/last page). */
-    const pageTarget = (dir: 1 | -1) => {
-      const y = window.scrollY;
+    const pageTarget = (dir: 1 | -1, y = window.scrollY) => {
       const vh = window.innerHeight;
       const list = sections();
       if (!list.length) return null;
@@ -110,7 +126,10 @@ export default function SectionPager() {
 
     const onTouchStart = (e: TouchEvent) => {
       const t = e.touches[0];
-      touch = t && e.touches.length === 1 ? { x: t.clientX, y: t.clientY, axis: null, claimed: false } : null;
+      touch =
+        t && e.touches.length === 1
+          ? { x: t.clientX, y: t.clientY, scrollY: window.scrollY, axis: null, claimed: false }
+          : null;
     };
     const onTouchMove = (e: TouchEvent) => {
       const t = e.touches[0];
@@ -135,7 +154,9 @@ export default function SectionPager() {
       if (!started || !t || started.claimed || started.axis !== "y" || animating) return;
       const dy = started.y - t.clientY;
       if (Math.abs(dy) < SWIPE_PX) return;
-      const target = pageTarget(dy > 0 ? 1 : -1);
+      // Paged from where the swipe started, so any native movement during
+      // the swipe can't make it skip or fall short of a page.
+      const target = pageTarget(dy > 0 ? 1 : -1, started.scrollY);
       if (target !== null) animateTo(target);
     };
 
@@ -186,12 +207,17 @@ export default function SectionPager() {
       if (y - from < 2 || to <= from || to - from > vh * 1.05) return;
       animateTo(y - from < to - y ? from : to);
     };
+    const onResize = () => {
+      updatePaged();
+      scheduleRealign();
+    };
     const scheduleRealign = () => {
       if (animating) return;
       clearTimeout(idleTimer);
       idleTimer = setTimeout(realign, 200);
     };
 
+    updatePaged();
     const active = { passive: false } as const;
     window.addEventListener("wheel", onWheel, active);
     window.addEventListener("touchstart", onTouchStart, { passive: true });
@@ -200,8 +226,9 @@ export default function SectionPager() {
     window.addEventListener("touchcancel", onTouchEnd, { passive: true });
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("scroll", scheduleRealign, { passive: true });
-    window.addEventListener("resize", scheduleRealign);
+    window.addEventListener("resize", onResize);
     return () => {
+      document.documentElement.removeAttribute("data-paged");
       if (frame) cancelAnimationFrame(frame);
       clearTimeout(idleTimer);
       window.removeEventListener("wheel", onWheel);
@@ -211,7 +238,7 @@ export default function SectionPager() {
       window.removeEventListener("touchcancel", onTouchEnd);
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("scroll", scheduleRealign);
-      window.removeEventListener("resize", scheduleRealign);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
