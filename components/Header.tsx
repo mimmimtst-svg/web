@@ -15,6 +15,30 @@ export default function Header() {
       history.scrollRestoration = "manual";
     }
     window.scrollTo(0, 0);
+
+    // A single scrollTo on mount isn't always enough: self-hosted fonts
+    // swapping in, or (on iPad Safari especially) the address-bar chrome
+    // animating away and changing 100dvh, can both shift layout above the
+    // viewport shortly after mount. With `scroll-snap-type: y mandatory`
+    // even a few px of drift is enough to resolve to section 2's snap
+    // point instead of back to 0 (`overflow-anchor: none` in globals.css
+    // removes one cause of that; these re-asserts cover the rest). Also
+    // reasserted on `pageshow` for the bfcache-restore case (Safari
+    // back/forward or a reload that revives a cached page — 'load' won't
+    // fire again for that, but 'pageshow' does).
+    // Guarded by scrollY so this only ever corrects small, unintentional
+    // drift from a layout shift — if the user has already deliberately
+    // scrolled a real distance by the time 'load'/'pageshow' fires (slow
+    // network, big hero image), this must not yank them back to the top.
+    const reassert = () => {
+      if (window.scrollY < 100) window.scrollTo(0, 0);
+    };
+    window.addEventListener("load", reassert);
+    window.addEventListener("pageshow", reassert);
+    return () => {
+      window.removeEventListener("load", reassert);
+      window.removeEventListener("pageshow", reassert);
+    };
   }, []);
 
   useEffect(() => {

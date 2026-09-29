@@ -1,21 +1,19 @@
 .section {
   position: relative;
   width: 100%;
-  min-height: 100dvh;
+  /* height (not min-height) + overflow hidden is this project's one-
+     screen-fit backstop (see docs/DESIGN_SYSTEM.md 4.9) — needed here
+     too once .inner reserves bottom padding for ScrollDownIndicator
+     (below), which on a portrait tablet's 2-column card grid otherwise
+     pushed the section past 100dvh instead of just tightening up. */
+  height: 100dvh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   padding: calc(var(--header-height) + var(--space-section-y)) var(--space-page-x)
     var(--space-section-y);
   background-color: var(--color-white);
   scroll-snap-align: start;
-  /* Before a card settles, Reveal hides it with `transform: translateX(±667px)`
-     (see CARD_MOTION in DevelopmentPlan.tsx) — that pushes the side cards'
-     painted position hundreds of px past the section's own edge, which
-     without local clipping expands `<html>`'s real scrollable width (this
-     project can't fix that with `overflow-x: hidden` on `html`/`body` —
-     see 4.8's scroll-snap-breaks-on-html-overflow-x-hidden note). Clipping
-     it here, one component-scoped level down, avoids that entirely. */
-  overflow-x: hidden;
 }
 
 .inner {
@@ -26,6 +24,15 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* Reserves room for ScrollDownIndicator (`position: absolute; bottom:
+     24px` in .section) so the vertically-centered grid doesn't sit low
+     enough to overlap it — this section has no heading (see comment
+     below) eating space above the grid, so it can afford to sit higher.
+     Confirmed by measurement: without this, cards overlapped the
+     indicator by ~40-50px on portrait tablet widths (2-column grid,
+     taller aspect-ratio cards), worse still once a mobile browser's
+     address bar hides and 100dvh shrinks further. */
+  padding-bottom: clamp(80px, 6vw + 4vh, 120px);
 }
 
 /* No section heading here — Figma's updated file (synced 2026-09-28)
@@ -161,6 +168,17 @@
 @media (max-width: 1023px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Tighter than the single-row (3-column) cap above — at this width 3
+     cards wrap into 2 rows, so the same 42vh cap per card (2x stacked)
+     was overlapping ScrollDownIndicator on portrait tablets. Scoped to
+     this breakpoint only: the single-row desktop layout needs its
+     card's full content (title/subtitle/desc/link) to fit without the
+     .cardInner's overflow:hidden clipping the title off the top, which
+     this tighter cap doesn't leave room for. */
+  .card {
+    max-height: clamp(240px, 34vh, 900px);
   }
 }
 

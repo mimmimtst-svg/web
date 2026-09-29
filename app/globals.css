@@ -36,6 +36,22 @@
   --fs-hero-kr: clamp(2rem, 1.28rem + 3.6vw, 5.625rem); /* 32 → 90 */
   --fs-hero-en: clamp(1.375rem, 0.86rem + 2.6vw, 4.375rem); /* 22 → 70 */
   --fs-section-title: clamp(1.5rem, 1.16rem + 1.7vw, 2.494rem); /* 24 → 39.9 */
+  /* The vw-only scale above never shrinks on a short-but-wide viewport
+     (e.g. 1280x720) — it only reacts to width. This vh-based ceiling
+     kicks in via min() only when the viewport is short enough for it to
+     be *smaller* than the vw-based value above; on any normal-height
+     viewport (effectively everything except short landscape tablets/
+     laptops) it's larger than --fs-section-title and so never wins,
+     leaving the original scale completely untouched there. Every
+     repeated "section title" heading (Promises, PolicyCarousel) uses
+     this SAME token so they render at the same size at any given
+     viewport — do not give one of them its own separate vh-blended
+     override, that's how they drifted to visibly different sizes
+     before (18.8px vs 34.8px at 1920x1080, same viewport). */
+  --fs-section-title-fit: min(
+    var(--fs-section-title),
+    clamp(1.1rem, 0.3rem + 3vh, 2.494rem)
+  );
   --fs-card-title: clamp(1.25rem, 1.1rem + 0.75vw, 1.75rem); /* 20 → 28 */
   --fs-card-title-sub: clamp(1.05rem, 0.96rem + 0.45vw, 1.375rem); /* 16.8 → 22 */
   --fs-card-desc: clamp(0.95rem, 0.87rem + 0.4vw, 1.25rem); /* 15.2 → 20 */
@@ -65,10 +81,12 @@
   --radius-card: 10px;
   --content-max: 1920px;
 
-  /* Fixed header height (not fluid — set to exactly 80px per design).
-     Header.tsx still measures the real rendered height and writes it
-     here, so this literal value is just the SSR/first-paint fallback. */
-  --header-height: 80px;
+  /* Fixed header height (not fluid — set to exactly 64px per design,
+     reduced from 80px). Header.tsx still measures the real rendered
+     height and writes it here, so this literal value is just the SSR/
+     first-paint fallback — keep it equal to Header.module.css's .header
+     height so there's no flash/jump before that JS runs. */
+  --header-height: 64px;
 }
 
 /* ---------------------------------------------------
@@ -88,6 +106,16 @@ html {
      double-motion / overshoot jank this was tuned to fix. CSS scroll
      snap already animates its own settle motion natively. */
   scroll-snap-type: y mandatory;
+  /* Self-hosted Pretendard swapping in after the fallback font (or any
+     other late layout shift above the viewport, e.g. mobile toolbar
+     show/hide changing 100dvh) can nudge scrollY by a few px on load.
+     With `scroll-snap-type: y mandatory` a nudge that small is enough to
+     resolve to the *next* section's snap point instead of settling back
+     at 0 — reported as "refreshing lands on section 2, not the hero".
+     Scroll anchoring is what performs that nudge; turning it off removes
+     the mechanism entirely rather than chasing each thing that can shift
+     layout above the fold. */
+  overflow-anchor: none;
 }
 
 /* overflow-x: hidden lives on body only — the same rule on html

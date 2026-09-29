@@ -34,6 +34,22 @@ export function useSectionSettled<T extends HTMLElement>(epsilon = 6) {
 
     check();
 
+    // On iOS Safari (and other mobile browsers), the address-bar/toolbar
+    // showing or hiding as the page scrolls fires a *rapid burst* of
+    // `resize` events while it animates — not one clean event at the end.
+    // `check()` forces a synchronous layout read (`getBoundingClientRect`)
+    // and a `setSettled` state update, so wiring it directly to `resize`
+    // means dozens of forced reflows + React re-renders stack up during
+    // that toolbar animation, competing with it for the main thread — the
+    // stutter reported as "jank every time the toolbar shows/hides while
+    // scrolling". Debouncing collapses that burst into a single check once
+    // the toolbar (or any other resize) has actually finished moving.
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(check, 200);
+    };
+
     // Checked into a separate boolean first, not used directly as the `if`
     // condition on `window` — newer DOM lib types declare `onscrollend` as
     // always present, so `"onscrollend" in window` used inline narrows
@@ -43,27 +59,29 @@ export function useSectionSettled<T extends HTMLElement>(epsilon = 6) {
     const supportsScrollend = typeof window.onscrollend !== "undefined";
     if (supportsScrollend) {
       document.addEventListener("scrollend", check);
-      window.addEventListener("resize", check);
+      window.addEventListener("resize", onResize);
       return () => {
+        clearTimeout(resizeTimer);
         document.removeEventListener("scrollend", check);
-        window.removeEventListener("resize", check);
+        window.removeEventListener("resize", onResize);
       };
     }
 
     // Fallback for browsers without `scrollend` (older Safari): debounce a
     // scroll listener so the layout read only happens once scrolling has
     // paused for a beat, not on every frame while it's still moving.
-    let timer: ReturnType<typeof setTimeout>;
+    let scrollTimer: ReturnType<typeof setTimeout>;
     const onScroll = () => {
-      clearTimeout(timer);
-      timer = setTimeout(check, 150);
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(check, 150);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", check);
+    window.addEventListener("resize", onResize);
     return () => {
-      clearTimeout(timer);
+      clearTimeout(scrollTimer);
+      clearTimeout(resizeTimer);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", check);
+      window.removeEventListener("resize", onResize);
     };
   }, [epsilon]);
 

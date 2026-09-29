@@ -5,7 +5,11 @@
   right: 0;
   z-index: 40;
   width: 100%;
-  height: 80px;
+  /* Was 80px — reduced to a more compact height per explicit request
+     ("헤더 높이를 좀 줄여도 돼"). Still comfortably fits the tallest header
+     text (--fs-header-name, up to 30px) with real vertical padding at
+     every viewport. */
+  height: 64px;
   background-color: transparent;
   border-bottom: 1px solid transparent;
   color: var(--color-white);

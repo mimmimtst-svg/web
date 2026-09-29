@@ -69,7 +69,9 @@
 .headingTitle {
   font-family: var(--font-kr);
   font-weight: 400;
-  font-size: clamp(0.85rem, 0.3rem + 1.3vh, 1.75rem);
+  /* Shared with PolicyCarousel's .headingTitle — see the token's comment
+     in globals.css for why this must not be a component-local value. */
+  font-size: var(--fs-section-title-fit);
   line-height: 1.25;
 }
 
