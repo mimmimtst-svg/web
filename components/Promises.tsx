@@ -7,6 +7,7 @@ import { withBasePath } from "@/lib/basePath";
 import { useSectionSettled } from "@/hooks/useSectionSettled";
 import { useSequentialReveal } from "@/hooks/useSequentialReveal";
 import { useEnterView } from "@/hooks/useEnterView";
+import { PORTRAIT, useMediaQuery } from "@/hooks/useMediaQuery";
 import Reveal from "./Reveal";
 import ScrollDownIndicator from "./ScrollDownIndicator";
 
@@ -20,7 +21,11 @@ export default function Promises() {
   // The first promise comes in while the section is still sliding into
   // view (~25% on screen) rather than after it has fully snapped.
   const entered = useEnterView(ref, 0.25);
-  const revealedCount = useSequentialReveal(promises.length, settled, entered);
+  // Mobile layout (portrait): the page scrolls freely, so there's no
+  // step-through — each item rises in on its own as it scrolls into view
+  // (Figma 672:2228 motion: 152.4px up + fade, easeInOut).
+  const mobile = useMediaQuery(PORTRAIT);
+  const revealedCount = useSequentialReveal(promises.length, settled && !mobile, entered);
   const shownCount = entered ? Math.max(revealedCount, 1) : 0;
 
   return (
@@ -42,10 +47,10 @@ export default function Promises() {
               /* Explicitly controlled by the discrete reveal count above —
                  item N becomes visible once N scroll gestures have
                  happened since the section settled into view. */
-              visible={index < shownCount}
+              visible={mobile ? undefined : index < shownCount}
               delay={0}
-              distance="calc(254 * var(--u))"
-              duration={950}
+              distance={mobile ? "calc(152.4 * var(--mu))" : "calc(254 * var(--u))"}
+              duration={mobile ? 1000 : 950}
             >
               <span className={styles.itemNumber}>{item.index}</span>
               <div className={styles.itemBody}>

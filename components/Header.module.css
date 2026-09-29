@@ -71,3 +71,45 @@
   width: 22px;
   height: auto;
 }
+
+/* Mobile layout (portrait, Figma 629:7979 div.c-header): 84px tall,
+   20px side padding, the label stacked over the name (12px / 20px, 8px
+   apart), 32px menu icon, and a 0.5px bottom line once past the hero.
+   Header.tsx measures the real height into --header-height. */
+@media (orientation: portrait) {
+  .header {
+    height: calc(84 * var(--mu));
+  }
+
+  .header.scrolled {
+    border-bottom-width: 0.5px;
+  }
+
+  .wrapper {
+    padding: 0 calc(20 * var(--mu));
+  }
+
+  .brand {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: calc(8 * var(--mu));
+  }
+
+  .brandLabel {
+    font-size: calc(12 * var(--mu));
+  }
+
+  .brandName {
+    font-size: calc(20 * var(--mu));
+  }
+
+  .menuToggle {
+    width: calc(32 * var(--mu));
+    height: calc(32 * var(--mu));
+    justify-content: flex-end;
+  }
+
+  .menuToggle svg {
+    width: calc(20.3 * var(--mu));
+  }
+}

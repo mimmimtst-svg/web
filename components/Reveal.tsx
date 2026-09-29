@@ -26,11 +26,12 @@ type RevealProps = {
 };
 
 /**
- * Fades + slides an element in every time it scrolls into view, and
- * resets when it scrolls back out — so the transition replays each time
- * the page passes over it, not just the first time. Purely visual — it
- * never reads or changes scroll position, so it can't interact with the
- * page's CSS scroll-snap.
+ * Fades + slides an element in when it scrolls into view from below, and
+ * resets once it drops back out below the viewport (the user scrolled
+ * back up past it) — so the entrance replays each time the user comes
+ * down to it, but not when they return to it from further down the page
+ * (same rule as hooks/useEnterView.ts). Purely visual — it never reads or
+ * changes scroll position.
  */
 export default function Reveal({
   children,
@@ -55,7 +56,10 @@ export default function Reveal({
     if (!el) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => setObservedVisible(entry.isIntersecting),
+      ([entry]) => {
+        if (entry.isIntersecting) setObservedVisible(true);
+        else if (entry.boundingClientRect.top > 0) setObservedVisible(false);
+      },
       { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
     );
     observer.observe(el);

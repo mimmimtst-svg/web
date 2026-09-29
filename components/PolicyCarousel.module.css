@@ -103,7 +103,7 @@
   transform: rotate(180deg);
 }
 
-/* Phones only (see the max-width: 640px block). */
+/* Mobile layout only (see the portrait block). */
 .mobileNav {
   display: none;
 }
@@ -324,43 +324,145 @@
   color: var(--color-charcoal);
 }
 
-/* Phones: one card at a time (width-driven), prev/dots/next underneath,
-   and the section grows past one screen instead of shrinking cards. */
-@media (max-width: 640px) {
+/* Mobile layout (portrait, Figma 629:8157 section4): free-scrolling.
+   20px top padding, the 20px heading row (no arrow buttons), 36px, then
+   centre-snapping 298 x 372 cards 20px apart (radius 8, shadow
+   0 9.6 12 .15) with 30px under them, and 5px dots 10px apart. Card
+   internals are Figma's mobile values, not the desktop ones scaled —
+   the mobile card isn't a uniform scale of the 504 x 584 one. */
+@media (orientation: portrait) {
   .section {
     height: auto;
-    min-height: 100dvh;
+    padding-top: calc(20 * var(--mu));
+  }
+
+  .headerWrap {
+    max-width: none;
+    margin: 0 0 calc(36 * var(--mu));
+    padding: 0 calc(20 * var(--mu));
   }
 
   .headerWrap .navButtons {
     display: none;
   }
 
+  .heading {
+    gap: calc(8 * var(--mu));
+  }
+
+  .heading svg {
+    width: calc(16 * var(--mu));
+    height: calc(16 * var(--mu));
+  }
+
+  .headingTitle {
+    font-size: calc(20 * var(--mu));
+    line-height: 1.398;
+  }
+
   .trackOuter {
+    flex: 0 0 auto;
     container-type: normal;
-    padding-bottom: 0;
   }
 
   .track {
-    --cu: calc(min(92vw, 430px) / 504);
     height: auto;
+    align-items: stretch;
+    gap: calc(20 * var(--mu));
+    /* Side padding centres the first/last card; 10px on top for the
+       shadow, which overflow-x would otherwise clip. */
+    padding: calc(10 * var(--mu)) calc((100vw - 298 * var(--mu)) / 2) calc(30 * var(--mu));
+    scroll-padding: 0;
+    scroll-snap-type: x mandatory;
   }
 
   .card {
+    width: calc(298 * var(--mu));
     height: auto;
-    min-height: calc(584 * var(--cu));
+    min-height: calc(372 * var(--mu));
+    scroll-snap-align: center;
   }
 
+  .cardInner {
+    border-radius: calc(8 * var(--mu));
+    box-shadow: 0 calc(9.6 * var(--mu)) calc(12 * var(--mu)) rgba(0, 0, 0, 0.15);
+  }
+
+  .cardHead {
+    gap: calc(10 * var(--mu));
+    padding: calc(20 * var(--mu)) calc(24 * var(--mu)) calc(16 * var(--mu)) calc(20 * var(--mu));
+  }
+
+  .cardTitleRow {
+    gap: calc(4 * var(--mu)) calc(12 * var(--mu));
+  }
+
+  .cardNumber,
+  .cardTitle {
+    font-size: calc(16 * var(--mu));
+  }
+
+  .cardHeadLink svg {
+    width: calc(15.36 * var(--mu));
+  }
+
+  .cardCategories {
+    gap: calc(20 * var(--mu));
+    padding: calc(5 * var(--mu)) calc(20 * var(--mu)) calc(20 * var(--mu));
+  }
+
+  .category {
+    gap: 0;
+  }
+
+  .categoryLabel {
+    font-size: calc(10 * var(--mu));
+    line-height: 1.568;
+  }
+
+  .categoryItems {
+    gap: 0;
+  }
+
+  .categoryItem {
+    gap: calc(8 * var(--mu));
+  }
+
+  /* Centres the 5.3px-tall check on the 22.4px text row. */
   .categoryItem svg {
-    margin-top: 0.55em;
+    width: calc(8 * var(--mu));
+    margin-top: calc(8.5 * var(--mu));
+  }
+
+  .categoryItem span {
+    font-size: calc(12 * var(--mu));
+    line-height: 1.867;
   }
 
   .mobileNav {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 18px;
-    padding: 0 var(--space-page-x) 48px;
-    color: var(--color-charcoal);
+    height: calc(21 * var(--mu));
+    margin-bottom: calc(20 * var(--mu));
+  }
+
+  .mobileNav > .navButton {
+    display: none;
+  }
+
+  .mobileNav > div {
+    gap: calc(10 * var(--mu));
+  }
+
+  .mobileNav > div > button {
+    width: calc(5 * var(--mu));
+    height: calc(5 * var(--mu));
+    background-color: var(--color-muted);
+    opacity: 0.5;
+  }
+
+  .mobileNav > div > button[aria-selected="true"] {
+    opacity: 1;
   }
 }

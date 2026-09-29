@@ -44,3 +44,34 @@
   font-size: var(--fs-small);
   color: var(--color-white);
 }
+
+/* Mobile layout (portrait, Figma 629:7979 page-wrapper): 20px padding,
+   12px type throughout, lowercase e-mail, copyright on the bottom line. */
+@media (orientation: portrait) {
+  .footer {
+    padding: calc(20 * var(--mu));
+  }
+
+  .inner {
+    align-items: flex-end;
+    flex-wrap: nowrap;
+  }
+
+  .detail {
+    gap: calc(5 * var(--mu));
+  }
+
+  .label {
+    font-size: calc(12 * var(--mu));
+    letter-spacing: 0;
+  }
+
+  .email {
+    font-size: calc(12 * var(--mu));
+    text-transform: lowercase;
+  }
+
+  .copy {
+    font-size: calc(12 * var(--mu));
+  }
+}

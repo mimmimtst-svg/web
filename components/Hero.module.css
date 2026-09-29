@@ -124,15 +124,36 @@
   }
 }
 
-/* Phone only: break into the explicit two-line layout and shrink the
-   type — the "web version" rule above (single line, nowrap) is only
-   overridden here. */
-@media (max-width: 640px) {
+/* Mobile layout (portrait, Figma 629:8002 section1_hero): a 598px-tall
+   band — not a full screen — with the two-line 38px / 55px headline at
+   20px from the left and 166px from the top (section pt 120 + h1 pt 46),
+   the 16px English line 10px under it in a 36px box, and the 248 x 347
+   portrait pinned bottom-right. Overrides the max-width: 1023px block. */
+@media (orientation: portrait) {
+  .hero {
+    min-height: 0;
+    height: calc(598 * var(--mu));
+  }
+
+  .inner {
+    min-height: 0;
+    height: 100%;
+    max-width: none;
+    align-items: flex-start;
+    padding: calc(166 * var(--mu)) calc(20 * var(--mu)) 0;
+  }
+
+  .headline {
+    width: auto;
+    gap: calc(10 * var(--mu));
+    transform: none;
+  }
+
   .headlineKr {
     display: flex;
     flex-direction: column;
-    white-space: normal;
-    font-size: clamp(1.7rem, 1.2rem + 4vw, 2.5rem);
+    font-size: calc(38 * var(--mu));
+    line-height: calc(55 * var(--mu));
   }
 
   .headlineLine {
@@ -140,10 +161,11 @@
   }
 
   .headlineEn {
-    font-size: clamp(1rem, 0.85rem + 1.6vw, 1.375rem);
+    font-size: calc(16 * var(--mu));
+    line-height: calc(36 * var(--mu));
   }
 
   .portraitWrap {
-    width: clamp(150px, 46vw, 220px);
+    width: calc(248 * var(--mu));
   }
 }

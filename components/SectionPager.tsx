@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { isNewWheelGesture } from "@/lib/wheelGesture";
 import { GOTO_EVENT } from "@/lib/pageNav";
+import { PORTRAIT } from "@/hooks/useMediaQuery";
 
 /** One page turn: the next section slides up into place over this long. */
 const DURATION_MS = 850;
@@ -30,6 +31,9 @@ const isTyping = (target: EventTarget | null) =>
 export default function SectionPager() {
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // Portrait screens get the mobile layout (Figma 629:7979): the page
+    // scrolls freely and nothing here intercepts it.
+    const mobile = window.matchMedia(PORTRAIT);
     let animating = false;
     let frame = 0;
     let gestureUsed = false;
@@ -56,7 +60,7 @@ export default function SectionPager() {
     // the next section before the page turn pulled it back.
     const updatePaged = () => {
       const vh = window.innerHeight;
-      const fits = sections().every((s) => s.bottom - s.top <= vh + 2);
+      const fits = !mobile.matches && sections().every((s) => s.bottom - s.top <= vh + 2);
       document.documentElement.toggleAttribute("data-paged", fits);
     };
 
@@ -103,6 +107,7 @@ export default function SectionPager() {
     };
 
     const onWheel = (e: WheelEvent) => {
+      if (mobile.matches) return;
       // A trackpad flick's momentum tail belongs to the gesture that
       // already turned the page (lib/wheelGesture.ts).
       const newGesture = isNewWheelGesture(e);
@@ -126,6 +131,10 @@ export default function SectionPager() {
     };
 
     const onTouchStart = (e: TouchEvent) => {
+      if (mobile.matches) {
+        touch = null;
+        return;
+      }
       const t = e.touches[0];
       touch =
         t && e.touches.length === 1
@@ -162,6 +171,7 @@ export default function SectionPager() {
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
+      if (mobile.matches) return;
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || isTyping(e.target)) return;
       const onButton = e.target instanceof HTMLElement && /^(BUTTON|A)$/.test(e.target.tagName);
       let dir: 1 | -1 | 0 = 0;
@@ -187,7 +197,7 @@ export default function SectionPager() {
     // through the handlers above (scrollbar drag, find-in-page, a resize
     // or mobile toolbar changing 100dvh) glides to the nearest section.
     const realign = () => {
-      if (animating || touch) return;
+      if (animating || touch || mobile.matches) return;
       const y = window.scrollY;
       const vh = window.innerHeight;
       const points = new Set<number>([0, Math.max(0, maxScroll())]);

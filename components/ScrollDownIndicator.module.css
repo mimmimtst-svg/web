@@ -48,3 +48,11 @@
     animation: none;
   }
 }
+
+/* The mobile layout (portrait, Figma 629:7979) scrolls freely and has no
+   scroll-down cue. */
+@media (orientation: portrait) {
+  .indicator {
+    display: none;
+  }
+}

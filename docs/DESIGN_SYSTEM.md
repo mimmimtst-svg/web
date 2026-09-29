@@ -20,6 +20,8 @@
 - 실제 이미지/아이콘 에셋만 사용한다. Figma에서 가져올 수 없는 경우 placeholder로 슬쩍 대체하지 말고, 먼저 사용자에게 알린다.
 
 > **Figma 소스**: fileKey `uwbrfXG77JjwUSOkbptUxq`, 페이지 전체 프레임 **`612:1359` ("1920w light", 1920×4519)**. 섹션별 노드: 헤더 `614:6029`(히어로 위) / `651:1947`(흰 배경 위, 하단 1px `#d9d9d9`), section1_hero `612:1405`, section2 `613:1832`(카드 그리드 `612:1416`), section3 `612:1471`(그리드 `614:6269`), section4 `614:6270`. 디자인을 다시 확인할 땐 이 노드들에 `get_design_context`/`get_screenshot`을 직접 호출한다 — 페이지 `0:1` 전체 메타데이터는 너무 커서 잘려 나오고, 캔버스에 다른 프로젝트 작업물이 섞여 있어 전체 검색으로는 이 사이트 프레임을 찾기 어렵다. (2026-09-28 한 라운드에서 전체 검색만 해보고 "이 파일엔 사이트 디자인이 없다"고 잘못 결론 낸 적이 있다 — 사용자가 준 노드 링크에서 시작할 것.)
+>
+> **모바일 Figma 소스 (2026-09-29)**: 프레임 **`629:7979`** (402px 폭). 헤더 `629:7981`, section1_hero `629:8002`, section2 `629:8015`, section3 `629:8045`(항목 모션 `672:2228`~`672:2303`), section4 `629:8157`. **세로(portrait) 화면 전체**에 이 레이아웃을 쓴다 — 4.15 참고.
 
 ---
 
@@ -126,6 +128,7 @@ intercept = min - slope * 390
 | `--radius-card` | 10px | Section 2 카드 라운드 (Figma 원본 값) |
 | `--header-height` | **75px 고정** (Figma div.c-header, fluid 아님), `Header.tsx`가 실측 높이로 재확인 | 고정 헤더 높이. 스냅 섹션의 top padding 계산에 사용 (4.8 참고). `Header.module.css`의 `.header { height }`와 `globals.css`의 `--header-height` 기본값(SSR/첫 페인트 폴백) 두 곳이 항상 같은 값이어야 한다 — 하나만 바꾸면 JS가 실측치로 덮어쓰기 전까지 순간적으로 어긋난다. |
 | `--u` | `min(100vw/1920, (100dvh - 75px)/1005)` | Figma 1920×1080 프레임의 1px. Section 2·3과 스크롤 인디케이터의 모든 길이를 `calc(N * var(--u))`로 써서 Figma 비율 그대로 축소한다 (4.9) |
+| `--mu` | `min(100vw/402, 1.4px)` | 모바일 Figma(402px 폭)의 1px. **`@media (orientation: portrait)` 블록 안에서만** 쓴다. 세로 태블릿에서 폰 디자인이 과하게 커지지 않도록 1.4배에서 멈춘다 (4.15) |
 
 > `--space-section-y`(40px)와 `--gap-lg`(85px)의 최댓값은 Figma 1920 프레임에서 실측한 값이다 (섹션 상하 여백 40px, 타이틀→콘텐츠 간격 85px). 임의로 더 크게 잡지 않는다 — 예전에 80px/48px로 더 크게 잡았다가 레이아웃이 화면마다 잘리는 문제가 있었다.
 
@@ -134,7 +137,7 @@ intercept = min - slope * 390
 - **모든 섹션은 태블릿/PC 가로 화면 어디서든 한 화면(`100dvh`)에 다 들어와야 한다** (2026-09-28 방침 변경 — 사용자의 명시적 요구사항). 이전엔 "`min-height: 100dvh`가 기본, 콘텐츠가 넘치면 그냥 더 스크롤하게 둔다"가 기본값이었지만, 콘텐츠가 늘어난 뒤(약속 6개, 카드 캐러셀 등) 섹션마다 화면 비율이 안 맞는다는 피드백을 받고 뒤집었다. 지금은 **`height: 100dvh; overflow: hidden;`을 안전망으로 걸고, 그 안의 폰트/간격을 전부 `vh`가 섞인 `clamp()`로 만들어서 안전망이 실제로 뭔가를 잘라내기 전에 이미 알아서 한 화면에 맞도록** 만든다. 상세 레시피와 이유는 4.9 참고 — `min-height`만 걸고 넘치게 두는 옛 패턴은 더 이상 기본값이 아니다.
 - 가로 스크롤 발생 금지. **`overflow-x: hidden`은 반드시 `body`에만 건다 (`html`에는 걸지 않는다)** — `html`에 걸면 이 프로젝트가 쓰는 Chromium 빌드에서 `scroll-snap-type`이 조용히 무시되는 버그가 있다 (실측으로 확인됨). 새 컴포넌트가 가로 스크롤 규칙을 깨지 않는지 `document.documentElement.scrollWidth === clientWidth`로 확인.
 - ⚠️ **`body`에만 건 `overflow-x: hidden`으로는 못 막는 경우가 있다**: 실제 스크롤 컨테이너는 `body`가 아니라 `html`인데(4.8), `html`의 `overflow-x`는 `visible`로 남아있으므로, **`transform`으로 뷰포트 밖에 숨겨두는 요소**(예: `Reveal`의 `axis="x"` 모드 — `DevelopmentPlan`의 양옆 카드가 등장 전 `translateX(±667px)`로 숨어있는 것)는 `body`의 클리핑을 우회해서 `html` 레벨에서 진짜로 스크롤 가능한 가로 여백을 만든다(`window.scrollTo({left:9999})`로 실측 가능 — `documentElement.scrollWidth`만 보는 것보다 이 쪽이 더 확실하다). `html`/`body`를 건드릴 수 없으니, **그 transform이 걸리는 요소의 가장 가까운 자기 컴포넌트 컨테이너(예: `.section`)에 `overflow-x: hidden`을 로컬로 건다** (`DevelopmentPlan.module.css`의 `.section`이 이 사례).
-- 브레이크포인트 기준: **1920 / 1440 / 1024 / 768 / 390**. 실제 CSS 분기점은 컴포넌트 CSS Module 안에 `@media (max-width: 1023px)`, `@media (max-width: 640px)` 형태로 존재. 다단 그리드는 1024 이하에서 2열, 640 이하에서 1열로 재배치하는 것이 기본 패턴 (`DevelopmentPlan.module.css` 참고).
+- 브레이크포인트 기준: **1920 / 1440 / 1024 / 768 / 390**. 실제 CSS 분기점: **모바일 레이아웃은 `@media (orientation: portrait)`**(4.15, 폭 기준 아님), 그 외에는 `Hero`의 `@media (max-width: 1023px)` 정도만 남아 있다. 가로 화면은 `--u`로 한 화면에 맞춘다(4.9).
 
 ---
 
@@ -198,6 +201,7 @@ intercept = min - slope * 390
   - ⚠️ **마운트 시 한 번만 `scrollTo(0,0)`을 부르는 것만으로는 부족할 수 있다 (2026-09-28).** "새로고침하면 히어로가 아니라 섹션 2로 바로 넘어간다"는 버그가 보고됐다 — 셀프호스트 폰트가 폴백 폰트에서 교체되며 생기는 리플로우, 또는(특히 아이패드에서) 모바일 툴바가 사라지며 `100dvh`가 바뀌는 것처럼, 마운트 직후 뷰포트 위쪽 레이아웃이 살짝 움직이는 원인은 여러 가지다. `scroll-snap-type: y mandatory`가 걸린 상태에서는 단 몇 px의 스크롤 드리프트도 다음 섹션의 스냅 지점으로 풀려버릴 수 있다. 두 겹으로 대응했다: (1) `html`에 `overflow-anchor: none;`(`globals.css`)을 걸어서 브라우저의 스크롤 앵커링(레이아웃 변화를 보정하려고 스크롤 위치를 자동으로 미세 조정하는 기능) 자체를 끈다 — 이게 근본 원인이므로 우선한다. (2) `Header.tsx`에서 `window.scrollTo(0,0)`을 `load`/`pageshow` 이벤트에서도 다시 호출해서, 마운트 이후에 일어나는 늦은 레이아웃 변화까지 잡는다. 단, 이 재호출은 반드시 `window.scrollY < 100`일 때만 실행한다 — 그 가드가 없으면 느린 네트워크에서 사용자가 이미 의도적으로 한참 스크롤한 뒤에 `load`가 늦게 발화했을 때 스크롤이 강제로 맨 위로 튕겨버리는 새 버그가 생긴다.
 
 ### 4.8 섹션 페이징 — 한 번 스크롤하면 한 페이지 (`components/SectionPager.tsx`)
+> **세로 화면(모바일 레이아웃, 4.15)에서는 페이저가 완전히 꺼진다** — wheel/touch/키 가로채기, 유휴 정렬(realign), `html[data-paged]` 모두 없음. 사용자 요청: "모바일에서는 애니메이션만 유지, 스크롤 정지는 없어도 된다". `goToSection()`(헤더 브랜드 클릭)만 계속 동작한다.
 `Section 1~4`(`main > section`, `Footer`는 Section 4 내부 — 4.10 참고)는 **스크롤 한 번 = 한 페이지**로 넘어가고, 다음 섹션이 아래에서 슬라이드하듯 올라온다(850ms `easeInOutCubic`, rAF로 직접 애니메이션). CSS `scroll-snap-type`과 `scroll-behavior: smooth`는 쓰지 않는다.
 - 변천사(되돌리지 말 것): ① CSS `scroll-snap-type: y mandatory` → 조금만 스크롤해도 바로 넘어가 "뚝뚝 끊긴다" ② 자유 스크롤 + 멈춘 뒤 80% 이상이면 붙고 아니면 되돌아가는 "자석"(2026-09-29 오전) → "밀당하는 것 같다(내리면 올라가고 내리면 올라가고)"는 피드백 ③ 지금의 페이징. **스크롤한 만큼 따라오다가 되돌아가는 동작은 다시 넣지 않는다.**
 - **제스처 단위 판정** (`lib/wheelGesture.ts`): 트랙패드 플릭은 관성 꼬리까지 1초 가까이 wheel 이벤트를 계속 보낸다. 이벤트 사이 간격이 180ms를 넘거나 방향이 바뀌거나, **관성 꼬리가 최고치의 40% 아래로 줄어든 뒤 delta가 다시 최근 평균의 2배(+4px 이상)로 치솟으면** 새 제스처로 보고, 한 제스처는 딱 한 페이지만 넘긴다(애니메이션 중·꼬리 이벤트는 `preventDefault`로 흡수). 이 판정은 모듈 하나가 가장 먼저 등록한 window 리스너가 하고, 페이저와 `Promises`의 순차 등장(4.21)이 **같은 판정을 공유**한다 — 각자 타이머를 두었더니 페이지를 넘긴 플릭의 꼬리가 `Promises`에 도착하자마자 항목 2·3을 추가로 열어버렸다(실측).
@@ -250,7 +254,7 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 - **1024px 미만에서도 이미지는 계속 `position: absolute; right:0; bottom:0;`로 고정한다 — `position: static`으로 풀지 않는다.** 이전엔 모바일에서 static + `align-self: center`로 자연스러운 흐름에 맡겼는데, 뷰포트 폭이 바뀔 때마다 이미지가 이리저리 움직이는 것처럼 보인다는 피드백을 받았다. 절대 위치를 유지한 채 `width`만 `clamp()`로 줄이면 항상 같은 모서리(우측 하단)에 붙어 있어서 훨씬 안정적이다. 겹침은 `.headline`을 `width: 100%; align-items: flex-start`로 상단에 배치해 이미지와 텍스트가 수직으로 자연히 분리되게 해서 방지한다(둘 다 같은 `.hero`의 절대/플렉스 자식이라 서로 레이아웃에 영향을 주지 않는다).
 - 텍스트 블록(`.headline`)은 데스크톱에서 `transform: translateY(-50px)`로 살짝 위로 올려 시각적 중심을 맞춘다 (모바일 `@media (max-width: 1023px)`에서는 `transform: none`으로 되돌린다 — 모바일은 이미 상단 정렬 레이아웃이라 별도 보정이 필요 없다).
 - **줄바꿈이 반드시 특정 지점에서 일어나야 하는 타이틀**(예: "자유로운 지성,(줄바꿈)시대를 여는 고대")은 CSS `white-space`/너비 조절로 자연스러운 wrap에 기대지 말고, JSX에서 아예 `<span className={styles.headlineLine}>`으로 줄 단위로 쪼개고 `.headlineLine { display: block; }`을 건다. 뷰포트 폭이 넓어져도(또는 폰트 크기가 줄어도) 줄바꿈 위치가 흔들리지 않는다.
-- 모바일 전용으로 폰트 크기를 더 줄여야 하면 전역 fluid 토큰(`--fs-hero-kr` 등)을 건드리지 말고, 해당 컴포넌트의 `@media (max-width: 640px)` 블록 안에서 그 요소에만 별도 `clamp()`를 지정한다 — 다른 곳에서 같은 토큰을 재사용 중이면 전역 값을 줄였을 때 의도치 않게 같이 줄어들 수 있다.
+- 모바일 전용으로 폰트 크기를 더 줄여야 하면 전역 fluid 토큰(`--fs-hero-kr` 등)을 건드리지 말고, 해당 컴포넌트의 `@media (orientation: portrait)` 블록 안에서 그 요소에만 `--mu` 값을 지정한다 — 다른 곳에서 같은 토큰을 재사용 중이면 전역 값을 줄였을 때 의도치 않게 같이 줄어들 수 있다.
 - fade-in은 `heroFadeIn` 키프레임(`opacity 0→1` + `translateY(28px→0)`)을 국문/영문 줄에 각각 살짝 다른 delay로 건다. **duration은 짧게 잡지 않는다** — 처음에 900ms로 했더니 "뚝 끊기는" 느낌이라는 피드백을 받고 1700ms(`cubic-bezier(0.19,1,0.22,1)`, ease-out 계열)로 늘렸다. 다른 곳에서도 로드 즉시 재생되는 fade-in은 1.2~1.8s 정도로 여유 있게 잡는 걸 기본값으로 삼는다(4.14의 스크롤 트리거 Reveal은 700ms로 더 짧아도 된다 — 사용자가 스크롤하는 동작 자체가 이미 "빠른 입력"이라 성격이 다르다).
 
 ### 4.12 엣지-투-엣지 스와이프 캐러셀 (`PolicyCarousel`)
@@ -298,6 +302,7 @@ Figma가 (node 614:6269, 2026-09-28 동기화) 3개였던 "약속"을 6개로 �
 <Reveal as="li" className={styles.card} delay={index * 180} distance={56} scale={0.95} duration={1100}>...</Reveal>
 ```
 - `as`로 실제 렌더링할 태그를 지정한다(그리드/리스트의 직계 자식이어야 할 때 `li`처럼 지정 — 불필요한 wrapper `div`를 만들지 않기 위함).
+- **(2026-09-29 갱신) 위에서 내려올 때만 재생된다.** 뷰포트에 들어오면 `revealVisible`, **화면 아래로** 빠져나갈 때만(위로 스크롤해 지나쳤을 때) `revealHidden`으로 리셋한다 — 아래로 지나간 뒤 다시 올라오면 이미 보이는 상태 그대로다(`useEnterView`와 같은 규칙, 4.19). 아래 옛 설명은 이력:
 - **매번 재생된다.** 뷰포트에 들어올 때 `revealVisible`, 벗어나면 `revealHidden`으로 되돌아가므로 위아래로 스크롤할 때마다 트랜지션이 다시 보인다 (전에는 최초 1회만 재생하고 `disconnect()`했는데, 사용자 피드백으로 매번 재생하는 쪽으로 바꿨다). 스크롤 위치를 읽거나 바꾸지 않는 건 동일하므로 4.8의 scroll-snap과는 여전히 충돌하지 않는다.
 - `delay`(ms)로 리스트 아이템을 스태거링하고, `duration`(기본 700ms)으로 재생 속도를 조절한다. `distance`(기본 24px)로 슬라이드 거리를, `scale`(기본 1 = 없음)로 살짝 커지며 나타나는 정도를 조절한다.
 - **`distance`/`scale`을 키울수록 `duration`도 같이 늘린다.** 거리·스케일만 키우고 `duration`(기본 700ms)을 그대로 두면 움직임의 양에 비해 너무 빨리 끝나서 "뚝 끊기는"/오류처럼 보이는 느낌이 난다 — `DevelopmentPlan` 카드가 처음에 `distance:64, scale:0.92`인데 `duration`을 안 늘렸다가 이 문제를 겪었고, `distance:56, scale:0.95, duration:1100`으로 조정해서 해결했다. 새 Reveal 효과를 과감하게 만들 때는 항상 이 셋을 같이 조율한다.
@@ -309,27 +314,19 @@ Figma가 (node 614:6269, 2026-09-28 동기화) 3개였던 "약속"을 6개로 �
 - **JS 없는 환경 대비**: `revealHidden`은 SSR 시 이미 `opacity:0`으로 렌더링되므로, `app/layout.tsx`의 `<noscript>` 블록이 JS가 없을 때 강제로 보이게 처리한다.
 - `@media (prefers-reduced-motion: reduce)`에서 자동으로 무효화된다(항상 보이는 상태로 고정).
 
-### 4.15 모바일 한 장씩 보기 카드 캐러셀 (`DevelopmentPlan`, `PolicyCarousel`)
-데스크톱/태블릿에서는 그리드나 여러 장이 함께 보이는 캐러셀이던 카드 목록이, 폰 너비(`max-width: 640px`)에서는 **한 번에 카드 한 장 + 하단 prev/dots/next 내비게이션**으로 바뀌는 공용 패턴. 3장짜리 그리드(`DevelopmentPlan`)를 세로로 그냥 쌓으면 섹션이 `100dvh`를 넘어 스냅 섹션 안에서 추가 스크롤이 생기는 문제가 있었는데, 이 패턴으로 해결했다.
-- 드래그/스크롤/prev-next-버튼/현재 인덱스 로직은 `hooks/useHorizontalCarousel.ts`에 공용 훅으로 뽑아뒀다 (`PolicyCarousel`이 먼저 갖고 있던 pointer-drag 로직을 두 번째 사용처가 생기면서 훅으로 추출). 트랙 엘리먼트에 `ref`, `onPointerDown/Move/Up/Leave/Cancel`을 연결하면 `atStart`/`atEnd`(버튼 disabled 판정용)와 `activeIndex`(현재 카드 인덱스, 첫 자식의 렌더링된 너비 + `column-gap`으로 스텝을 계산)를 제공한다. 카드 개수가 바뀌는 새 캐러셀을 추가할 때 로직을 새로 짜지 말고 이 훅을 재사용한다.
-- 점 내비게이션은 `components/CarouselDots.tsx` (+ `.module.css`)로 공용화되어 있다. `count`/`activeIndex`/`onSelect`만 받는 순수 표시용 컴포넌트라 언제 보일지(데스크톱에서 숨길지 등)는 감싸는 컴포넌트가 CSS로 결정한다 — dots 자체엔 반응형 로직이 없다. 점 색상은 `background-color: currentColor`라서, 감싸는 `.mobileNav`에 `color`만 지정하면 다크/라이트 배경 어디서든 그대로 맞는다.
-- 데스크톱 그리드(`display:grid`)와 모바일 캐러셀(`display:flex; overflow-x:auto; scroll-snap-type:x mandatory;`)은 **같은 DOM**(`<ul ref={trackRef}>` + `<li className={styles.card}>`)에 미디어쿼리로 다른 레이아웃을 입히는 방식이다 — 별도 모바일 전용 마크업을 만들지 않는다. `<ul>`을 감싸는 `.gridWrap`은 그리드/캐러셀과 그 아래 `.mobileNav`를 하나의 flex-column 자식으로 묶어서, `.inner`의 `justify-content: space-between`(제목은 위, 콘텐츠 덩어리는 아래)이 깨지지 않게 한다.
-- `.card`가 모바일에서 `scroll-snap-align`의 대상이 되면(각 카드가 곧 스냅 지점), 4.12에서 정리한 "snap 대상에 직접 transform 금지" 규칙이 여기도 적용된다. `DevelopmentPlan`의 `.card`는 데스크톱 전용 hover-lift(`:hover{transform:translateY(-6px)}`)를 그대로 갖고 있으므로, `@media (max-width: 640px)` 블록 안에서 `.card:hover{transform:none}`으로 무력화한다(터치 입력엔 hover가 없어서 잃는 건 없다). `PolicyCarousel`처럼 카드가 이미 바깥(snap 대상)/안쪽(`.cardInner`, transform) 2단 구조라면 이 걱정이 애초에 없다 — 새 캐러셀을 만들 때는 가능하면 처음부터 2단 구조를 쓰는 쪽이 더 안전하다.
-- 새 카드 캐러셀에 그대로 복사할 스니펫(모바일 전용 블록):
-  ```css
-  @media (max-width: 640px) {
-    .grid {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      gap: var(--gap-sm);
-      scrollbar-width: none;
-    }
-    .grid::-webkit-scrollbar { display: none; }
-    .card { flex: 0 0 100%; width: 100%; scroll-snap-align: start; }
-    .mobileNav { display: flex; align-items: center; justify-content: center; gap: 18px; }
-  }
-  ```
+### 4.15 모바일 레이아웃 — 세로 화면 전체 (Figma `629:7979`)
+**기준은 폭이 아니라 방향이다: `@media (orientation: portrait)`**(JS에서는 `hooks/useMediaQuery.ts`의 `PORTRAIT` + `useMediaQuery()`). 사용자 요청 "화면이 세로로 길어졌을 때 모바일 디자인" (2026-09-29). 세로 태블릿도 여기에 들어간다. 가로 화면은 폭과 상관없이 데스크톱 레이아웃(한 화면 맞춤 + 페이징)이다. 예전의 `max-width: 640px` 폰 블록은 전부 이 블록으로 대체됐다.
+- **길이는 모두 `calc(<모바일 Figma px> * var(--mu))`.** 데스크톱 값을 스케일해서 쓰지 않는다 — 모바일 카드 등은 데스크톱의 균일 축소가 아니다(예: 공약 카드 504×584 → 298×372, 폰트·패딩도 따로 정해져 있음).
+- **자유 스크롤**: 섹션은 `height: auto`, 페이저(4.8)·`Promises` 단계 등장(4.21)·스크롤 다운 인디케이터(4.17) 없음. 애니메이션은 유지:
+  - `Promises` 항목: 각자 `Reveal` 자동 모드(IntersectionObserver)로, Figma 모션 `672:2228`대로 **152.4px 아래에서 fade-up, 1s, easeInOut**.
+  - `DevelopmentPlan` 카드: 데스크톱과 같은 타이밍(가운데 0ms, 양옆 530ms, 1.4s)이지만 **모두 아래에서(120mu) 올라온다** — 가로 캐러셀 안에서 좌우 슬라이드를 하면 트랙의 스크롤 폭이 흔들린다.
+- **헤더**: 84px, 라벨(12)/이름(20) 세로 배치 8px 간격, 좌우 20, 햄버거 32, 스크롤 후 하단선 0.5px. `Header.tsx`가 실측 높이를 `--header-height`로 넣는다.
+- **히어로**: 한 화면이 아니라 **598px 띠**. 헤드라인 38/55 ExtraBold 두 줄(위 166, 왼쪽 20), 영문 16 Light, 인물 248×347 우하단.
+- **Section 2 캐러셀**: 위 여백 = 헤더 + 40 (Figma가 section2 안에 흰 헤더를 그려둔 자리), 333×344 카드(radius 20, 패딩 75/30/50, 제목 48, 부제 20, 본문 16/22, 링크 13.5), 간격 20, **가운데 스냅 + 양옆 카드 50% 불투명**, 처음엔 가운데 카드(나답게)가 가운데. 점 10px/간격 20/`#AEA89B`(비활성 50%). prev/next 버튼 없음.
+- **Section 3**: 헤딩 패딩 20(아이콘 16, 간격 8, 20px `#d9d9d9`), 리스트 패딩 20·항목 간격 30, 번호 칸 58·간격 20, 제목 16/28.8 SemiBold, 12 간격, 본문 12/17.2 Light, 링크(Figma 8.47px → 가독성 위해 최소 10px).
+- **Section 4**: 위 20, 헤딩(20px `#333`, 화살표 버튼 없음) → 36 → 298×372 카드(radius 8, 그림자 `0 9.6 12 .15`, 헤더 패딩 20/24/16/20, 번호·제목 16, 본문 패딩 5/20/20, 묶음 간격 20, 라벨 10, 항목 12px·행 22.4, 체크 8) **가운데 스냅**, 아래 30 → 점 5px/간격 10 → 푸터.
+- **푸터**: 패딩 20, 모든 글자 12px, 이메일은 소문자, 저작권은 아랫줄에 맞춤.
+- 캐러셀 공용 로직은 여전히 `hooks/useHorizontalCarousel.ts` + `components/CarouselDots.tsx`. 가운데 스냅 트랙은 좌우 패딩을 `(100vw - 카드폭) / 2`로 줘서 첫/마지막 카드도 가운데에 오게 하고, 그래서 `activeIndex = round(scrollLeft / (카드폭+간격))`가 그대로 맞는다. 점 모양은 각 컴포넌트 CSS에서 `.mobileNav > div > button`으로 덮어쓴다.
 
 ### 4.16 hover 인터랙션
 - **카드** (`DevelopmentPlan`, `PolicyCarousel`): `transform: translateY(-6px)` + `box-shadow`, `transition: 300ms cubic-bezier(0.16,1,0.3,1)`. 카드 안 이미지가 있으면 `transform: scale(1.04)`도 같이 (별도 `transition-duration` 500ms로 조금 더 느리게). 카드가 `Reveal`로 감싸여 있다면 4.14의 `:where()` 명시도 규칙 때문에 hover가 항상 이긴다.
@@ -338,6 +335,7 @@ Figma가 (node 614:6269, 2026-09-28 동기화) 3개였던 "약속"을 6개로 �
 
 ### 4.17 "SCROLL DOWN" 인디케이터 (`components/ScrollDownIndicator.tsx`)
 섹션 하단에 고정된 "SCROLL DOWN" 텍스트 + 더블 쉐브론 아이콘. **다음 페이지가 있는 섹션(`Hero`/`DevelopmentPlan`/`Promises`)에 전부 단다** — 웹 버전에서는 어느 페이지에 있든 항상 보여야 한다는 사용자의 명시적 요구사항. Figma엔 원래 `Promises`/`PolicyCarousel`에만 있었지만, Figma에 없다고 자동으로 빼지 않고 일관성을 위해 추가했다. **마지막 섹션(`PolicyCarousel`)에는 달지 않는다** (2026-09-29 사용자 요청: "더이상 내려갈게 없잖아" — 이전엔 "항상 보인다"를 우선해 여기에도 달았었다). 새 섹션을 맨 끝에 추가하면 인디케이터도 그쪽으로 옮긴다. `active` prop은 바운스 애니메이션만 켜고 끌 뿐, 인디케이터 자체는 `active`와 무관하게 항상 렌더링된다 — "항상 보인다"를 만족하려면 이 컴포넌트를 조건부로 렌더링하면 안 된다.
+- **세로 화면(모바일 레이아웃, 4.15)에서는 숨긴다** — 모바일 Figma에 없고, 자유 스크롤이라 필요 없다.
 - **라벨과 쉐브론은 한 덩어리로 같이 움직인다** — `.bobbing`은 아이콘이 아니라 인디케이터 루트에 붙는다 (2026-09-29, 예전엔 쉐브론만 움직였다).
 ```tsx
 <ScrollDownIndicator active={settled} />
@@ -375,6 +373,7 @@ Figma의 `get_motion_context`(node 612:1416)가 준 값: 가운데 카드는 아
 - ⚠️ **자동화 테스트에서 스크롤 동작을 검증할 때 `page.mouse.wheel()`은 못 믿는다.** 이 프로젝트를 테스트한 헤드리스 Chromium 환경에서 합성 wheel 이벤트는 실제 페이지 스크롤 위치를 전혀 안 움직이는 경우가 있었다(scrollY가 0에 고정) — 다만 **`window`에 등록한 `wheel` 이벤트 리스너 자체는 정상적으로 발화한다** (4.21의 `useSequentialReveal` 테스트에선 `page.mouse.wheel()`로 리스너를 확실히 트리거할 수 있었다). 즉 "이벤트가 발화하는지"와 "그 이벤트로 실제 네이티브 스크롤이 움직이는지"는 별개로 검증해야 한다 — 페이지 스크롤 위치 자체를 옮겨야 하는 테스트는 `page.evaluate(() => window.scrollBy({ top, behavior: 'instant' }))`나 `element.scrollIntoView({behavior:'instant'})`처럼 직접 위치를 지정하는 쪽이 안정적이다.
 
 ### 4.21 한 화면 안에서 항목을 하나씩 순서대로 보여주기 (`hooks/useSequentialReveal.ts`)
+> **데스크톱(가로) 전용.** 세로 화면(4.15)에서는 `active`에 `!mobile`을 걸어 가로채기를 끄고, 항목은 `Reveal` 자동 모드로 스크롤해 들어올 때 각자 등장한다.
 `Promises`의 여섯 항목처럼 "처음 들어왔을 때 첫째만 보이고, 스크롤할 때마다 둘째·셋째...가 나타나며, 다 보여주기 전엔 다음 섹션으로 안 넘어간다"를 구현해야 하는데, 4.9 정책으로 섹션이 `height: 100dvh; overflow: hidden;`으로 고정되어 있어서 **섹션 내부에 스크롤할 거리 자체가 없다** — 예전엔 각 항목이 자기 `IntersectionObserver`로 "화면에 들어왔는지"를 관찰(`Reveal`의 비제어 모드)했지만, 섹션이 안 움직이니 2번째 항목부터는 이 관찰이 아예 발화하지 않아(`rootMargin`이 겹치는 위치 자체가 없음) 영원히 숨어있는 채로 남는 버그가 났다(아이패드에서 "다섯째·여섯째가 안 보인다"는 증상으로 처음 발견됐지만, 근본 원인은 아이패드가 아니라 이 구조적 문제였다).
 ```tsx
 const entered = useEnterView(ref, 0.25);
@@ -406,7 +405,7 @@ const revealedCount = useSequentialReveal(promises.length, settled, entered);
 1. Figma 소스를 먼저 확인(`get_design_context`)하고, 이 문서에 대응하는 토큰이 있는지 확인한다.
 2. 색상/타이포/spacing은 **기존 토큰을 재사용**한다. 새 값이 꼭 필요하면 위 표에 추가하고 이 문서를 갱신한다.
 3. 좌우 패딩 `--space-page-x`, 콘텐츠 wrapper `max-width: var(--content-max)` 패턴을 따른다. 화면 단위 섹션은 **4.9 패턴**: `height: 100dvh; overflow: hidden;` 안전망 + 섹션 내부 모든 길이를 Figma px × `--u`로 쓴다(요소마다 따로 튜닝한 `vw`/`vh` `clamp()`를 새로 만들지 않는다). 새 섹션은 `main`의 직계 `<section>`으로 두면 `SectionPager`가 자동으로 한 페이지로 잡는다.
-4. 1024 / 640 분기 기준으로 다단 → 스택 반응형을 기본으로 검토한다(필요시 768 분기 추가).
+4. 새 섹션은 가로(데스크톱, `--u`, 한 화면) 레이아웃과 `@media (orientation: portrait)` 모바일(`--mu`, 자유 스크롤, 모바일 Figma `629:7979`) 레이아웃을 둘 다 만든다.
 5. 이미지·아이콘은 전부 실제 에셋만 사용한다. 구할 수 없으면 사용자에게 먼저 알린다. "비슷해 보인다"는 이유로 다른 요소의 기존 에셋을 재사용하기 전에, 그 요소 자신의 Figma 노드에서 실제 에셋/색상을 직접 확인한다(4.12 카드 배경 이미지 사례 참고).
 6. 과한 그라디언트/글로우/불필요한 둥근 카드/장식 요소를 새로 추가하지 않는다.
 7. `html`에 `scroll-behavior: smooth`도, CSS `scroll-snap-type`도 걸지 않는다 — 섹션 페이징은 `SectionPager`(4.8)가 담당한다. 스크롤 위치를 읽어야 하는 컴포넌트는 `scroll` 리스너보다 `IntersectionObserver`를 우선 검토한다 (4.7, 4.18).

@@ -87,6 +87,13 @@
      exact Figma proportions on any screen instead of each value scaling
      on its own curve (the "sizes all over the place" bug). */
   --u: min(calc(100vw / 1920), calc((100dvh - var(--header-height)) / 1005));
+
+  /* Mobile design unit: 1 Figma px of the 402px-wide mobile frame
+     (node 629:7979). Used only inside `@media (orientation: portrait)`
+     blocks — a portrait screen gets the mobile layout (free scrolling,
+     no page turns). Capped so a portrait tablet doesn't blow the phone
+     design up past ~1.4x. */
+  --mu: min(calc(100vw / 402), 1.4px);
 }
 
 /* ---------------------------------------------------

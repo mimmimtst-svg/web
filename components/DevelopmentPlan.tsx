@@ -1,11 +1,13 @@
 "use client";
 
 import styles from "./DevelopmentPlan.module.css";
+import { useEffect } from "react";
 import { ArrowRightIcon, ChevronIcon } from "./icons";
 import { planCards } from "@/lib/policyData";
 import { useHorizontalCarousel } from "@/hooks/useHorizontalCarousel";
 import { useSectionSettled } from "@/hooks/useSectionSettled";
 import { useEnterView } from "@/hooks/useEnterView";
+import { PORTRAIT, useMediaQuery } from "@/hooks/useMediaQuery";
 import { withBasePath } from "@/lib/basePath";
 import CarouselDots from "./CarouselDots";
 import Reveal from "./Reveal";
@@ -21,6 +23,15 @@ const CARD_MOTION = [
   { axis: "y" as const, distance: "calc(909 * var(--u))", delay: 0 },
   { axis: "x" as const, distance: "calc(667 * var(--u))", delay: 530 },
 ];
+// Mobile carousel (portrait): sliding sideways would drag the track's
+// scroll width around, so all three rise instead, same timing.
+const CARD_MOTION_MOBILE = CARD_MOTION.map((motion) => ({
+  ...motion,
+  axis: "y" as const,
+  distance: "calc(120 * var(--mu))",
+}));
+/** Figma's mobile carousel opens on the middle card (나답게). */
+const MOBILE_START_INDEX = 1;
 
 export default function DevelopmentPlan() {
   const {
@@ -40,6 +51,19 @@ export default function DevelopmentPlan() {
   // screen), not after it has fully snapped — waiting for the snap made
   // them feel late.
   const entered = useEnterView(sectionRef, 0.25);
+  const mobile = useMediaQuery(PORTRAIT);
+  const motion = mobile ? CARD_MOTION_MOBILE : CARD_MOTION;
+
+  // Mobile carousel: start centred on the middle card, like Figma.
+  useEffect(() => {
+    const track = trackRef.current;
+    const card = track?.children[MOBILE_START_INDEX] as HTMLElement | undefined;
+    if (!mobile || !track || !card) return;
+    const trackBox = track.getBoundingClientRect();
+    const cardBox = card.getBoundingClientRect();
+    track.scrollLeft +=
+      cardBox.left + cardBox.width / 2 - (trackBox.left + trackBox.width / 2);
+  }, [mobile, trackRef]);
 
   return (
     <section className={styles.section} id="plan" ref={sectionRef}>
@@ -58,11 +82,11 @@ export default function DevelopmentPlan() {
               <Reveal
                 as="li"
                 key={card.title}
-                className={styles.card}
+                className={`${styles.card} ${index === activeIndex ? styles.cardActive : ""}`}
                 visible={entered}
-                axis={CARD_MOTION[index].axis}
-                distance={CARD_MOTION[index].distance}
-                delay={CARD_MOTION[index].delay}
+                axis={motion[index].axis}
+                distance={motion[index].distance}
+                delay={motion[index].delay}
                 duration={1400}
               >
                 <div className={styles.cardInner}>

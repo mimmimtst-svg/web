@@ -45,7 +45,7 @@
   min-height: calc(767 * var(--u));
 }
 
-/* Hidden except in the phone carousel (max-width: 640px block below). */
+/* Hidden except in the mobile carousel (portrait block below). */
 .mobileNav {
   display: none;
 }
@@ -174,15 +174,33 @@
   height: auto;
 }
 
-/* Phones: one card at a time in a swipeable, scroll-snapping track with
-   a prev/dots/next bar underneath (same pattern as PolicyCarousel). */
-@media (max-width: 640px) {
+/* Mobile layout (portrait, Figma 629:8015 section2): a free-scrolling
+   band under the hero. 40px below the (fixed, overlaid) header, a
+   centre-snapping carousel of 333 x 344 cards 20px apart with the
+   neighbours peeking in at 50% opacity, then 10px dots (20px apart,
+   #AEA89B, inactive at 50%) and 40px bottom padding. */
+@media (orientation: portrait) {
+  .section {
+    height: auto;
+    padding: calc(var(--header-height) + 40 * var(--mu)) 0 calc(40 * var(--mu));
+  }
+
+  .inner {
+    max-width: none;
+  }
+
+  .gridWrap {
+    gap: calc(10 * var(--mu));
+  }
+
   .grid {
     display: flex;
     min-height: 0;
+    gap: calc(20 * var(--mu));
+    /* Side padding centres the first/last card. */
+    padding: 0 calc((100vw - 333 * var(--mu)) / 2);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    gap: var(--gap-sm);
     cursor: grab;
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -198,48 +216,77 @@
   }
 
   .card {
-    flex: 0 0 100%;
-    width: 100%;
-    min-height: 60dvh;
-    scroll-snap-align: start;
+    flex: 0 0 calc(333 * var(--mu));
+    height: calc(344 * var(--mu));
+    scroll-snap-align: center;
+  }
+
+  .cardInner {
+    border-radius: calc(20 * var(--mu));
+    opacity: 0.5;
+    transition: opacity 300ms ease, transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cardActive .cardInner {
+    opacity: 1;
+  }
+
+  /* div.works-item__txt: 75 / 30 / 50 padding, spread top to bottom. */
+  .cardContent {
+    justify-content: space-between;
+    gap: 0;
+    padding: calc(75 * var(--mu)) calc(30 * var(--mu)) calc(50 * var(--mu));
+  }
+
+  .cardTitleBlock {
+    gap: calc(30 * var(--mu));
+  }
+
+  .cardTitle {
+    font-size: calc(48 * var(--mu));
+  }
+
+  .cardSubtitle {
+    font-size: calc(20 * var(--mu));
+  }
+
+  .cardDesc {
+    font-size: calc(16 * var(--mu));
+    line-height: 1.375;
+  }
+
+  .cardLink {
+    font-size: calc(13.5 * var(--mu));
+  }
+
+  .cardLink svg {
+    width: calc(14 * var(--mu));
   }
 
   .mobileNav {
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 18px;
-    color: var(--color-charcoal);
+    align-items: center;
+    height: calc(21 * var(--mu));
   }
 
   .navButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-    border: 1px solid var(--color-charcoal-30);
-    border-radius: 999px;
-    transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+    display: none;
   }
 
-  .navButton:hover:not(:disabled) {
-    background-color: var(--color-charcoal);
-    color: var(--color-white);
+  .mobileNav > div {
+    gap: calc(20 * var(--mu));
   }
 
-  .navButton:disabled {
-    opacity: 0.3;
-    cursor: default;
+  .mobileNav > div > button {
+    width: calc(10 * var(--mu));
+    height: calc(10 * var(--mu));
+    background-color: var(--color-muted);
+    opacity: 0.5;
   }
 
-  .navButton svg {
-    width: 40%;
-    height: auto;
-  }
-
-  .navButtonNext svg {
-    transform: rotate(180deg);
+  .mobileNav > div > button[aria-selected="true"] {
+    opacity: 1;
   }
 }

@@ -155,16 +155,77 @@
   height: auto;
 }
 
-/* Phones: a single column, and the section grows past one screen
-   instead of shrinking six items' text to an unreadable size. */
-@media (max-width: 640px) {
+/* Mobile layout (portrait, Figma 629:8045 section3): free-scrolling,
+   single column. Heading row padded 20 (16px icon, 8px gap, 20px title),
+   then the list padded 20 with 30px between items; 58px number column,
+   20px gap; 16px / 28.8px SemiBold title, 12px gap, 12px / 17.2px Light
+   body, then the link. */
+@media (orientation: portrait) {
   .section {
     height: auto;
-    min-height: 100dvh;
-    padding-bottom: 96px;
+    padding: 0 0 calc(20 * var(--mu));
+  }
+
+  .inner {
+    max-width: none;
+    gap: 0;
+  }
+
+  .heading {
+    gap: calc(8 * var(--mu));
+    padding: calc(20 * var(--mu));
+  }
+
+  .heading svg {
+    width: calc(16 * var(--mu));
+    height: calc(16 * var(--mu));
+  }
+
+  .headingTitle {
+    font-size: calc(20 * var(--mu));
+    line-height: 1.398;
   }
 
   .list {
     grid-template-columns: minmax(0, 1fr);
+    row-gap: calc(30 * var(--mu));
+    padding: calc(20 * var(--mu));
+  }
+
+  .item {
+    gap: calc(20 * var(--mu));
+    /* Figma's authored item motion curve. */
+    --reveal-ease: cubic-bezier(0.42, 0, 0.58, 1);
+  }
+
+  .itemNumber {
+    flex-basis: calc(58 * var(--mu));
+    font-size: calc(16 * var(--mu));
+    line-height: 1.8;
+  }
+
+  .itemBody {
+    gap: calc(12 * var(--mu));
+  }
+
+  .itemTitle {
+    font-size: calc(16 * var(--mu));
+    line-height: 1.8;
+  }
+
+  .itemDesc {
+    font-size: calc(12 * var(--mu));
+    line-height: 1.433;
+  }
+
+  /* Figma draws this at 8.47px; floored so it stays legible/tappable. */
+  .itemLink {
+    gap: calc(4 * var(--mu));
+    padding: calc(6.3 * var(--mu)) 0;
+    font-size: max(calc(8.47 * var(--mu)), 10px);
+  }
+
+  .itemLink svg {
+    width: max(calc(11 * var(--mu)), 12px);
   }
 }
