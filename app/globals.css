@@ -36,22 +36,13 @@
   --fs-hero-kr: clamp(2rem, 1.28rem + 3.6vw, 5.625rem); /* 32 → 90 */
   --fs-hero-en: clamp(1.375rem, 0.86rem + 2.6vw, 4.375rem); /* 22 → 70 */
   --fs-section-title: clamp(1.5rem, 1.16rem + 1.7vw, 2.494rem); /* 24 → 39.9 */
-  /* The vw-only scale above never shrinks on a short-but-wide viewport
-     (e.g. 1280x720) — it only reacts to width. This vh-based ceiling
-     kicks in via min() only when the viewport is short enough for it to
-     be *smaller* than the vw-based value above; on any normal-height
-     viewport (effectively everything except short landscape tablets/
-     laptops) it's larger than --fs-section-title and so never wins,
-     leaving the original scale completely untouched there. Every
-     repeated "section title" heading (Promises, PolicyCarousel) uses
-     this SAME token so they render at the same size at any given
-     viewport — do not give one of them its own separate vh-blended
-     override, that's how they drifted to visibly different sizes
-     before (18.8px vs 34.8px at 1920x1080, same viewport). */
-  --fs-section-title-fit: min(
-    var(--fs-section-title),
-    clamp(1.1rem, 0.3rem + 3vh, 2.494rem)
-  );
+  /* Every repeated "section title" heading (Promises, PolicyCarousel —
+     Figma h2.text-24-32, 39.9px in both) uses this SAME token so they
+     always render at the same size. Do not give one of them its own
+     override — that's how they drifted to 18.8px vs 34.8px at the same
+     viewport before. Scales with --u (defined below) like the rest of
+     the section content, floored for phones. */
+  --fs-section-title-fit: max(calc(39.9 * var(--u)), 1.25rem);
   --fs-card-title: clamp(1.25rem, 1.1rem + 0.75vw, 1.75rem); /* 20 → 28 */
   --fs-card-title-sub: clamp(1.05rem, 0.96rem + 0.45vw, 1.375rem); /* 16.8 → 22 */
   --fs-card-desc: clamp(0.95rem, 0.87rem + 0.4vw, 1.25rem); /* 15.2 → 20 */
@@ -81,12 +72,21 @@
   --radius-card: 10px;
   --content-max: 1920px;
 
-  /* Fixed header height (not fluid — set to exactly 64px per design,
-     reduced from 80px). Header.tsx still measures the real rendered
-     height and writes it here, so this literal value is just the SSR/
-     first-paint fallback — keep it equal to Header.module.css's .header
-     height so there's no flash/jump before that JS runs. */
-  --header-height: 64px;
+  /* Fixed header height — Figma's div.c-header is exactly 75px (node
+     651:1947). Header.tsx still measures the real rendered height and
+     writes it here, so this literal value is just the SSR/first-paint
+     fallback — keep it equal to Header.module.css's .header height so
+     there's no flash/jump before that JS runs. */
+  --header-height: 75px;
+
+  /* Figma design unit: 1 Figma px at the 1920x1080 reference frame
+     (node 612:1359), scaled uniformly to whichever axis is tighter.
+     The header stays a fixed 75px, so the height axis measures the
+     1005px (1080 - 75) Figma allots below it. Every section 2/3 size is
+     `calc(<figma px> * var(--u))`, which keeps cards and text in the
+     exact Figma proportions on any screen instead of each value scaling
+     on its own curve (the "sizes all over the place" bug). */
+  --u: min(calc(100vw / 1920), calc((100dvh - var(--header-height)) / 1005));
 }
 
 /* ---------------------------------------------------
@@ -100,21 +100,15 @@
 
 html {
   height: 100%;
-  /* scroll-behavior: smooth is intentionally NOT set here — combined with
-     scroll-snap-type it causes the browser to animate every snap
-     correction on top of the wheel-driven scroll, producing the
-     double-motion / overshoot jank this was tuned to fix. CSS scroll
-     snap already animates its own settle motion natively. */
-  scroll-snap-type: y mandatory;
-  /* Self-hosted Pretendard swapping in after the fallback font (or any
-     other late layout shift above the viewport, e.g. mobile toolbar
-     show/hide changing 100dvh) can nudge scrollY by a few px on load.
-     With `scroll-snap-type: y mandatory` a nudge that small is enough to
-     resolve to the *next* section's snap point instead of settling back
-     at 0 — reported as "refreshing lands on section 2, not the hero".
-     Scroll anchoring is what performs that nudge; turning it off removes
-     the mechanism entirely rather than chasing each thing that can shift
-     layout above the fold. */
+  /* No CSS scroll-snap here. `scroll-snap-type: y mandatory` commits to
+     the next section after even a tiny scroll; section snapping is done
+     by components/ScrollMagnet.tsx instead, which only pulls the next
+     section in once it's ~80% on screen and otherwise returns. Also no
+     `scroll-behavior: smooth` — ScrollMagnet animates its own snaps. */
+  /* Self-hosted Pretendard swapping in after the fallback font (or a
+     mobile toolbar changing 100dvh) can nudge scrollY by a few px right
+     after load; scroll anchoring is what performs that nudge. Turning it
+     off keeps a refresh on the hero instead of drifting toward section 2. */
   overflow-anchor: none;
 }
 
@@ -169,7 +163,7 @@ ol {
      ease-out (vs. the earlier 0.16/0.3 curve, which decelerated so hard
      right at the start it read as an abrupt "pop" instead of a glide). */
   transition-property: opacity, transform;
-  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-timing-function: var(--reveal-ease, cubic-bezier(0.22, 0.61, 0.36, 1));
 }
 
 /* :where() keeps these at zero specificity so a component's own

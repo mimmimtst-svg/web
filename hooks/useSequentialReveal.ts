@@ -12,12 +12,18 @@ import { useEffect, useRef, useState } from "react";
  * moves, so there's no distance for a position-based observer to react
  * to. Instead, once the section has settled into view, this intercepts
  * wheel/touch/key scroll intents itself (preventDefault, so the page's
- * own scroll-snap can't advance yet), and each discrete gesture reveals
+ * own snapping can't advance yet), and each discrete gesture reveals
  * one more item. Once every item is revealed, it stops intercepting and
- * scrolling continues normally to the next section. Scrolling back out
- * resets the count, so re-entering the section replays it from the start.
+ * scrolling continues normally to the next section.
+ *
+ * `active` (section snapped into place) gates the interception; `present`
+ * (section at least partly on screen) gates the reset. They're separate
+ * on purpose: a short scroll that ScrollMagnet pulls back briefly
+ * un-settles the section without it ever leaving, and resetting on that
+ * would throw away the reveal the user just stepped through. Only
+ * scrolling the section fully off screen replays it from the start.
  */
-export function useSequentialReveal(total: number, active: boolean) {
+export function useSequentialReveal(total: number, active: boolean, present: boolean) {
   const [revealedCount, setRevealedCount] = useState(0);
   const cooldownRef = useRef(false);
   const touchYRef = useRef<number | null>(null);
@@ -26,10 +32,11 @@ export function useSequentialReveal(total: number, active: boolean) {
     const reset = () => setRevealedCount(0);
     const showFirst = () => setRevealedCount(1);
 
-    if (!active) {
+    if (!present) {
       if (revealedCount !== 0) reset();
       return;
     }
+    if (!active) return;
     // First item shows the moment the section settles; this setState
     // triggers one more run of this same effect (revealedCount is a
     // dependency below), and that next run is the one that actually
@@ -84,7 +91,7 @@ export function useSequentialReveal(total: number, active: boolean) {
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
     };
-  }, [active, revealedCount, total]);
+  }, [active, present, revealedCount, total]);
 
   return revealedCount;
 }

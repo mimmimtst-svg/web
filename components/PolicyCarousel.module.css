@@ -13,7 +13,6 @@
   gap: 0;
   padding-top: calc(var(--header-height) + clamp(8px, 1.6vh, var(--space-section-y)));
   background-color: var(--color-white);
-  scroll-snap-align: start;
 }
 
 /* Wraps everything except <Footer> so ScrollDownIndicator (position:

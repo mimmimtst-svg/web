@@ -1,90 +1,89 @@
+/* Section 2 — sized straight from Figma section2 (node 613:1832) at the
+   1920x1080 frame, every length multiplied by --u (globals.css) so the
+   whole composition scales as one piece. max() floors only matter on
+   narrow phones/portrait tablets, where --u gets very small. */
 .section {
   position: relative;
   width: 100%;
-  /* height (not min-height) + overflow hidden is this project's one-
-     screen-fit backstop (see docs/DESIGN_SYSTEM.md 4.9) — needed here
-     too once .inner reserves bottom padding for ScrollDownIndicator
-     (below), which on a portrait tablet's 2-column card grid otherwise
-     pushed the section past 100dvh instead of just tightening up. */
+  /* height (not min-height) + overflow hidden is the one-screen-fit
+     backstop (docs/DESIGN_SYSTEM.md 4.9); overflow also clips Reveal's
+     translateX(±667u) hidden side cards so they can't widen <html>. */
   height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: calc(var(--header-height) + var(--space-section-y)) var(--space-page-x)
-    var(--space-section-y);
+  padding: calc(var(--header-height) + 40 * var(--u)) calc(40 * var(--u))
+    calc(40 * var(--u));
   background-color: var(--color-white);
-  scroll-snap-align: start;
 }
 
+/* section2_body: fills the space under the header and centers the grid.
+   No heading here — Figma dropped section 2's title. */
 .inner {
   width: 100%;
   max-width: var(--content-max);
   margin: 0 auto;
   flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* Reserves room for ScrollDownIndicator (`position: absolute; bottom:
-     24px` in .section) so the vertically-centered grid doesn't sit low
-     enough to overlap it — this section has no heading (see comment
-     below) eating space above the grid, so it can afford to sit higher.
-     Confirmed by measurement: without this, cards overlapped the
-     indicator by ~40-50px on portrait tablet widths (2-column grid,
-     taller aspect-ratio cards), worse still once a mobile browser's
-     address bar hides and 100dvh shrinks further. */
-  padding-bottom: clamp(80px, 6vw + 4vh, 120px);
 }
 
-/* No section heading here — Figma's updated file (synced 2026-09-28)
-   dropped section2's title entirely, leaving "유병현의 OO 가지 약속" as
-   section3/Promises's alone (they used to duplicate each other). */
 .gridWrap {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(16px, 2.2vh, 24px);
+  gap: 16px;
 }
 
+/* ul.works-grid: three equal flex-1 columns, 40px gap, 767px tall. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--gap-sm);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(40 * var(--u));
+  min-height: calc(767 * var(--u));
 }
 
-/* Hidden on desktop/tablet where .grid is a static grid; shown only in
-   the phone carousel (see the max-width:640px block below). */
+/* Hidden except in the phone carousel (max-width: 640px block below). */
 .mobileNav {
   display: none;
 }
 
-/* Full-bleed photo card: bg image + dark overlay fill the whole box,
-   content sits centered on top. Matches Figma's "works-item" card —
-   all three cards share one background photo (lib/policyData.ts). */
+/* Full-bleed photo card (Figma "works-item"): 20px radius, 50/50/70
+   padding, 50px gap between title block / description / link. */
+/* .card is the Reveal element — it owns the entrance transition only.
+   Anything else setting `transition`/`transform` on it (e.g. a hover
+   lift) would override Reveal's transition and make the entrance pop,
+   so the visuals and hover live on .cardInner. */
 .card {
   position: relative;
-  aspect-ratio: 587 / 767;
-  /* Below the 1023px breakpoint, 3 cards wrap into a 2-column x 2-row
-     grid — at that point the aspect-ratio (locked to card *width*) can
-     make two stacked rows taller than a short/portrait viewport has
-     room for. This caps it; object-fit: cover on .cardBg means a
-     shorter box just crops the photo a little tighter, nothing
-     distorts or gets clipped off. Wide/short single-row layouts (grid
-     stays 3-column above 1023px) rarely hit this ceiling in practice. */
-  max-height: clamp(280px, 42vh, 900px);
-  border-radius: 20px;
+  display: flex;
+  /* Figma's authored motion curve for these cards is easeInOut. */
+  --reveal-ease: cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+.cardInner {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  border-radius: max(calc(20 * var(--u)), 12px);
   overflow: hidden;
   isolation: isolate;
   transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.45);
+@media (hover: hover) {
+  .cardInner:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.45);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card:hover {
+  .cardInner:hover {
     transform: none;
   }
 }
@@ -106,13 +105,15 @@
 }
 
 .cardContent {
-  height: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(24px, 2.6vw, 50px);
-  padding: clamp(28px, 2.6vw, 50px) clamp(24px, 2.6vw, 50px) clamp(36px, 3.6vw, 70px);
+  gap: max(calc(50 * var(--u)), 16px);
+  padding: max(calc(50 * var(--u)), 20px) max(calc(50 * var(--u)), 16px)
+    max(calc(70 * var(--u)), 24px);
   text-align: center;
   color: var(--color-white);
 }
@@ -121,36 +122,44 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(24px, 2.6vw, 50px);
+  gap: max(calc(50 * var(--u)), 16px);
+  letter-spacing: 0.16px;
 }
 
+/* 120px ExtraBold, cap-height-trimmed in Figma (box 111.3px tall). */
 .cardTitle {
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: var(--fs-plan-card-title);
+  font-size: max(calc(120 * var(--u)), 2.75rem);
   line-height: 0.93;
-  letter-spacing: 0.16px;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
 }
 
 .cardSubtitle {
   font-family: var(--font-kr);
   font-weight: 500;
-  font-size: var(--fs-plan-card-subtitle);
+  font-size: max(calc(32 * var(--u)), 0.95rem);
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
+/* 22px / 30px Regular. */
 .cardDesc {
   font-family: var(--font-kr);
   font-weight: 400;
-  font-size: var(--fs-plan-card-desc);
-  line-height: 1.36;
+  font-size: max(calc(22 * var(--u)), 0.8125rem);
+  line-height: 1.364;
 }
 
 .cardLink {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  padding: 8px 0;
   font-family: var(--font-en);
   font-size: var(--fs-btn);
+  line-height: 14px;
   color: var(--color-white);
   transition: gap 200ms ease, opacity 200ms ease;
 }
@@ -161,34 +170,16 @@
 }
 
 .cardLink svg {
-  width: 13px;
+  width: 14px;
   height: auto;
 }
 
-@media (max-width: 1023px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  /* Tighter than the single-row (3-column) cap above — at this width 3
-     cards wrap into 2 rows, so the same 42vh cap per card (2x stacked)
-     was overlapping ScrollDownIndicator on portrait tablets. Scoped to
-     this breakpoint only: the single-row desktop layout needs its
-     card's full content (title/subtitle/desc/link) to fit without the
-     .cardInner's overflow:hidden clipping the title off the top, which
-     this tighter cap doesn't leave room for. */
-  .card {
-    max-height: clamp(240px, 34vh, 900px);
-  }
-}
-
-/* Below 640px a stacked single column let three full cards force the
-   section past 100dvh. Instead show one card at a time in a horizontally
-   swipeable, scroll-snapping track with a prev/dots/next bar underneath —
-   matching the phone pattern used by the Section 4 policy carousel. */
+/* Phones: one card at a time in a swipeable, scroll-snapping track with
+   a prev/dots/next bar underneath (same pattern as PolicyCarousel). */
 @media (max-width: 640px) {
   .grid {
     display: flex;
+    min-height: 0;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: var(--gap-sm);
@@ -209,16 +200,8 @@
   .card {
     flex: 0 0 100%;
     width: 100%;
+    min-height: 60dvh;
     scroll-snap-align: start;
-  }
-
-  /* .card is the scroll-snap target here, so its hover-lift transform is
-     disabled at this breakpoint (see PolicyCarousel.module.css for why a
-     transform on a snap target is unsafe) — touch input doesn't hover
-     anyway, so nothing is lost. */
-  .card:hover {
-    transform: none;
-    box-shadow: none;
   }
 
   .mobileNav {

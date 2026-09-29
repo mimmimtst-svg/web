@@ -5,7 +5,6 @@
   overflow: hidden;
   background-color: var(--color-key);
   isolation: isolate;
-  scroll-snap-align: start;
 }
 
 .bgImage {

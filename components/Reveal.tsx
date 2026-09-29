@@ -7,7 +7,8 @@ type RevealProps = {
   className?: string;
   as?: ElementType;
   delay?: number;
-  distance?: number;
+  /** A number is px; a string is any CSS length (e.g. a calc() in --u). */
+  distance?: number | string;
   scale?: number;
   duration?: number;
   /** 'y' (default) slides up from `distance`px below; 'x' slides in
@@ -46,6 +47,7 @@ export default function Reveal({
   const [observedVisible, setObservedVisible] = useState(false);
   const isControlled = controlledVisible !== undefined;
   const visible = isControlled ? controlledVisible : observedVisible;
+  const length = typeof distance === "number" ? `${distance}px` : distance;
 
   useEffect(() => {
     if (isControlled) return;
@@ -67,8 +69,8 @@ export default function Reveal({
       style={{
         transitionDelay: visible ? `${delay}ms` : "0ms",
         transitionDuration: `${duration}ms`,
-        ["--reveal-distance-y" as string]: axis === "y" ? `${distance}px` : "0px",
-        ["--reveal-distance-x" as string]: axis === "x" ? `${distance}px` : "0px",
+        ["--reveal-distance-y" as string]: axis === "y" ? length : "0px",
+        ["--reveal-distance-x" as string]: axis === "x" ? length : "0px",
         ["--reveal-scale" as string]: scale,
       }}
     >

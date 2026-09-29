@@ -5,11 +5,8 @@
   right: 0;
   z-index: 40;
   width: 100%;
-  /* Was 80px — reduced to a more compact height per explicit request
-     ("헤더 높이를 좀 줄여도 돼"). Still comfortably fits the tallest header
-     text (--fs-header-name, up to 30px) with real vertical padding at
-     every viewport. */
-  height: 64px;
+  /* Figma div.c-header (651:1947): 75px. */
+  height: 75px;
   background-color: transparent;
   border-bottom: 1px solid transparent;
   color: var(--color-white);
@@ -19,9 +16,8 @@
 
 .header.scrolled {
   background-color: var(--color-white);
-  /* Figma's literal header border on every section: 1px solid
-     --color-light-gray (#d9d9d9), not a black-based semi-transparent
-     line — thin and pale, only visible along the bottom edge. */
+  /* Figma: border-b 1px solid --color/light-gray (#d9d9d9) on every
+     section's header except the hero. */
   border-bottom-color: var(--color-light-gray);
   color: var(--color-charcoal);
 }

@@ -1,18 +1,18 @@
+/* Section 3 — sized straight from Figma section3 (node 612:1471) at the
+   1920x1080 frame, every length multiplied by --u (globals.css) so the
+   heading, numbers, titles and body copy keep Figma's proportions to each
+   other on any screen. max() floors only matter on phones/portrait. */
 .section {
   position: relative;
   width: 100%;
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  /* Locally tighter than the shared --space-section-y (used by every
-     other section) — with six items to fit on one screen, this section
-     needs a smaller vertical budget spent on padding than the others do. */
-  padding: calc(var(--header-height) + clamp(2px, 0.5vh, 20px)) var(--space-page-x)
-    clamp(1px, 0.35vh, 14px);
+  padding: calc(var(--header-height) + 40 * var(--u)) calc(40 * var(--u))
+    calc(40 * var(--u));
   overflow: hidden;
   background-color: #201a1a;
   isolation: isolate;
-  scroll-snap-align: start;
 }
 
 .bgImage {
@@ -25,13 +25,15 @@
   z-index: -2;
 }
 
+/* Figma: rgba(41, 33, 33, 0.75) over the photo. */
 .overlay {
   position: absolute;
   inset: 0;
-  background-color: var(--color-overlay);
+  background-color: rgba(41, 33, 33, 0.75);
   z-index: -1;
 }
 
+/* section3_body: heading, then an 80px gap, then the 2x3 grid. */
 .inner {
   width: 100%;
   max-width: var(--content-max);
@@ -40,103 +42,91 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  /* Locally tighter than --gap-lg — the heading needs to sit close to the
-     grid rather than centered with its usual generous breathing room, so
-     six items' worth of grid has room to fit under it. */
-  gap: clamp(3px, 0.85vh, 20px);
+  justify-content: flex-start;
+  gap: max(calc(80 * var(--u)), 24px);
 }
 
+/* h2.text-24-32: 32px plus icon, 16px gap, 39.9px title. */
 .heading {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: clamp(8px, 1vw, 16px);
+  gap: max(calc(16 * var(--u)), 8px);
   color: var(--color-light-gray);
 }
 
 .heading svg {
-  width: clamp(14px, 0.7vw + 0.85vh, 30px);
-  height: clamp(14px, 0.7vw + 0.85vh, 30px);
+  width: max(calc(32 * var(--u)), 20px);
+  height: max(calc(32 * var(--u)), 20px);
   flex-shrink: 0;
   color: #abb8c3;
 }
 
-/* Smaller than the shared --fs-section-title (used by Promises/Policy-
-   Carousel's headings elsewhere) and blended with vh so it's the first
-   thing to give up space on a short screen — matching the instruction to
-   shrink the heading/title before touching body text. */
 .headingTitle {
   font-family: var(--font-kr);
   font-weight: 400;
-  /* Shared with PolicyCarousel's .headingTitle — see the token's comment
-     in globals.css for why this must not be a component-local value. */
+  /* Shared with PolicyCarousel's .headingTitle (globals.css). */
   font-size: var(--fs-section-title-fit);
-  line-height: 1.25;
+  line-height: 1.4;
 }
 
-/* 2-column x 3-row grid (Figma node 614:6269, synced 2026-09-28) — replaces
-   the previous single-column, right-aligned 6-col list now that there are
-   six promises instead of three. Items fill left-to-right, top-to-bottom
-   in DOM order, so no explicit grid-column/row placement is needed. */
+/* body: 2 columns, 100px column gap, 30px row gap. */
 .list {
   flex: 0 0 auto;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  column-gap: clamp(16px, 3vw, 56px);
-  row-gap: clamp(2px, 0.7vh, 18px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: max(calc(100 * var(--u)), 16px);
+  row-gap: max(calc(30 * var(--u)), 12px);
 }
 
+/* numN: 98px number column, 40px gap to the text. */
 .item {
   display: flex;
   align-items: flex-start;
-  gap: clamp(10px, 1vw, 20px);
+  gap: max(calc(40 * var(--u)), 10px);
 }
 
+/* 34px / 48px SemiBold — same size as the item title. */
 .itemNumber {
-  flex: 0 0 clamp(28px, 2vw, 50px);
+  flex: 0 0 max(calc(98 * var(--u)), 2.75rem);
   font-family: var(--font-kr);
   font-weight: 600;
-  /* Smaller than Figma's flat 34px and blended with vh so it shrinks on
-     short screens — priority target for "shrink the title before body
-     text" per the one-screen-fit requirement. */
-  font-size: clamp(0.56rem, 0.14rem + 0.75vh, 1.3rem);
-  line-height: 1;
+  font-size: max(calc(34 * var(--u)), 0.875rem);
+  line-height: 1.412;
   color: var(--color-white);
-  text-align: justify;
-  /* Global word-break: keep-all (globals.css) forbids breaking inside a
-     Korean phrase, so justify only has a couple of full-phrase gaps to
-     stretch to fill each line — the gaps end up huge. Overriding back to
-     normal breaking gives justify far more break points, so it fills
-     lines by wrapping (even mid-word) instead of stretching whitespace. */
-  word-break: normal;
-  overflow-wrap: break-word;
+  white-space: nowrap;
 }
 
+/* div.text-18-24: title, 20px gap, body, link. */
 .itemBody {
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: clamp(1px, 0.35vh, 8px);
+  align-items: flex-start;
+  gap: max(calc(20 * var(--u)), 6px);
 }
 
 .itemTitle {
   font-family: var(--font-kr);
   font-weight: 600;
-  font-size: clamp(0.56rem, 0.14rem + 0.75vh, 1.3rem);
-  line-height: 1;
+  font-size: max(calc(34 * var(--u)), 0.875rem);
+  line-height: 1.412;
   color: var(--color-white);
   text-align: justify;
+  /* Global word-break: keep-all leaves justify only a couple of
+     full-phrase gaps per Korean line to stretch; normal breaking lets it
+     wrap instead of opening huge gaps between words. */
   word-break: normal;
   overflow-wrap: break-word;
 }
 
+/* p.text-18r: 18px / 28.66px Light. */
 .itemDesc {
   font-family: var(--font-kr);
   font-weight: 300;
-  font-size: clamp(0.38rem, 0.08rem + 0.36vh, 0.9rem);
-  line-height: 1.05;
+  font-size: max(calc(18 * var(--u)), 0.75rem);
+  line-height: 1.592;
   color: var(--color-white);
   text-align: justify;
   word-break: normal;
@@ -147,8 +137,10 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  padding: 8px 0;
   font-family: var(--font-en);
   font-size: var(--fs-btn);
+  line-height: 14px;
   color: var(--color-muted);
   transition: gap 200ms ease, color 200ms ease;
 }
@@ -159,23 +151,20 @@
 }
 
 .itemLink svg {
-  width: 13px;
+  width: 14px;
   height: auto;
 }
 
-/* The 2-column grid stays intact at every width, phones included — the
-   base sizing above is already vh-aware (shrinks on short screens), and
-   collapsing to a single column here would double the row count, which
-   with a fixed height:100dvh + overflow:hidden (see .section) would
-   clip items 5-6 off the bottom entirely instead of just making them
-   small. Two columns is the more reliable way to fit six items on any
-   one screen. */
-@media (max-width: 480px) {
-  .list {
-    column-gap: clamp(12px, 4vw, 24px);
+/* Phones: a single column, and the section grows past one screen
+   instead of shrinking six items' text to an unreadable size. */
+@media (max-width: 640px) {
+  .section {
+    height: auto;
+    min-height: 100dvh;
+    padding-bottom: 96px;
   }
 
-  .item {
-    gap: clamp(8px, 3vw, 16px);
+  .list {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

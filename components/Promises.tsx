@@ -6,6 +6,7 @@ import { promises } from "@/lib/policyData";
 import { withBasePath } from "@/lib/basePath";
 import { useSectionSettled } from "@/hooks/useSectionSettled";
 import { useSequentialReveal } from "@/hooks/useSequentialReveal";
+import { useEnterView } from "@/hooks/useEnterView";
 import Reveal from "./Reveal";
 import ScrollDownIndicator from "./ScrollDownIndicator";
 
@@ -16,7 +17,11 @@ export default function Promises() {
      "scrolled into view" trigger has nothing to react to for items 2-6 —
      they'd stay stuck mid-transition forever. Each discrete scroll while
      settled instead reveals one more item by count. */
-  const revealedCount = useSequentialReveal(promises.length, settled);
+  // The first promise comes in while the section is still sliding into
+  // view (~25% on screen) rather than after it has fully snapped.
+  const entered = useEnterView(ref, 0.25);
+  const revealedCount = useSequentialReveal(promises.length, settled, entered);
+  const shownCount = entered ? Math.max(revealedCount, 1) : 0;
 
   return (
     <section className={styles.section} id="promises" ref={ref}>
@@ -37,9 +42,9 @@ export default function Promises() {
               /* Explicitly controlled by the discrete reveal count above —
                  item N becomes visible once N scroll gestures have
                  happened since the section settled into view. */
-              visible={index < revealedCount}
+              visible={index < shownCount}
               delay={0}
-              distance={254}
+              distance="calc(254 * var(--u))"
               duration={950}
             >
               <span className={styles.itemNumber}>{item.index}</span>
