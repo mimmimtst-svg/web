@@ -183,27 +183,30 @@
   }
 }
 
-/* div.footer-detail: 20px top padding, 9px gap, #AEA89B. */
+/* div.footer-detail (Figma 2026-09-30): 20px top padding, 5px gap,
+   #AEA89B. Label 12px / 12px Pretendard Regular "E-Mail" (was Space
+   Mono caps); address 14px / 22.4px lowercase (was 16px caps). */
 .footer {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 5px;
   padding-top: 20px;
   color: var(--color-muted);
 }
 
 .footerLabel {
-  font-family: var(--font-mono);
+  font-family: var(--font-kr);
+  font-weight: 400;
   font-size: 12px;
-  line-height: 1.4;
-  text-transform: uppercase;
+  line-height: 1;
 }
 
 .footerEmail {
   font-family: var(--font-kr);
-  font-size: 16px;
-  line-height: 1.4;
-  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.6;
+  text-transform: lowercase;
   color: inherit;
 }
 

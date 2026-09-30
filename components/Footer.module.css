@@ -15,18 +15,20 @@
   flex-wrap: wrap;
 }
 
+/* div.footer-detail (Figma 2026-09-30): "E-Mail" 14px / 17.5px
+   Pretendard Regular (was Space Mono caps) directly over the address,
+   16px / 22.4px lowercase (was caps). */
 .detail {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0;
 }
 
 .label {
-  font-family: var(--font-mono);
+  font-family: var(--font-kr);
   font-weight: 400;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 0.875rem;
+  line-height: 1.25;
   color: var(--color-white);
 }
 
@@ -34,7 +36,8 @@
   font-family: var(--font-kr);
   font-weight: 400;
   font-size: 1rem;
-  text-transform: uppercase;
+  line-height: 1.4;
+  text-transform: lowercase;
   color: var(--color-white);
 }
 
@@ -46,7 +49,7 @@
 }
 
 /* Mobile layout (portrait, Figma 629:7979 page-wrapper): 20px padding,
-   12px type throughout, lowercase e-mail, copyright on the bottom line. */
+   12px type, copyright on the bottom line. */
 @media (orientation: portrait) {
   .footer {
     padding: calc(20 * var(--mu));
@@ -57,18 +60,20 @@
     flex-wrap: nowrap;
   }
 
+  /* Figma mobile footer (2026-09-30): 10px label over the 12px address,
+     both on a 17.5px line, no gap. */
   .detail {
-    gap: calc(5 * var(--mu));
+    gap: 0;
   }
 
   .label {
-    font-size: calc(12 * var(--mu));
-    letter-spacing: 0;
+    font-size: calc(10 * var(--mu));
+    line-height: calc(17.5 * var(--mu));
   }
 
   .email {
     font-size: calc(12 * var(--mu));
-    text-transform: lowercase;
+    line-height: calc(17.5 * var(--mu));
   }
 
   .copy {
