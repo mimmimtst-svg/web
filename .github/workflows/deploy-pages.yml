@@ -28,9 +28,11 @@ jobs:
       - run: npm run build
         env:
           GITHUB_PAGES: "true"
-          # Custom domain (Settings → Pages → Custom domain). Served from
-          # the domain root, so next.config.ts drops the /web base path.
-          PAGES_CUSTOM_DOMAIN: byunghyun.kr
+          # Custom domain: once byunghyun.kr is saved under Settings → Pages
+          # → Custom domain, uncomment this so next.config.ts drops the /web
+          # base path (the site is then served from the domain root). Left
+          # off until then so mimmimtst-svg.github.io/web/ keeps working.
+          # PAGES_CUSTOM_DOMAIN: byunghyun.kr
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
