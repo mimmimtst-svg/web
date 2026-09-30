@@ -8,6 +8,22 @@ import { withBasePath } from "@/lib/basePath";
 import CarouselDots from "./CarouselDots";
 import Footer from "./Footer";
 
+// A Latin parenthetical inside an item, e.g. "(Chaired Professor)", is set
+// a size smaller in Figma (14px against the 18px line on desktop).
+const NOTE = /(\([A-Za-z][^)]*\))/;
+
+function ItemText({ text }: { text: string }) {
+  return text.split(NOTE).map((part, i) =>
+    NOTE.test(part) ? (
+      <span key={i} className={styles.itemNote}>
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
+}
+
 export default function PolicyCarousel() {
   const {
     trackRef,
@@ -89,7 +105,9 @@ export default function PolicyCarousel() {
                         {category.items.map((item) => (
                           <li className={styles.categoryItem} key={item}>
                             <CheckIcon />
-                            <span>{item}</span>
+                            <span>
+                              <ItemText text={item} />
+                            </span>
                           </li>
                         ))}
                       </ul>

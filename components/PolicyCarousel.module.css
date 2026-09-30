@@ -228,11 +228,11 @@
   min-width: 0;
 }
 
-/* 34px SemiBold, key color. */
+/* 34px ExtraBold (Figma 2026-09-30, was SemiBold), key color. */
 .cardNumber,
 .cardTitle {
   font-family: var(--font-kr);
-  font-weight: 600;
+  font-weight: 800;
   font-size: max(calc(34 * var(--cu)), 1rem);
   line-height: 1.2;
   color: var(--color-key);
@@ -314,7 +314,7 @@
   color: var(--color-key);
 }
 
-.categoryItem span {
+.categoryItem > span {
   flex: 1 1 auto;
   min-width: 0;
   font-family: var(--font-kr);
@@ -322,6 +322,11 @@
   font-size: max(calc(18 * var(--cu)), 0.6875rem);
   line-height: 1.556;
   color: var(--color-charcoal);
+}
+
+/* "(Chaired Professor)": 14px against the 18px line. */
+.itemNote {
+  font-size: 0.778em;
 }
 
 /* Mobile layout (portrait, Figma 629:8157 section4): free-scrolling.
@@ -397,9 +402,11 @@
     gap: calc(4 * var(--mu)) calc(12 * var(--mu));
   }
 
+  /* Figma's mobile card title is still 16px SemiBold. */
   .cardNumber,
   .cardTitle {
     font-size: calc(16 * var(--mu));
+    font-weight: 600;
   }
 
   .cardHeadLink svg {
@@ -434,9 +441,14 @@
     margin-top: calc(8.5 * var(--mu));
   }
 
-  .categoryItem span {
+  .categoryItem > span {
     font-size: calc(12 * var(--mu));
     line-height: 1.867;
+  }
+
+  /* Mobile Figma keeps the parenthetical at the line's own 12px. */
+  .itemNote {
+    font-size: 1em;
   }
 
   .mobileNav {

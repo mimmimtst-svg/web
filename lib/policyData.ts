@@ -31,7 +31,7 @@ export const policyCards: PolicyCard[] = [
         items: [
           "우수 석학 제도 개선",
           "World Class 석학 특별채용 프로그램 도입",
-          "산업계 석좌교수 (Chaired Professor) 제도 활성화",
+          "산업계 석좌교수(Chaired Professor) 제도 활성화",
           "국제 공동연구 Seed Fund 확대",
           "AI 기반 연구역량 강화",
         ],
@@ -47,6 +47,7 @@ export const policyCards: PolicyCard[] = [
         items: [
           "AI 시대 인문학 기반 융합교양 교육과정 정립",
           "특수대학원 경쟁력 확보",
+          "단과대 연구기금 조성 및 기본연구비 신설",
         ],
       },
       {
@@ -72,7 +73,7 @@ export const policyCards: PolicyCard[] = [
     categories: [
       {
         label: "나답게  |  대학의 본질 회복",
-        items: ["예산 효율성 강화"],
+        items: ["예산 효율성 강화", "단과대 연구기금 조성 및 기본연구비 신설"],
       },
       {
         label: "다함께  |  조화로운 다양성",

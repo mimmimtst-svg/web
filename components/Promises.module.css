@@ -155,11 +155,13 @@
   height: auto;
 }
 
-/* Mobile layout (portrait, Figma 629:8045 section3): free-scrolling,
-   single column. Heading row padded 20 (16px icon, 8px gap, 20px title),
-   then the list padded 20 with 30px between items; 58px number column,
-   20px gap; 16px / 28.8px SemiBold title, 12px gap, 12px / 17.2px Light
-   body, then the link. */
+/* Mobile layout (portrait, Figma 629:8045 section3, updated 2026-09-30):
+   free-scrolling, single column. Heading row padded 20 (16px icon, 8px
+   gap, 20px title), then the list padded 20 with 30px between items;
+   58px number column (18px / 24px SemiBold), 10px gap; 18px / 26px
+   SemiBold title at -0.9px tracking, 12px gap, 12px / 17.2px Light body,
+   then the link. Left-aligned: justify on a phone-width column opened
+   wide gaps in the English copy. */
 @media (orientation: portrait) {
   .section {
     height: auto;
@@ -193,15 +195,15 @@
   }
 
   .item {
-    gap: calc(20 * var(--mu));
+    gap: calc(10 * var(--mu));
     /* Figma's authored item motion curve. */
     --reveal-ease: cubic-bezier(0.42, 0, 0.58, 1);
   }
 
   .itemNumber {
     flex-basis: calc(58 * var(--mu));
-    font-size: calc(16 * var(--mu));
-    line-height: 1.8;
+    font-size: calc(18 * var(--mu));
+    line-height: 1.333;
   }
 
   .itemBody {
@@ -209,13 +211,19 @@
   }
 
   .itemTitle {
-    font-size: calc(16 * var(--mu));
-    line-height: 1.8;
+    font-size: calc(18 * var(--mu));
+    line-height: 1.444;
+    letter-spacing: -0.05em;
+    text-align: left;
+    /* No justify here, so break between words again (Figma: "학교
+       행정을 / 원점에서부터"), not mid-word. */
+    word-break: keep-all;
   }
 
   .itemDesc {
     font-size: calc(12 * var(--mu));
     line-height: 1.433;
+    text-align: left;
   }
 
   /* Figma draws this at 8.47px; floored so it stays legible/tappable. */

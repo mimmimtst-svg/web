@@ -2,16 +2,17 @@
    height of the screen on the right edge, 40px side / 20px top-bottom
    padding, shadow -10 0 10 rgba(0,0,0,.25). Over a 50% black backdrop.
 
-   Motion: the backdrop fades while the panel slides in from the right on
-   an expo-out curve; the five links follow in a short stagger. Closing
-   runs the same in reverse, a little quicker and without the stagger.
-   `visibility` waits for the close transition to finish before hiding. */
+   Motion (slowed down 2026-09-30 — "too fast"): the backdrop fades while
+   the panel glides in from the right over ~1s, and the five links follow
+   in a stagger. Closing slides the panel out with the links still on it
+   (no separate text fade — user request); they reset to hidden only once
+   the panel is gone. `visibility` waits for the close transition too. */
 .root {
   position: fixed;
   inset: 0;
   z-index: 60;
   visibility: hidden;
-  transition: visibility 0s linear 500ms;
+  transition: visibility 0s linear 550ms;
 }
 
 .root.open {
@@ -24,12 +25,12 @@
   inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
-  transition: opacity 400ms ease;
+  transition: opacity 450ms ease;
 }
 
 .open .backdrop {
   opacity: 1;
-  transition-duration: 500ms;
+  transition-duration: 800ms;
 }
 
 .panel {
@@ -48,12 +49,12 @@
   background-color: var(--color-white);
   box-shadow: -10px 0 10px rgba(0, 0, 0, 0.25);
   transform: translateX(calc(100% + 20px));
-  transition: transform 450ms cubic-bezier(0.55, 0, 0.75, 0.2);
+  transition: transform 500ms cubic-bezier(0.55, 0, 0.75, 0.2);
 }
 
 .open .panel {
   transform: translateX(0);
-  transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .top {
@@ -93,7 +94,10 @@
   white-space: nowrap;
 }
 
-/* 24px X. Hover spins it one full turn. */
+/* 24px X. Hover spins it exactly one turn, once: the transition lives
+   only on :hover, so leaving doesn't spin it back the other way (that
+   read as a second turn — "too much"). An X looks the same at 360deg, so
+   the snap back to 0 on leave is invisible. */
 .close {
   display: flex;
   align-items: center;
@@ -102,7 +106,6 @@
   height: 40px;
   margin-right: -8px;
   color: #333;
-  transition: transform 600ms cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .close svg {
@@ -113,6 +116,7 @@
 @media (hover: hover) {
   .close:hover {
     transform: rotate(360deg);
+    transition: transform 700ms cubic-bezier(0.45, 0, 0.25, 1);
   }
 }
 
@@ -130,17 +134,19 @@
   list-style: none;
 }
 
+/* Closed state: hidden, but the switch waits until the panel has slid
+   out (550ms), so the links leave with the panel instead of fading. */
 .item {
   opacity: 0;
-  transform: translateX(24px);
-  transition: opacity 250ms ease, transform 250ms ease;
+  transform: translateX(32px);
+  transition: opacity 0s linear 550ms, transform 0s linear 550ms;
 }
 
 .open .item {
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 500ms ease, transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: calc(180ms + var(--i) * 60ms);
+  transition: opacity 700ms ease, transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(350ms + var(--i) * 90ms);
 }
 
 .link {
