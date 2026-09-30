@@ -34,13 +34,15 @@ type SiteMenuProps = {
  */
 export default function SiteMenu({ id, open, onClose }: SiteMenuProps) {
   const panelRef = useRef<HTMLDivElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
     const root = document.documentElement;
     root.setAttribute(MENU_OPEN_ATTR, "");
-    closeRef.current?.focus({ preventScroll: true });
+    // Focus the dialog itself, not the X: iOS Safari draws a focus ring
+    // on a programmatically focused button even after a tap. Tab then
+    // moves on to the X as usual.
+    panelRef.current?.focus({ preventScroll: true });
 
     // The page behind must not move (or page-turn) while the menu is up.
     // Capture phase on window, so this runs before SectionPager's
@@ -60,7 +62,8 @@ export default function SiteMenu({ id, open, onClose }: SiteMenuProps) {
         if (!focusables?.length) return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
+        const onEdge = document.activeElement === first || document.activeElement === panelRef.current;
+        if (e.shiftKey && onEdge) {
           e.preventDefault();
           last.focus();
         } else if (!e.shiftKey && document.activeElement === last) {
@@ -97,6 +100,7 @@ export default function SiteMenu({ id, open, onClose }: SiteMenuProps) {
         className={styles.panel}
         id={id}
         ref={panelRef}
+        tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-label="사이트 메뉴"
@@ -110,7 +114,6 @@ export default function SiteMenu({ id, open, onClose }: SiteMenuProps) {
             <button
               type="button"
               className={styles.close}
-              ref={closeRef}
               onClick={onClose}
               aria-label="메뉴 닫기"
             >

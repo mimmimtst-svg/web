@@ -94,10 +94,12 @@
   white-space: nowrap;
 }
 
-/* 24px X. Hover spins the icon exactly one turn, once, as a keyframe
-   animation on the svg: nothing runs on leave (an earlier transition
-   spun back the other way, reading as a second turn — "too much"), and a
-   new hover starts a fresh single turn. */
+/* 24px X. Hover turns the icon once, as a keyframe animation on the
+   svg: nothing runs on leave (an earlier transition spun back the other
+   way), and a new hover starts afresh. The turn is 90deg, not 360: an X
+   looks identical every quarter turn, so a full 360 read as the X
+   spinning three or four times ("세네 바퀴"). A quarter turn is one
+   visible turn that lands back on the same shape. */
 .close {
   display: flex;
   align-items: center;
@@ -115,23 +117,29 @@
 
 @media (hover: hover) {
   .close:hover svg {
-    animation: spinOnce 700ms cubic-bezier(0.45, 0, 0.25, 1) 1 both;
+    animation: turnOnce 450ms cubic-bezier(0.45, 0, 0.25, 1) 1 both;
   }
 }
 
-@keyframes spinOnce {
+@keyframes turnOnce {
   from {
     transform: rotate(0deg);
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(90deg);
   }
 }
 
+/* Keyboard focus only. (No ring on open: the panel, not the X, takes
+   focus then — see SiteMenu.tsx.) */
 .close:focus-visible {
   outline: 1px solid #333;
   outline-offset: 2px;
   border-radius: 999px;
+}
+
+.panel:focus {
+  outline: none;
 }
 
 /* menu1 rows: 10px vertical padding, 10px apart; 22px SemiBold. */

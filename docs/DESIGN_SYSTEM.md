@@ -402,9 +402,9 @@ const revealedCount = useSequentialReveal(promises.length, settled, entered);
 - **메뉴 항목 → 섹션**: 유 병 현 → `#hero`, (비전/리더십) → `#plan`, (주요 공약) → `#promises`, (발전 계획서) → `#policies`, (언론 보도 자료) → 아직 연결할 섹션이 없어 닫기만 한다. 라벨의 괄호는 Figma 문구 그대로(가제). 이동은 `goToSection()`(페이지 넘김과 같은 애니메이션).
 - **배경**: 검정 50%(`rgba(0,0,0,.5)`, 사용자 지정). 클릭하면 닫힌다.
 - **모션 (2026-09-30 "너무 빠르다" → 느리게)**: 열림 — 배경 800ms fade, 패널 오른쪽에서 **1000ms** `cubic-bezier(0.22,1,0.36,1)`, 메뉴 항목은 350ms 뒤부터 90ms 간격으로 32px 옆에서 fade-in(700~900ms). 닫힘 — 패널 500ms ease-in으로 빠져나가고, **메뉴 글자는 따로 fade-out 하지 않는다**(사용자 요청) — 패널에 실린 채 나가고, 패널이 사라진 뒤(550ms) 숨김 상태로 리셋된다. 패널은 항상 마운트해 두고 `visibility`(닫힘 전환이 끝난 뒤 숨김) + `inert`로 닫힌 상태에서 포커스·클릭을 막는다.
-- **X hover**: 700ms로 **딱 한 바퀴**(360°) — `transition`이 아니라 `.close:hover svg`의 1회짜리 `@keyframes spinOnce`. 마우스를 떼면 아무 애니메이션도 없고(예전 transition 방식은 떼면 역회전해 두 바퀴처럼 보였다, "너무 과하다"), 다시 올리면 새로 한 바퀴. 터치 기기(hover 없음)와 OS의 "동작 줄이기" 설정에서는 돌지 않는다.
+- **X hover**: 450ms로 **90°만** 한 번 — `transition`이 아니라 `.close:hover svg`의 1회짜리 `@keyframes turnOnce`. ⚠️ **X는 90°마다 똑같은 모양이라 360° 회전은 네 바퀴로 보인다**("세네 바퀴 도는 것 같다" 피드백, 2026-09-30) — 대칭 아이콘을 "한 바퀴" 돌릴 때는 대칭 각도만큼만 돌린다. 마우스를 떼면 아무 애니메이션도 없고(예전 transition 방식은 떼면 역회전해 두 바퀴처럼 보였다, "너무 과하다"), 다시 올리면 새로 한 바퀴. 터치 기기(hover 없음)와 OS의 "동작 줄이기" 설정에서는 돌지 않는다.
 - **아이콘 선 굵기 통일 (2026-09-30)**: 햄버거·X·공약 카드 화살표 모두 **1px 선**, `vector-effect: non-scaling-stroke`로 렌더 크기와 상관없이 정확히 1px. 공약 카드 화살표는 예전 채워진(fill) 14px 화살표를 30px로 키워 ~2.8px로 두꺼워 보였다 → `LineArrowRightIcon`(선 화살표)으로 교체. 새 아이콘도 선 굵기는 이 규칙을 따른다. 메뉴 링크 hover는 키 컬러 + 오른쪽 6px.
-- **열려 있는 동안**: `<html data-menu-open>`(`lib/menuState.ts`). window capture 단계에서 wheel/touchmove와 스크롤 키를 막아 뒤 페이지가 움직이지 않고, `SectionPager`·`useSequentialReveal`도 이 속성을 보고 아무것도 하지 않는다(페이지가 넘어가거나 공약 항목이 열리지 않도록). Esc로 닫힘, Tab은 패널 안에서만 돈다, 열면 X에 포커스·닫으면 햄버거로 포커스 복귀.
+- **열려 있는 동안**: `<html data-menu-open>`(`lib/menuState.ts`). window capture 단계에서 wheel/touchmove와 스크롤 키를 막아 뒤 페이지가 움직이지 않고, `SectionPager`·`useSequentialReveal`도 이 속성을 보고 아무것도 하지 않는다(페이지가 넘어가거나 공약 항목이 열리지 않도록). Esc로 닫힘, Tab은 패널 안에서만 돈다, 열면 **패널 자체**(`tabIndex=-1`)에 포커스·닫으면 햄버거로 포커스 복귀. ⚠️ X 버튼에 바로 포커스를 주면 iOS Safari가 탭 후에도 포커스 링(동그라미 테두리)을 그렸다 — 그래서 패널에 포커스를 두고, X의 링은 키보드 Tab일 때(`:focus-visible`)만 보인다.
 
 ## 5. 코드 컨벤션
 
