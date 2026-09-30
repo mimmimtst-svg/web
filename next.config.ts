@@ -1,17 +1,20 @@
 import type { NextConfig } from "next";
 
 // GitHub Pages serves this repo at https://<user>.github.io/web/ (a
-// subpath, not the domain root), so the build needs its base path set
-// only for that deployment target — set by the GitHub Actions workflow,
-// left unset for local dev/build and any other host (e.g. Vercel).
+// subpath, not the domain root), so a Pages build needs a base path —
+// unless the site has a custom domain (PAGES_CUSTOM_DOMAIN, set by the
+// GitHub Actions workflow), which serves it from the domain root and
+// redirects the github.io/web/ address there. Both are left unset for
+// local dev/build and any other host (e.g. Vercel).
 const isGithubPages = process.env.GITHUB_PAGES === "true";
+const hasCustomDomain = Boolean(process.env.PAGES_CUSTOM_DOMAIN);
 const repoName = "web";
-const basePath = isGithubPages ? `/${repoName}` : "";
+const basePath = isGithubPages && !hasCustomDomain ? `/${repoName}` : "";
 
 const nextConfig: NextConfig = {
   output: "export",
   basePath: basePath || undefined,
-  assetPrefix: isGithubPages ? `/${repoName}/` : undefined,
+  assetPrefix: basePath ? `${basePath}/` : undefined,
   images: { unoptimized: true },
   // Next.js only rewrites its own managed assets (CSS/JS chunks, next/image)
   // for the basePath above — plain <img src="/images/...">  tags need it
