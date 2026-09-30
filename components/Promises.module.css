@@ -59,7 +59,7 @@
   width: max(calc(32 * var(--u)), 20px);
   height: max(calc(32 * var(--u)), 20px);
   flex-shrink: 0;
-  color: #abb8c3;
+  color: var(--color-muted);
 }
 
 .headingTitle {
@@ -113,23 +113,23 @@
   font-size: max(calc(34 * var(--u)), 0.875rem);
   line-height: 1.412;
   color: var(--color-white);
-  text-align: justify;
-  /* Global word-break: keep-all leaves justify only a couple of
-     full-phrase gaps per Korean line to stretch; normal breaking lets it
-     wrap instead of opening huge gaps between words. */
-  word-break: normal;
+  /* Left-aligned, breaking between words (2026-09-30: justify needed
+     word-break: normal to avoid huge gaps, which split Korean words
+     mid-way — "설 / 치하겠습니다"). */
+  text-align: left;
+  word-break: keep-all;
   overflow-wrap: break-word;
 }
 
-/* p.text-18r: 18px / 28.66px Light. */
+/* p.text-18r: 22px / 28.66px Light (Figma 2026-09-30, was 18px). */
 .itemDesc {
   font-family: var(--font-kr);
   font-weight: 300;
-  font-size: max(calc(18 * var(--u)), 0.75rem);
-  line-height: 1.592;
+  font-size: max(calc(22 * var(--u)), 0.8125rem);
+  line-height: 1.303;
   color: var(--color-white);
-  text-align: justify;
-  word-break: normal;
+  text-align: left;
+  word-break: keep-all;
   overflow-wrap: break-word;
 }
 

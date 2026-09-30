@@ -119,14 +119,14 @@
 }
 
 /* div.swiper: 40px gap, 40px side padding. The 16/44 vertical padding
-   (Figma: 20/20 around the 584px cards) leaves room for the card's
-   drop shadow, which overflow-x: auto would otherwise clip. */
+   around the 624px cards leaves room for their drop shadow, which
+   overflow-x: auto would otherwise clip. */
 .track {
   /* Figma px -> screen px for the cards. The carousel scrolls
      sideways, so width isn't the constraint — the cards take the height
-     the carousel has (card + 60 Figma px of padding = 644), capped at
+     the carousel has (card + 60 Figma px of padding = 684), capped at
      Figma's own size and at one card fitting across the screen. */
-  --cu: min(1px, calc(100cqh / 644), calc((100vw - 80px) / 504));
+  --cu: min(1px, calc(100cqh / 684), calc((100vw - 80px) / 504));
   height: 100%;
   display: flex;
   align-items: flex-start;
@@ -159,12 +159,13 @@
 /* .card is the scroll-snap target and must never get its own transform
    (some browsers re-evaluate snapping against the transformed box, which
    yanked the track flush-left on hover). Visuals + hover live on
-   .cardInner. Figma card: 504 x 584. */
+   .cardInner. Figma card: 504 x 624 (2026-09-30, was 584; the extra
+   40px is empty space under the list). */
 .card {
   scroll-snap-align: start;
   flex: 0 0 auto;
   width: calc(504 * var(--cu));
-  height: calc(584 * var(--cu));
+  height: calc(624 * var(--cu));
 }
 
 .cardInner {
@@ -205,7 +206,9 @@
   height: 100%;
   object-fit: fill;
   object-position: bottom;
-  opacity: 0.8;
+  /* No CSS opacity: Figma's export already bakes the fill's 95% opacity
+     into the PNG's alpha. The old `opacity: 0.8` on top of an asset with
+     0.8 baked in rendered the texture at ~64%, fainter than Figma. */
   z-index: -1;
 }
 
@@ -334,7 +337,7 @@
    centre-snapping 298 x 372 cards 20px apart (radius 8, shadow
    0 9.6 12 .15) with 30px under them, and 5px dots 10px apart. Card
    internals are Figma's mobile values, not the desktop ones scaled —
-   the mobile card isn't a uniform scale of the 504 x 584 one. */
+   the mobile card isn't a uniform scale of the 504 x 624 one. */
 @media (orientation: portrait) {
   .section {
     height: auto;
@@ -402,11 +405,9 @@
     gap: calc(4 * var(--mu)) calc(12 * var(--mu));
   }
 
-  /* Figma's mobile card title is still 16px SemiBold. */
   .cardNumber,
   .cardTitle {
     font-size: calc(16 * var(--mu));
-    font-weight: 600;
   }
 
   .cardHeadLink svg {

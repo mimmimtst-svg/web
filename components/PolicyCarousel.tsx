@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./PolicyCarousel.module.css";
-import { ArrowRightIcon, CheckIcon, ChevronIcon, PlusIcon } from "./icons";
+import { CheckIcon, ChevronIcon, LineArrowRightIcon, PlusIcon } from "./icons";
 import { policyCards } from "@/lib/policyData";
 import { useHorizontalCarousel } from "@/hooks/useHorizontalCarousel";
 import { withBasePath } from "@/lib/basePath";
@@ -94,7 +94,7 @@ export default function PolicyCarousel() {
                     <span className={styles.cardTitle}>{card.title}</span>
                   </span>
                   <a className={styles.cardHeadLink} href="#" aria-label="자세히 보기">
-                    <ArrowRightIcon />
+                    <LineArrowRightIcon />
                   </a>
                 </div>
                 <div className={styles.cardCategories}>

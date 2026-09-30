@@ -47,9 +47,13 @@ export function MenuIcon({ className }: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      <path d="M0.5 0.5H25.8633" stroke="currentColor" strokeLinecap="round" />
-      <path d="M0.5 12H25.8633" stroke="currentColor" strokeLinecap="round" />
-      <path d="M0.5 23.5H25.8633" stroke="currentColor" strokeLinecap="round" />
+      <path
+        d="M0.5 0.5H25.8633M0.5 12H25.8633M0.5 23.5H25.8633"
+        stroke="currentColor"
+        strokeWidth={1}
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+      />
     </svg>
   );
 }
@@ -152,6 +156,35 @@ export function CloseIcon({ className }: IconProps) {
       <path
         d="M21 21L12 12M12 12L3 3M12 12L21 3M12 12L3 21"
         stroke="currentColor"
+        strokeWidth={1}
+        vectorEffect="non-scaling-stroke"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/**
+ * Policy card head link (Figma Component 2 in 660:5027): a line arrow
+ * drawn with the same 1px stroke as the menu and close icons.
+ * `non-scaling-stroke` keeps it exactly 1px at any rendered size — the
+ * old filled 14px arrow scaled up to 30px came out ~2.8px thick.
+ */
+export function LineArrowRightIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 30 30"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M1.5 15H28.5M18.5 5L28.5 15L18.5 25"
+        stroke="currentColor"
+        strokeWidth={1}
+        vectorEffect="non-scaling-stroke"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
