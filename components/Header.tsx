@@ -5,11 +5,23 @@ import styles from "./Header.module.css";
 import { MenuIcon } from "./icons";
 import { goToSection } from "@/lib/pageNav";
 import SiteMenu from "./SiteMenu";
+import { PORTRAIT, useMediaQuery } from "@/hooks/useMediaQuery";
+
+/** Mobile: past this much scroll, scrolling down slides the header away. */
+const HIDE_AFTER_PX = 40;
+/** Scroll moves smaller than this don't flip the header (finger jitter). */
+const DIRECTION_SLOP_PX = 6;
 
 export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  // Mobile layout scrolls freely, so the fixed header would sit over the
+  // hero headline and the content below it. There it hides while the
+  // user scrolls down and comes back (as the solid white bar) on any
+  // scroll up; at the very top it is the transparent hero header.
+  const mobile = useMediaQuery(PORTRAIT);
+  const [autoHide, setAutoHide] = useState<"top" | "hidden" | "shown">("top");
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeMenu = useCallback(() => {
     setMenuOpen(false);
@@ -86,11 +98,53 @@ export default function Header() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!mobile) return;
+    let lastY = window.scrollY;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      if (y <= 4) {
+        setAutoHide("top");
+        lastY = y;
+        return;
+      }
+      const delta = y - lastY;
+      // Small moves accumulate (lastY stays put) until they add up.
+      if (Math.abs(delta) < DIRECTION_SLOP_PX) return;
+      if (delta > 0 && y > HIDE_AFTER_PX) setAutoHide("hidden");
+      else if (delta < 0) setAutoHide("shown");
+      lastY = y;
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [mobile]);
+
+  const hidden = mobile && autoHide === "hidden" && !menuOpen;
+  const solid = scrolled || (mobile && autoHide === "shown");
+
+  // Browser chrome tint (theme-color; app/layout.tsx sets the initial
+  // red): the hero's red while the transparent header sits on the hero,
+  // white once the white header bar (or the page below the hero) shows.
+  useEffect(() => {
+    const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    if (meta) meta.content = solid ? "#ffffff" : "#8b0029";
+  }, [solid]);
+
   return (
     <>
       <header
         ref={headerRef}
-        className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}
+        className={`${styles.header} ${solid ? styles.scrolled : ""} ${
+          hidden ? styles.autoHidden : ""
+        }`}
       >
         <div className={styles.wrapper}>
           <a

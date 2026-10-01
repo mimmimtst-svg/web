@@ -107,6 +107,7 @@
 
 html {
   height: 100%;
+  background-color: var(--color-key);
   /* No CSS scroll-snap and no `scroll-behavior: smooth`: section paging
      (one gesture = one page, sliding the next section up) is driven by
      components/SectionPager.tsx, which animates its own transitions. */
@@ -138,7 +139,12 @@ body {
   display: flex;
   flex-direction: column;
   color: var(--color-ink);
-  background: var(--color-bg);
+  /* Every section paints its own background, so this only shows where
+     the page itself does: the rubber-band overscroll at the top (above
+     the red hero) and bottom (below the red footer), and what iOS
+     Safari tints its status bar / see-through toolbars with. Red there
+     instead of white (2026-10-01). */
+  background: var(--color-key);
   font-family: var(--font-kr);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

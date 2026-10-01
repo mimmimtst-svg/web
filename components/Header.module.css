@@ -11,7 +11,12 @@
   border-bottom: 1px solid transparent;
   color: var(--color-white);
   transition: background-color 300ms ease, color 300ms ease,
-    border-color 300ms ease;
+    border-color 300ms ease, transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Mobile only (Header.tsx): slid away while scrolling down. */
+.autoHidden {
+  transform: translateY(-100%);
 }
 
 .header.scrolled {

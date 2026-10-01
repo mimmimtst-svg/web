@@ -1,9 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "유병현 | 고려대학교 제22대 총장 후보",
   description: "자유로운 지성, 시대를 여는 고대 — 고려대학교 제22대 총장 후보 유병현",
+};
+
+// Browser chrome tint (status bar / toolbars) starts in the hero's red;
+// Header.tsx switches it to white once the white header bar shows.
+export const viewport: Viewport = {
+  themeColor: "#8b0029",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
