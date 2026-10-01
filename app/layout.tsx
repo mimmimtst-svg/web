@@ -6,10 +6,10 @@ export const metadata: Metadata = {
   description: "자유로운 지성, 시대를 여는 고대 — 고려대학교 제22대 총장 후보 유병현",
 };
 
-// Browser chrome tint (status bar / toolbars) starts in the hero's red;
-// Header.tsx switches it to white once the white header bar shows.
+// Browser chrome tint (status bar / toolbars): white. The hero's red was
+// tried there and looked worse (2026-10-01).
 export const viewport: Viewport = {
-  themeColor: "#8b0029",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

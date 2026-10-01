@@ -130,14 +130,6 @@ export default function Header() {
   const hidden = mobile && autoHide === "hidden" && !menuOpen;
   const solid = scrolled || (mobile && autoHide === "shown");
 
-  // Browser chrome tint (theme-color; app/layout.tsx sets the initial
-  // red): the hero's red while the transparent header sits on the hero,
-  // white once the white header bar (or the page below the hero) shows.
-  useEffect(() => {
-    const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-    if (meta) meta.content = solid ? "#ffffff" : "#8b0029";
-  }, [solid]);
-
   return (
     <>
       <header
