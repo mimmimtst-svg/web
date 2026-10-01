@@ -130,9 +130,18 @@
    the 16px English line 10px under it in a 36px box, and the 248 x 347
    portrait pinned bottom-right. Overrides the max-width: 1023px block. */
 @media (orientation: portrait) {
+  /* First screen fills the phone (2026-10-01 user request): at least
+     Figma's 598px band, stretched to the screen height so the next
+     section doesn't peek in at the bottom. The background (object-fit:
+     cover) grows with it and the portrait stays pinned to the bottom, so
+     only the photo moves down; the headline keeps its Figma position.
+     svh, not dvh: sized to the screen with the browser toolbars showing
+     (the first view), and it doesn't resize while they collapse on
+     scroll, which would jolt the page. 100vh is the fallback. */
   .hero {
     min-height: 0;
-    height: calc(598 * var(--mu));
+    height: max(calc(598 * var(--mu)), 100vh);
+    height: max(calc(598 * var(--mu)), 100svh);
   }
 
   .inner {
