@@ -135,15 +135,16 @@
      section doesn't peek in at the bottom. The background (object-fit:
      cover) grows with it and the portrait stays pinned to the bottom, so
      only the photo moves down; the headline keeps its Figma position.
-     lvh (the full screen, toolbars included), not svh: iOS Safari's
-     toolbars are see-through, and an svh hero ended right above them, so
-     the white section below showed through as a white band (2026-10-01).
-     Not dvh either — that resizes while the toolbars collapse on scroll
-     and jolts the page. 100vh (= lvh on iOS) is the fallback. */
+     svh = the screen as first seen, between the browser's toolbars.
+     ⚠️ Not lvh: in iOS Safari lvh is the height with the toolbars gone,
+     much taller than the first view, and it pushed the bottom-pinned
+     photo off screen ("사진 왜 저렇게 내려갔어", 2026-10-01). Not dvh
+     either — that resizes while the toolbars collapse on scroll and jolts
+     the page. 100vh is the fallback. */
   .hero {
     min-height: 0;
     height: max(calc(598 * var(--mu)), 100vh);
-    height: max(calc(598 * var(--mu)), 100lvh);
+    height: max(calc(598 * var(--mu)), 100svh);
   }
 
   .inner {
