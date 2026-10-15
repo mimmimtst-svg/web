@@ -33,6 +33,10 @@ jobs:
           # drops the /web base path; mimmimtst-svg.github.io/web/
           # redirects to it.
           PAGES_CUSTOM_DOMAIN: byunghyun.kr
+          # Private for now: byunghyun.kr shows a "coming soon" page and
+          # the site lives at byunghyun.kr/preview-q0xgevgw (lib/siteMode.ts).
+          # Delete this line and push to make the site public.
+          NEXT_PUBLIC_SITE_PRIVATE: "true"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

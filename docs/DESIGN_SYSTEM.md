@@ -409,6 +409,12 @@ const revealedCount = useSequentialReveal(promises.length, settled, entered);
 - **아이콘 선 굵기 통일 (2026-09-30)**: 햄버거·X·공약 카드 화살표 모두 **1px 선**, `vector-effect: non-scaling-stroke`로 렌더 크기와 상관없이 정확히 1px. 공약 카드 화살표는 예전 채워진(fill) 14px 화살표를 30px로 키워 ~2.8px로 두꺼워 보였다 → `LineArrowRightIcon`(선 화살표)으로 교체. 새 아이콘도 선 굵기는 이 규칙을 따른다. 메뉴 링크 hover는 키 컬러 + 오른쪽 6px.
 - **열려 있는 동안**: `<html data-menu-open>`(`lib/menuState.ts`). window capture 단계에서 wheel/touchmove와 스크롤 키를 막아 뒤 페이지가 움직이지 않고, `SectionPager`·`useSequentialReveal`도 이 속성을 보고 아무것도 하지 않는다(페이지가 넘어가거나 공약 항목이 열리지 않도록). Esc로 닫힘, Tab은 패널 안에서만 돈다, 열면 **패널 자체**(`tabIndex=-1`)에 포커스·닫으면 햄버거로 포커스 복귀. ⚠️ X 버튼에 바로 포커스를 주면 iOS Safari가 탭 후에도 포커스 링(동그라미 테두리)을 그렸다 — 그래서 패널에 포커스를 두고, X의 링은 키보드 Tab일 때(`:focus-visible`)만 보인다.
 
+### 4.23 비공개(준비 중) 모드 (`lib/siteMode.ts`, 2026-10-15)
+사이트가 완성되기 전 잠깐 가려두는 모드. 배포 워크플로의 `NEXT_PUBLIC_SITE_PRIVATE: "true"`가 켜져 있으면 `byunghyun.kr/`에는 `components/ComingSoon.tsx`("웹사이트를 준비하고 있습니다", 히어로의 빨강+패턴)만 보이고, 실제 사이트(`components/SiteHome.tsx`)는 목록에 없는 주소 **`/preview-q0xgevgw/`**(`app/preview-q0xgevgw/page.tsx`)에서 볼 수 있다. 두 페이지 모두 `noindex, nofollow`.
+- **공개하기**: `.github/workflows/deploy-pages.yml`에서 `NEXT_PUBLIC_SITE_PRIVATE` 줄을 지우고 push. GitHub Pages 설정·커스텀 도메인·DNS는 건드리지 않는다(도메인 연결을 끊으면 다른 사람이 도메인을 가로챌 수 있어서 이 방식을 택했다).
+- 미리보기 경로 이름을 바꾸면 `app/` 폴더 이름과 `PREVIEW_PATH`를 같이 바꾼다. 비밀번호가 아니라 "주소를 아는 사람만" 수준의 비공개다.
+- `next.config.ts`의 `trailingSlash: true`는 이 경로 때문 — 정적 export가 `<route>.html`과 같은 이름의 `<route>/` 폴더(RSC 페이로드)를 함께 만들면 GitHub Pages가 폴더로 해석해 404가 난다. `<route>/index.html`로 내보낸다.
+
 ## 5. 코드 컨벤션
 
 - **스타일링**: CSS Modules (`*.module.css`), Tailwind 미사용

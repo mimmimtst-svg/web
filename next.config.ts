@@ -13,6 +13,10 @@ const basePath = isGithubPages && !hasCustomDomain ? `/${repoName}` : "";
 
 const nextConfig: NextConfig = {
   output: "export",
+  // Export routes as <route>/index.html, not <route>.html next to a
+  // <route>/ folder of RSC payloads — GitHub Pages resolves /<route> to
+  // that folder and would 404 (the unlisted preview route, lib/siteMode.ts).
+  trailingSlash: true,
   basePath: basePath || undefined,
   assetPrefix: basePath ? `${basePath}/` : undefined,
   images: { unoptimized: true },
