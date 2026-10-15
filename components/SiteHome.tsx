@@ -7,8 +7,8 @@ import SectionPager from "@/components/SectionPager";
 
 /**
  * The full one-page site. Rendered at "/" when the site is public, and
- * always at the unlisted preview route (app/preview-q0xgevgw) so it can
- * be checked while "/" shows the coming-soon page (lib/siteMode.ts).
+ * always at the unlisted preview route (preview-template/page.tsx) so it
+ * can be checked while "/" shows the coming-soon page (lib/siteMode.ts).
  */
 export default function SiteHome() {
   return (

@@ -19,7 +19,7 @@
 - 예외: Figma 콘텐츠/구조는 유지하되, **카드류의 시각 디자인은 이 시스템에 맞게 모던화**해도 된다 (Section 4 카드가 그 예). 단, 텍스트·제목·데이터는 임의로 수정·요약하지 않는다.
 - 실제 이미지/아이콘 에셋만 사용한다. Figma에서 가져올 수 없는 경우 placeholder로 슬쩍 대체하지 말고, 먼저 사용자에게 알린다.
 
-> **Figma 소스**: fileKey `uwbrfXG77JjwUSOkbptUxq`, 페이지 전체 프레임 **`612:1359` ("1920w light", 1920×4519)**. 섹션별 노드: 헤더 `614:6029`(히어로 위) / `651:1947`(흰 배경 위, 하단 1px `#d9d9d9`), section1_hero `612:1405`, section2 `613:1832`(카드 그리드 `612:1416`), section3 `612:1471`(그리드 `614:6269`), section4 `614:6270`. 디자인을 다시 확인할 땐 이 노드들에 `get_design_context`/`get_screenshot`을 직접 호출한다 — 페이지 `0:1` 전체 메타데이터는 너무 커서 잘려 나오고, 캔버스에 다른 프로젝트 작업물이 섞여 있어 전체 검색으로는 이 사이트 프레임을 찾기 어렵다. (2026-09-28 한 라운드에서 전체 검색만 해보고 "이 파일엔 사이트 디자인이 없다"고 잘못 결론 낸 적이 있다 — 사용자가 준 노드 링크에서 시작할 것.)
+> **Figma 소스**: 파일 키는 이 공개 저장소에 적지 않는다(작업자에게 Figma 링크로 따로 받는다). 페이지 전체 프레임 **`612:1359` ("1920w light", 1920×4519)**. 섹션별 노드: 헤더 `614:6029`(히어로 위) / `651:1947`(흰 배경 위, 하단 1px `#d9d9d9`), section1_hero `612:1405`, section2 `613:1832`(카드 그리드 `612:1416`), section3 `612:1471`(그리드 `614:6269`), section4 `614:6270`. 디자인을 다시 확인할 땐 이 노드들에 `get_design_context`/`get_screenshot`을 직접 호출한다 — 페이지 `0:1` 전체 메타데이터는 너무 커서 잘려 나오고, 캔버스에 다른 프로젝트 작업물이 섞여 있어 전체 검색으로는 이 사이트 프레임을 찾기 어렵다. (2026-09-28 한 라운드에서 전체 검색만 해보고 "이 파일엔 사이트 디자인이 없다"고 잘못 결론 낸 적이 있다 — 사용자가 준 노드 링크에서 시작할 것.)
 >
 > **모바일 Figma 소스 (2026-09-29)**: 프레임 **`629:7979`** (402px 폭). 헤더 `629:7981`, section1_hero `629:8002`, section2 `629:8015`, section3 `629:8045`(항목 모션 `672:2228`~`672:2303`), section4 `629:8157`. **세로(portrait) 화면 전체**에 이 레이아웃을 쓴다 — 4.15 참고.
 
@@ -410,10 +410,12 @@ const revealedCount = useSequentialReveal(promises.length, settled, entered);
 - **열려 있는 동안**: `<html data-menu-open>`(`lib/menuState.ts`). window capture 단계에서 wheel/touchmove와 스크롤 키를 막아 뒤 페이지가 움직이지 않고, `SectionPager`·`useSequentialReveal`도 이 속성을 보고 아무것도 하지 않는다(페이지가 넘어가거나 공약 항목이 열리지 않도록). Esc로 닫힘, Tab은 패널 안에서만 돈다, 열면 **패널 자체**(`tabIndex=-1`)에 포커스·닫으면 햄버거로 포커스 복귀. ⚠️ X 버튼에 바로 포커스를 주면 iOS Safari가 탭 후에도 포커스 링(동그라미 테두리)을 그렸다 — 그래서 패널에 포커스를 두고, X의 링은 키보드 Tab일 때(`:focus-visible`)만 보인다.
 
 ### 4.23 비공개(준비 중) 모드 (`lib/siteMode.ts`, 2026-10-15)
-사이트가 완성되기 전 잠깐 가려두는 모드. 배포 워크플로의 `NEXT_PUBLIC_SITE_PRIVATE: "true"`가 켜져 있으면 `byunghyun.kr/`에는 `components/ComingSoon.tsx`("웹사이트를 준비하고 있습니다", 히어로의 빨강+패턴)만 보이고, 실제 사이트(`components/SiteHome.tsx`)는 목록에 없는 주소 **`/preview-q0xgevgw/`**(`app/preview-q0xgevgw/page.tsx`)에서 볼 수 있다. 두 페이지 모두 `noindex, nofollow`.
-- **공개하기**: `.github/workflows/deploy-pages.yml`에서 `NEXT_PUBLIC_SITE_PRIVATE` 줄을 지우고 push. GitHub Pages 설정·커스텀 도메인·DNS는 건드리지 않는다(도메인 연결을 끊으면 다른 사람이 도메인을 가로챌 수 있어서 이 방식을 택했다).
-- 미리보기 경로 이름을 바꾸면 `app/` 폴더 이름과 `PREVIEW_PATH`를 같이 바꾼다. 비밀번호가 아니라 "주소를 아는 사람만" 수준의 비공개다.
-- `next.config.ts`의 `trailingSlash: true`는 이 경로 때문 — 정적 export가 `<route>.html`과 같은 이름의 `<route>/` 폴더(RSC 페이로드)를 함께 만들면 GitHub Pages가 폴더로 해석해 404가 난다. `<route>/index.html`로 내보낸다.
+사이트가 완성되기 전 잠깐 가려두는 모드. 배포 워크플로의 `NEXT_PUBLIC_SITE_PRIVATE: "true"`가 켜져 있으면 `byunghyun.kr/`에는 `components/ComingSoon.tsx`("웹사이트를 준비하고 있습니다", 히어로의 빨강+패턴)만 보이고, 실제 사이트(`components/SiteHome.tsx`)는 **목록에 없는 미리보기 주소**에서만 볼 수 있다. 두 페이지 모두 `noindex, nofollow`.
+- **미리보기 주소는 저장소에 적지 않는다.** 이 저장소는 공개라서, 주소를 코드·문서·커밋 메시지 어디에 써도 누구나 볼 수 있다(처음 쓴 주소는 그래서 폐기했다). 주소는 저장소 Secret **`PREVIEW_SLUG`**(영소문자·숫자·`-`)에만 있고, 워크플로가 빌드 직전에 `preview-template/page.tsx`를 `app/<PREVIEW_SLUG>/page.tsx`로 복사한다. 빌드 로그에서는 GitHub이 Secret 값을 `***`로 가린다. Secret이 없으면 미리보기 페이지 없이 빌드된다. 로컬에서는 `/`가 그대로 전체 사이트다.
+- **주소 바꾸기**: Secret 값만 새로 바꾸고 배포를 다시 돌린다(코드 수정 없음).
+- **한계**: 저장소가 공개인 동안 사이트의 코드·문구·이미지 자체는 누구나 저장소에서 볼 수 있다 — 이 모드는 "도메인에서 바로 보이지 않게" 가리는 수준이다. 완전히 숨기려면 저장소를 비공개로 해야 하고, 그러려면 GitHub Pages에 유료 플랜(GitHub Pro 등)이 필요하다. 또 배포용 빌드 결과물(Actions의 `github-pages` 아티팩트, 보존 1일)에는 미리보기 폴더가 들어 있어 로그인한 GitHub 사용자가 받아 볼 수 있다.
+- **공개하기**: `.github/workflows/deploy-pages.yml`에서 `NEXT_PUBLIC_SITE_PRIVATE` 줄을 지우고 push. GitHub Pages 설정·커스텀 도메인·DNS는 건드리지 않는다(도메인 연결을 끊으면 다른 사람이 도메인을 가로챌 수 있다).
+- `next.config.ts`의 `trailingSlash: true`는 미리보기 경로 때문 — 정적 export가 `<route>.html`과 같은 이름의 `<route>/` 폴더(RSC 페이로드)를 함께 만들면 GitHub Pages가 폴더로 해석해 404가 난다. `<route>/index.html`로 내보낸다.
 
 ## 5. 코드 컨벤션
 

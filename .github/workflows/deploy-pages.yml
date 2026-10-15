@@ -25,6 +25,21 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      # The unlisted preview page's address comes from the PREVIEW_SLUG
+      # repository secret, so it never appears in this public repository
+      # (lib/siteMode.ts). Without the secret there is no preview page.
+      - name: Add the unlisted preview page
+        env:
+          PREVIEW_SLUG: ${{ secrets.PREVIEW_SLUG }}
+        run: |
+          if [ -z "$PREVIEW_SLUG" ]; then
+            echo "No PREVIEW_SLUG secret: building without a preview page."
+          elif [[ ! "$PREVIEW_SLUG" =~ ^[a-z0-9-]+$ ]]; then
+            echo "PREVIEW_SLUG may only use a-z, 0-9 and -." && exit 1
+          else
+            mkdir -p "app/$PREVIEW_SLUG"
+            cp preview-template/page.tsx "app/$PREVIEW_SLUG/page.tsx"
+          fi
       - run: npm run build
         env:
           GITHUB_PAGES: "true"
@@ -34,7 +49,7 @@ jobs:
           # redirects to it.
           PAGES_CUSTOM_DOMAIN: byunghyun.kr
           # Private for now: byunghyun.kr shows a "coming soon" page and
-          # the site lives at byunghyun.kr/preview-q0xgevgw (lib/siteMode.ts).
+          # the site lives at the unlisted preview address (lib/siteMode.ts).
           # Delete this line and push to make the site public.
           NEXT_PUBLIC_SITE_PRIVATE: "true"
       - uses: actions/configure-pages@v5
