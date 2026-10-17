@@ -48,15 +48,15 @@ export default function ProfilePage() {
         <section className={styles.intro}>
           <div className={styles.introInner}>
             <Reveal className={styles.photoWrap} visible>
-              {/* The main page's cut-out portrait, mirrored to face the
-                  text, standing on the band's bottom edge. */}
+              {/* Cut-out portrait facing the text (its own photo since
+                  2026-10-17), standing on the band's bottom edge. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className={styles.photo}
-                src={withBasePath("/images/hero-portrait.png")}
+                src={withBasePath("/images/profile-portrait.webp")}
                 alt="유병현 교수"
-                width={591}
-                height={827}
+                width={1241}
+                height={1835}
               />
             </Reveal>
             <Reveal className={styles.introText} visible>

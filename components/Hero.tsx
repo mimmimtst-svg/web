@@ -30,8 +30,10 @@ export default function Hero() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className={styles.portrait}
-          src={withBasePath("/images/hero-portrait.png")}
+          src={withBasePath("/images/hero-portrait.webp")}
           alt="유병현 교수"
+          width={1241}
+          height={1835}
         />
       </div>
       <ScrollDownIndicator active={settled} />

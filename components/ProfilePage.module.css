@@ -29,19 +29,14 @@
 }
 
 /* The cut-out stands on the band's bottom edge (no padding under it),
-   mirrored so he looks toward the name (2026-10-17). */
+   facing the name. Its own photo (2026-10-17), already turned that way:
+   no mirroring and no edge fade any more. */
 .photo {
   display: block;
   width: 100%;
   max-width: 460px;
   height: auto;
   margin: 0 auto;
-  transform: scaleX(-1);
-  /* The source cuts the shoulder off with a straight edge; mirrored, that
-     edge faces the text, so it fades out. The mask is in the image's own
-     (unmirrored) coordinates, where the cut is on the left. */
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16%);
-  mask-image: linear-gradient(to right, transparent 0, #000 16%);
 }
 
 .introText {

@@ -93,14 +93,15 @@
   line-height: 0;
 }
 
+/* New portrait from Figma (2026-10-17): already facing the right way,
+   so no mirroring; trimmed to the figure, transparent around it. */
 .portrait {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 591 / 827;
+  aspect-ratio: 1241 / 1835;
   object-fit: cover;
   object-position: bottom;
-  transform: scaleX(-1);
 }
 
 /* Below 1024px the portrait stays pinned bottom-right (position: absolute,
