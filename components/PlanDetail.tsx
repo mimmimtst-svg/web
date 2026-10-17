@@ -28,7 +28,11 @@ export default function PlanDetail() {
       <main className={styles.page}>
         {/* The whole page at a glance: each part with its numbered
             pillars, every line a link down to it. */}
-        <nav className={styles.jumpBar} aria-label="나답게 · 다함께 · 더높게 공약 요약">
+        <nav className={styles.jumpBar} aria-labelledby="plan-overview">
+          <h1 className={styles.jumpHeading} id="plan-overview">
+            <PlusIcon />
+            <span>공약 한눈에 보기</span>
+          </h1>
           <ol className={styles.jumpList}>
             {planParts.map((part) => (
               <li className={styles.jumpItem} key={part.id}>

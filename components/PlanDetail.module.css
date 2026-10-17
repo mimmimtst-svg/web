@@ -10,21 +10,50 @@
   color: var(--color-charcoal);
 }
 
-/* ---------- Summary at the top ----------
-   Each part (title + subtitle) over its numbered pillars, three columns,
-   every line a link to that spot below. No rules — the hairlines over the
-   columns and under the strip were taken out (2026-10-17). */
+/* ---------- Summary at the top: its own section ----------
+   A full-width beige band (the card colour) with the section-heading
+   pattern ("+ 공약 한눈에 보기") and the three parts as white cards — each
+   part's title and subtitle over its numbered pillars, every line a link
+   down to that spot. The band's colour sets it apart from the white
+   나답게 part below, and the parts then alternate white / beige / white.
+   No rules (2026-10-17: hairlines removed at the user's request). */
 .jumpBar {
-  padding: calc(var(--header-height) + clamp(48px, 7vh, 96px)) var(--space-page-x)
-    clamp(24px, 4vh, 56px);
+  padding: calc(var(--header-height) + clamp(48px, 6vh, 88px))
+    max(var(--space-page-x), calc(var(--detail-float-x) + 64px)) clamp(56px, 8vh, 112px);
+  background-color: var(--color-card-bg);
+}
+
+.jumpHeading {
+  max-width: var(--detail-max);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: clamp(1.25rem, 1.05rem + 0.75vw, 1.875rem);
+  line-height: 1.4;
+}
+
+.jumpHeading svg {
+  flex: 0 0 auto;
+  width: clamp(18px, 1.4vw, 26px);
+  height: clamp(18px, 1.4vw, 26px);
+  color: var(--color-muted);
 }
 
 .jumpList {
   max-width: var(--detail-max);
-  margin: 0 auto;
+  margin: clamp(24px, 3vw, 48px) auto 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(24px, 3vw, 56px);
+  gap: clamp(16px, 1.6vw, 32px);
+}
+
+.jumpItem {
+  padding: clamp(24px, 2.4vw, 44px);
+  border-radius: var(--radius-card);
+  background-color: var(--color-white);
 }
 
 .jump {
@@ -291,12 +320,27 @@ footer.footer {
 /* ---------- Mobile layout (portrait): one column, --mu sizes ---------- */
 @media (orientation: portrait) {
   .jumpBar {
-    padding: calc(84 * var(--mu) + 36 * var(--mu)) calc(20 * var(--mu)) calc(8 * var(--mu));
+    padding: calc(84 * var(--mu) + 32 * var(--mu)) calc(20 * var(--mu)) calc(40 * var(--mu));
+  }
+
+  .jumpHeading {
+    gap: calc(8 * var(--mu));
+    font-size: calc(20 * var(--mu));
+  }
+
+  .jumpHeading svg {
+    width: calc(16 * var(--mu));
+    height: calc(16 * var(--mu));
   }
 
   .jumpList {
     grid-template-columns: minmax(0, 1fr);
-    gap: calc(32 * var(--mu));
+    gap: calc(12 * var(--mu));
+    margin-top: calc(20 * var(--mu));
+  }
+
+  .jumpItem {
+    padding: calc(22 * var(--mu)) calc(20 * var(--mu));
   }
 
   .jump {
