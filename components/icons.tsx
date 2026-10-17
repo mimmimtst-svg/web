@@ -270,25 +270,3 @@ export function LineDownloadIcon({ className }: IconProps) {
     </svg>
   );
 }
-
-/** Opinion mail link: a 1px line envelope. */
-export function LineMailIcon({ className }: IconProps) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 30 30"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path
-        d="M3.5 7.5H26.5V23.5H3.5Z M3.5 7.5L15 16.5L26.5 7.5"
-        stroke="currentColor"
-        strokeWidth={1}
-        vectorEffect="non-scaling-stroke"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
