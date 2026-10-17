@@ -1,5 +1,5 @@
 /* Detail-page part navigation (components/DetailNav.tsx).
-   Landscape: 10px dots on the right edge, 16px apart, vertically
+   Landscape: 10px dots on the right edge, 40px apart, vertically
    centred; inactive dots are the muted beige at 50%, the current one key
    red and a little larger. Names appear beside the dots on hover only —
    a permanent label covered the body text on narrower screens. */
@@ -26,11 +26,12 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  /* 2026-10-17: 4px → 14px ("간격 살짝 넓게") — dots 40px apart. */
+  gap: 14px;
 }
 
 /* The whole row (name + dot) is the hit area; 26px rows give the 10px
-   dots a comfortable target and keep them 16px apart. */
+   dots a comfortable target. */
 .link {
   display: flex;
   align-items: center;
