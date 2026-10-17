@@ -12,10 +12,11 @@ import { MENU_OPEN_ATTR } from "@/lib/menuState";
 type MenuItem = { label: string; target?: string; page?: string };
 
 // Figma hamburger (697:6208); labels final as of 2026-10-17 (the
-// parentheses were placeholders). 발전 방향 opens the P2-1 page;
+// parentheses were placeholders). 유 병 현 opens the profile page,
+// 발전 방향 the P2-1 page;
 // "언론 보도 자료" has nothing to link to yet.
 const MENU_ITEMS: MenuItem[] = [
-  { label: "유 병 현", target: "hero" },
+  { label: "유 병 현", page: "profile/" },
   { label: "발전 방향", page: "direction/" },
   { label: "주요 공약", target: "promises" },
   { label: "발전계획서", target: "policies" },
