@@ -99,8 +99,9 @@
 }
 
 /* Portrait (mobile layout): no room for a column of dots beside the
-   text, so the names sit in a pill at the bottom centre, current one in
-   key red. Moves out of the way while the footer is on screen. */
+   text, so the names sit in a pill at the bottom centre, the current one
+   on a rounded light-gray pill. Moves out of the way while the footer is
+   on screen. */
 @media (orientation: portrait) {
   .nav {
     top: auto;
@@ -140,12 +141,16 @@
     gap: 0;
   }
 
+  /* Current part: a rounded light-gray pill inside the bar (a square
+     red block ran past the bar's rounded ends and read too heavy). */
   .label {
     padding: 0 14px;
     height: 100%;
     display: flex;
     align-items: center;
+    border-radius: 999px;
     font-size: 13px;
+    color: var(--color-label);
     background-color: transparent;
     opacity: 1;
     transform: none;
@@ -157,8 +162,8 @@
   }
 
   .current .label {
-    background-color: var(--color-key);
-    color: var(--color-white);
+    background-color: rgba(44, 44, 44, 0.07);
+    color: var(--color-charcoal);
   }
 }
 

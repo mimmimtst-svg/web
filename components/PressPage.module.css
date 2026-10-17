@@ -1,6 +1,6 @@
 /* 언론 보도 자료 (components/PressPage.tsx). White reading page: centred
    title, a key-red pill tab bar, then a list ruled like a board — a 2px
-   charcoal line on top, light-gray hairlines between rows. Each row: the
+   light-gray line on top, 1px between rows. Each row: the
    source as a beige tag, the title, the date in the label colour, and an
    arrow that slides in on hover (the whole row is the link). */
 .page {
@@ -64,17 +64,17 @@
 
 .panel {
   margin-top: clamp(40px, 5vw, 64px);
-  border-top: 2px solid var(--color-charcoal);
+  border-top: 2px solid var(--color-light-gray);
 }
 
 .group + .group {
   margin-top: clamp(40px, 4vw, 56px);
 }
 
-/* Each period starts like the list itself: under a 2px charcoal line. */
+/* Each period starts like the list itself: under a 2px gray line. */
 .groupTitle {
   padding: clamp(28px, 3vw, 40px) 0 12px;
-  border-bottom: 2px solid var(--color-charcoal);
+  border-bottom: 2px solid var(--color-light-gray);
   font-family: var(--font-kr);
   font-weight: 700;
   font-size: clamp(1rem, 0.94rem + 0.25vw, 1.25rem);

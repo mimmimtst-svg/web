@@ -150,48 +150,62 @@
     height: max(calc(598 * var(--mu)), 100svh);
   }
 
+  /* 2026-10-17 phone layout (user mock): the three lines stacked at the
+     top — tagline, "FINE - KU", the Korean line kept on one line — and
+     the portrait below them, cropped by the bottom edge. Earlier the
+     two-line Korean headline ran across his face. */
   .inner {
     min-height: 0;
     height: 100%;
     align-items: flex-start;
-    padding: calc(166 * var(--mu)) calc(20 * var(--mu)) 0;
+    padding: calc(116 * var(--mu)) calc(20 * var(--mu)) 0;
   }
 
-  /* Figma's mobile hero still shows the old wording; the new lines follow
-     the desktop order at phone sizes: 16 / 48 / 38 (two lines). */
   .headline {
     height: auto;
   }
 
   .headlineEn {
-    font-size: calc(17 * var(--mu));
-    line-height: calc(22 * var(--mu));
+    font-size: calc(14 * var(--mu));
+    line-height: calc(20 * var(--mu));
   }
 
   .headlineTitle {
-    gap: calc(14 * var(--mu));
+    gap: calc(10 * var(--mu));
     margin-top: calc(2 * var(--mu));
   }
 
   .headlineBrand {
-    font-size: calc(48 * var(--mu));
-    line-height: calc(56 * var(--mu));
+    font-size: calc(42 * var(--mu));
+    line-height: calc(48 * var(--mu));
   }
 
   .headlineKr {
-    display: flex;
-    flex-direction: column;
-    font-size: calc(38 * var(--mu));
-    line-height: calc(55 * var(--mu));
+    font-size: calc(24 * var(--mu));
+    line-height: calc(34 * var(--mu));
+    letter-spacing: -0.01em;
   }
 
-  .headlineLine {
-    display: block;
-  }
-
+  /* The photo fills a box from under the text to the bottom of the
+     screen, its top (head) pinned, the rest cropped by the box — on a
+     tall screen it grows (cover) rather than leaving a gap below. */
   .portraitWrap {
+    top: calc(258 * var(--mu));
     right: 0;
     bottom: 0;
-    width: calc(248 * var(--mu));
+    /* Wide enough for the box's height (figure ≈ 0.68 : 1), so a tall
+       screen crops only the bottom, not the shoulders; never wider than
+       the screen. */
+    width: min(100vw, max(calc(290 * var(--mu)), calc((100vh - 258 * var(--mu)) * 0.7)));
+    width: min(100vw, max(calc(290 * var(--mu)), calc((100svh - 258 * var(--mu)) * 0.7)));
+    overflow: hidden;
+  }
+
+  .portrait {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+    object-position: top center;
   }
 }
