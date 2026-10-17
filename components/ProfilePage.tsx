@@ -3,6 +3,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Reveal from "./Reveal";
 import ScrollTopButton from "./ScrollTopButton";
+import PaperList from "./PaperList";
 import {
   profileBooks,
   profileCourses,
@@ -13,14 +14,21 @@ import {
 } from "@/lib/profileData";
 import { withBasePath } from "@/lib/basePath";
 
+/** One CV line: the date first, small and light, then the entry. */
+function EntryRow({ entry }: { entry: ProfileEntry }) {
+  return (
+    <li className={styles.entry}>
+      <span className={styles.period}>{entry.period}</span>
+      <span className={styles.entryText}>{entry.text}</span>
+    </li>
+  );
+}
+
 function Entries({ entries }: { entries: ProfileEntry[] }) {
   return (
     <ul className={styles.entries}>
       {entries.map((entry) => (
-        <li className={styles.entry} key={entry.text}>
-          <span className={styles.entryText}>{entry.text}</span>
-          {entry.period && <span className={styles.period}>{entry.period}</span>}
-        </li>
+        <EntryRow entry={entry} key={entry.text} />
       ))}
     </ul>
   );
@@ -29,8 +37,8 @@ function Entries({ entries }: { entries: ProfileEntry[] }) {
 /**
  * The candidate's profile (menu "유 병 현"): photo, name and contacts in
  * a beige band, then the CV from the booklet up to 강의과목 — each
- * section a label column beside its entries, periods right-aligned. The
- * long list of papers folds into a <details>.
+ * section a label column beside its entries (newest first), each entry's
+ * date before it. Papers show the newest five and a "더보기".
  */
 export default function ProfilePage() {
   return (
@@ -40,13 +48,15 @@ export default function ProfilePage() {
         <section className={styles.intro}>
           <div className={styles.introInner}>
             <Reveal className={styles.photoWrap} visible>
+              {/* The main page's cut-out portrait, mirrored to face the
+                  text, standing on the band's bottom edge. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className={styles.photo}
-                src={withBasePath("/images/profile-portrait.jpg")}
+                src={withBasePath("/images/hero-portrait.png")}
                 alt="유병현 교수"
-                width={588}
-                height={647}
+                width={591}
+                height={827}
               />
             </Reveal>
             <Reveal className={styles.introText} visible>
@@ -95,17 +105,14 @@ export default function ProfilePage() {
                 <h3 className={styles.groupTitle}>저서</h3>
                 <Entries entries={profileBooks} />
               </div>
-              <details className={styles.papers}>
-                <summary className={styles.papersToggle}>
-                  <span>논문 {profilePapers.length}편</span>
-                  <span className={styles.papersHint} aria-hidden="true" />
-                </summary>
-                <ol className={styles.paperList}>
+              <div className={styles.group}>
+                <h3 className={styles.groupTitle}>논문</h3>
+                <PaperList>
                   {profilePapers.map((paper) => (
-                    <li key={paper}>{paper}</li>
+                    <EntryRow entry={paper} key={paper.text} />
                   ))}
-                </ol>
-              </details>
+                </PaperList>
+              </div>
             </div>
           </Reveal>
 

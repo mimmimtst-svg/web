@@ -11,8 +11,7 @@
 
 /* ---------- Intro ---------- */
 .intro {
-  padding: calc(var(--header-height) + clamp(48px, 7vh, 96px)) var(--space-page-x)
-    clamp(48px, 7vh, 96px);
+  padding: calc(var(--header-height) + clamp(32px, 5vh, 64px)) var(--space-page-x) 0;
   background-color: var(--color-card-bg);
 }
 
@@ -29,16 +28,25 @@
   min-width: 0;
 }
 
+/* The cut-out stands on the band's bottom edge (no padding under it),
+   mirrored so he looks toward the name (2026-10-17). */
 .photo {
   display: block;
   width: 100%;
+  max-width: 460px;
   height: auto;
-  border-radius: var(--radius-card);
+  margin: 0 auto;
+  transform: scaleX(-1);
+  /* The source cuts the shoulder off with a straight edge; mirrored, that
+     edge faces the text, so it fades out. The mask is in the image's own
+     (unmirrored) coordinates, where the cut is on the left. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16%);
+  mask-image: linear-gradient(to right, transparent 0, #000 16%);
 }
 
 .introText {
   min-width: 0;
-  padding-bottom: clamp(4px, 1vw, 16px);
+  padding-bottom: clamp(48px, 8vh, 112px);
 }
 
 .title {
@@ -164,89 +172,83 @@
   gap: 8px;
 }
 
-/* Text left, period right in the muted label colour. */
+/* Date first — smaller, light, in the label colour — then the entry,
+   the dates in one column so the entries line up. */
 .entry {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: clamp(132px, 11vw, 176px) minmax(0, 1fr);
   align-items: baseline;
-  gap: 24px;
+  column-gap: 20px;
   font-family: var(--font-kr);
-  font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);
   line-height: 1.6;
+}
+
+.period {
+  font-weight: 300;
+  font-size: clamp(0.8125rem, 0.78rem + 0.12vw, 0.9375rem);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-label);
+  word-break: keep-all;
 }
 
 .entryText {
   min-width: 0;
   font-weight: 500;
-  word-break: keep-all;
-}
-
-.period {
-  flex: 0 0 auto;
-  max-width: 45%;
-  font-weight: 400;
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-  color: var(--color-label);
-}
-
-/* Papers: folded by default, opened with the summary row. */
-.papers {
-  border-radius: var(--radius-card);
-  background-color: var(--color-card-bg);
-}
-
-.papersToggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px 20px;
-  cursor: pointer;
-  list-style: none;
-  font-family: var(--font-kr);
-  font-weight: 600;
   font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);
-}
-
-.papersToggle::-webkit-details-marker {
-  display: none;
-}
-
-.papersHint::after {
-  content: "전체 보기 +";
-  font-weight: 500;
-  font-size: 0.875rem;
-  color: var(--color-key);
-}
-
-.papers[open] .papersHint::after {
-  content: "접기 −";
-}
-
-.papersToggle:focus-visible {
-  outline: 1px solid var(--color-charcoal);
-  outline-offset: 2px;
-  border-radius: var(--radius-card);
-}
-
-.paperList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 4px 20px 20px 40px;
-  list-style: decimal;
-  font-family: var(--font-kr);
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  color: var(--color-line);
   word-break: keep-all;
   overflow-wrap: break-word;
 }
 
-.paperList li::marker {
-  color: var(--color-label);
-  font-size: 0.8125rem;
+/* "더보기" under the papers: text button with a plus/minus. */
+.more {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  padding: 6px 0;
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
+  color: var(--color-key);
+}
+
+.moreIcon {
+  position: relative;
+  width: 10px;
+  height: 10px;
+}
+
+.moreIcon::before,
+.moreIcon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background-color: currentColor;
+  transition: transform 250ms ease;
+}
+
+.moreIcon::after {
+  transform: rotate(90deg);
+}
+
+.moreIconOpen::after {
+  transform: rotate(0deg);
+}
+
+@media (hover: hover) {
+  .more:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.more:focus-visible {
+  outline: 1px solid var(--color-charcoal);
+  outline-offset: 2px;
 }
 
 .courses {
@@ -273,16 +275,22 @@ footer.footer {
 /* ---------- Mobile layout (portrait) ---------- */
 @media (orientation: portrait) {
   .intro {
-    padding: calc(84 * var(--mu) + 32 * var(--mu)) calc(20 * var(--mu)) calc(40 * var(--mu));
+    padding: calc(84 * var(--mu) + 32 * var(--mu)) calc(20 * var(--mu)) 0;
   }
 
+  /* Name and contacts first, the portrait standing at the bottom. */
   .introInner {
     grid-template-columns: minmax(0, 1fr);
-    gap: calc(28 * var(--mu));
+    gap: calc(20 * var(--mu));
   }
 
-  .photoWrap {
-    width: calc(240 * var(--mu));
+  .introText {
+    order: -1;
+    padding-bottom: 0;
+  }
+
+  .photo {
+    max-width: calc(260 * var(--mu));
   }
 
   .name {
@@ -331,30 +339,25 @@ footer.footer {
     font-size: calc(12.5 * var(--mu));
   }
 
-  /* Period under the text on a phone. */
+  /* Date above the entry on a phone. */
+  .entries {
+    gap: calc(14 * var(--mu));
+  }
+
   .entry {
-    flex-direction: column;
-    gap: 0;
-    font-size: calc(14.5 * var(--mu));
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: calc(2 * var(--mu));
   }
 
   .period {
-    max-width: none;
-    text-align: left;
-    font-size: calc(13 * var(--mu));
+    font-size: calc(12 * var(--mu));
   }
 
-  .papersToggle {
-    padding: calc(14 * var(--mu)) calc(16 * var(--mu));
+  .entryText {
     font-size: calc(14.5 * var(--mu));
   }
 
-  .papersHint::after {
-    font-size: calc(13 * var(--mu));
-  }
-
-  .paperList {
-    padding: calc(4 * var(--mu)) calc(16 * var(--mu)) calc(16 * var(--mu)) calc(34 * var(--mu));
+  .more {
     font-size: calc(13.5 * var(--mu));
   }
 
