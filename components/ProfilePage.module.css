@@ -199,7 +199,14 @@
   overflow-wrap: break-word;
 }
 
-/* "더보기" under the papers: text button with a plus/minus. */
+/* Folded papers: the list fades out toward the bottom, as if it runs
+   on under the "+ 더보기" below. */
+.entriesFaded {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 6.5em), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 6.5em), transparent);
+}
+
+/* "+ 더보기" / "− 접기": gray text button, no counts. */
 .more {
   align-self: flex-start;
   display: inline-flex;
@@ -208,9 +215,10 @@
   margin-top: 4px;
   padding: 6px 0;
   font-family: var(--font-kr);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
-  color: var(--color-key);
+  color: var(--color-label);
+  transition: color 200ms ease;
 }
 
 .moreIcon {
@@ -241,8 +249,7 @@
 
 @media (hover: hover) {
   .more:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    color: var(--color-charcoal);
   }
 }
 
