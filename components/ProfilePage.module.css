@@ -11,6 +11,7 @@
 
 /* ---------- Intro ---------- */
 .intro {
+  overflow: hidden;
   padding: calc(var(--header-height) + clamp(32px, 5vh, 64px)) var(--space-page-x) 0;
   background-color: var(--color-card-bg);
 }
@@ -30,13 +31,16 @@
 
 /* The cut-out stands on the band's bottom edge (no padding under it),
    facing the name. Its own photo (2026-10-17), already turned that way:
-   no mirroring and no edge fade any more. */
+   no mirroring and no edge fade. Sunk 15% of its height below the band
+   ("too high" — the band now ends just past the first jacket button);
+   .intro clips the rest. */
 .photo {
   display: block;
   width: 100%;
   max-width: 460px;
   height: auto;
   margin: 0 auto;
+  transform: translateY(15%);
 }
 
 .introText {

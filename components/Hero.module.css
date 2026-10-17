@@ -18,11 +18,12 @@
   z-index: 0;
 }
 
-/* Desktop, Figma 612:1405 at 1920 x 1080, every length in --u: the
-   headline block (698u tall, text at its top) is centred in the area
-   below the 120u top padding, 40u from the left — English tagline 48u
-   Light with Bold initials, 20u, "FINE - KU" 135u Bold, 55u, the Korean
-   line 90u ExtraBold, each on a 120u line. */
+/* Desktop, Figma 613:1819 at 1920 x 1080 (updated 2026-10-17), every
+   length in --u: the headline block (634u tall, text at its top) is
+   centred in the area below the 120u top padding, 40u from the left.
+   The English tagline (40u ExtraLight, a 48u line) sits 10u above
+   "FINE - KU" (135u Bold) so the two read as one group; 55u below, the
+   Korean line (90u ExtraBold). Both large lines on 120u. */
 .inner {
   position: relative;
   z-index: 2;
@@ -36,7 +37,7 @@
 .headline {
   display: flex;
   flex-direction: column;
-  height: calc(698 * var(--u));
+  height: calc(634 * var(--u));
   color: var(--color-white);
 }
 
@@ -52,20 +53,17 @@
 }
 
 .headlineEn {
-  font-weight: 300;
-  font-size: calc(48 * var(--u));
+  font-weight: 200;
+  font-size: calc(40 * var(--u));
+  line-height: calc(48 * var(--u));
   animation-delay: 200ms;
-}
-
-.headlineEn b {
-  font-weight: 700;
 }
 
 .headlineTitle {
   display: flex;
   flex-direction: column;
   gap: calc(55 * var(--u));
-  margin-top: calc(20 * var(--u));
+  margin-top: calc(10 * var(--u));
   font-weight: inherit;
   font-size: inherit;
 }
@@ -166,13 +164,13 @@
   }
 
   .headlineEn {
-    font-size: calc(16 * var(--mu));
-    line-height: calc(28 * var(--mu));
+    font-size: calc(17 * var(--mu));
+    line-height: calc(22 * var(--mu));
   }
 
   .headlineTitle {
     gap: calc(14 * var(--mu));
-    margin-top: calc(4 * var(--mu));
+    margin-top: calc(2 * var(--mu));
   }
 
   .headlineBrand {
