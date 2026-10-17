@@ -10,6 +10,15 @@ import { groupPledges, planParts } from "@/lib/planDetail";
 const NAV_ITEMS = planParts.map(({ id, title }) => ({ id, label: title }));
 
 /**
+ * What is already on screen when the page opens — the first part's title,
+ * summary and first pillar — appears as is: animating only the title in
+ * beside text that was already there looked broken (2026-10-17). Returns
+ * true for those, undefined (Reveal's own on-scroll entrance) for the rest.
+ */
+const shownAtOnce = (partIndex: number, pillarIndex = 0) =>
+  partIndex === 0 && pillarIndex === 0 ? true : undefined;
+
+/**
  * P2-2: the page behind section 2's three cards. At the top, the three
  * parts side by side with their numbered pillars (all links), then one
  * part per card (나답게 · 다함께 · 더높게):
@@ -28,11 +37,7 @@ export default function PlanDetail() {
       <main className={styles.page}>
         {/* The whole page at a glance: each part with its numbered
             pillars, every line a link down to it. */}
-        <nav className={styles.jumpBar} aria-labelledby="plan-overview">
-          <h1 className={styles.jumpHeading} id="plan-overview">
-            <PlusIcon />
-            <span>공약 한눈에 보기</span>
-          </h1>
+        <nav className={styles.jumpBar} aria-label="나답게 · 다함께 · 더높게 공약 요약">
           <ol className={styles.jumpList}>
             {planParts.map((part) => (
               <li className={styles.jumpItem} key={part.id}>
@@ -63,7 +68,7 @@ export default function PlanDetail() {
           >
             <div className={styles.partInner}>
               <header className={styles.partHead}>
-                <Reveal>
+                <Reveal visible={shownAtOnce(index)}>
                   <h2 className={styles.partTitle}>{part.title}</h2>
                   <p className={styles.partSub}>{part.subtitle}</p>
                   <p className={styles.partLead}>{part.lead}</p>
@@ -71,7 +76,7 @@ export default function PlanDetail() {
               </header>
 
               <div className={styles.partBody}>
-                <Reveal>
+                <Reveal visible={shownAtOnce(index)}>
                   <p className={styles.summary}>{part.summary}</p>
                 </Reveal>
 
@@ -83,7 +88,12 @@ export default function PlanDetail() {
                   {part.pillars.map((pillar, pillarIndex) => {
                     const groups = groupPledges(pillar.pledges);
                     return (
-                      <Reveal as="li" className={styles.pillar} key={pillar.title}>
+                      <Reveal
+                        as="li"
+                        className={styles.pillar}
+                        key={pillar.title}
+                        visible={shownAtOnce(index, pillarIndex)}
+                      >
                         <h4
                           className={styles.pillarTitle}
                           id={`${part.id}-${pillarIndex + 1}`}
