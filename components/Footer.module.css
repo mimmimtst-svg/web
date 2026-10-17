@@ -15,6 +15,51 @@
   flex-wrap: wrap;
 }
 
+/* E-mail, then the SNS links beside it (2026-10-17). */
+.contact {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.sns {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 34px outlined circles in the footer's white; filled white with a key-red
+   mark on hover. */
+.snsLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  color: var(--color-white);
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+
+.snsLink svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (hover: hover) {
+  .snsLink:hover {
+    border-color: var(--color-white);
+    background-color: var(--color-white);
+    color: var(--color-key);
+  }
+}
+
+.snsLink:focus-visible {
+  outline: 1px solid var(--color-white);
+  outline-offset: 3px;
+}
+
 /* div.footer-detail (Figma 2026-09-30): "E-Mail" 14px / 17.5px
    Pretendard Regular (was Space Mono caps) directly over the address,
    16px / 22.4px lowercase (was caps). */
@@ -58,6 +103,24 @@
   .inner {
     align-items: flex-end;
     flex-wrap: nowrap;
+  }
+
+  .contact {
+    gap: calc(16 * var(--mu));
+  }
+
+  .sns {
+    gap: calc(8 * var(--mu));
+  }
+
+  .snsLink {
+    width: calc(28 * var(--mu));
+    height: calc(28 * var(--mu));
+  }
+
+  .snsLink svg {
+    width: calc(17 * var(--mu));
+    height: calc(17 * var(--mu));
   }
 
   /* Figma mobile footer (2026-09-30): 10px label over the 12px address,

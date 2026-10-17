@@ -213,3 +213,36 @@ export function LineArrowUpIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+/** Naver (blog) mark: the Naver "N", for the footer's SNS links. */
+export function NaverIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path d="M6.5 5.5h3.9l3.3 5.1V5.5h3.8v13h-3.9l-3.3-5.1v5.1H6.5z" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** Facebook "f", for the footer's SNS links. */
+export function FacebookIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M13.3 19.5v-6.4h2.2l.33-2.6H13.3V8.9c0-.74.21-1.25 1.27-1.25h1.36V5.36A18 18 0 0 0 13.95 5.25c-1.96 0-3.3 1.2-3.3 3.4v1.85H8.45v2.6h2.2v6.4z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}

@@ -247,6 +247,8 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 ```
 섹션이 한 화면을 다 못 채우면 Footer가 자연스럽게 화면 하단에 붙고, 카드가 많아 한 화면을 넘으면 Footer를 보기 위해 조금 더 스크롤하면 된다 — 강제로 맞추지 않는다.
 
+> **Footer SNS (2026-10-17)**: 이메일 오른쪽에 네이버 블로그(`NaverIcon`, https://m.blog.naver.com/pfyoo)·페이스북(`FacebookIcon`, https://www.facebook.com/pfyoo) 링크. 34px(모바일 28mu) 흰 1px 테두리 원 + 흰 마크, hover 시 흰 원에 키 컬러 마크. 새 창(`target="_blank" rel="noopener noreferrer"`), `aria-label`에 "(새 창)". 모든 페이지가 같은 `Footer`를 쓰므로 한 곳만 고치면 된다.
+
 ### 4.11 히어로 2/3·1/3 비대칭 레이아웃 (엣지 정렬 이미지)
 텍스트가 좌측 2/3, 인물/제품 이미지가 우측 1/3을 섹션의 실제 가장자리(오른쪽·하단)에 여백 없이 맞닿게 배치하는 패턴:
 - 텍스트는 패딩이 있는 `.inner` 컨테이너 안에 두고 `width: 66.66%`
