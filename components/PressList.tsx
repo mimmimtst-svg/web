@@ -1,0 +1,28 @@
+import styles from "./PressPage.module.css";
+import { LineArrowRightIcon } from "./icons";
+import type { PressItem } from "@/lib/pressData";
+
+/** Rows of source tag · title · date; each row opens the article in a
+    new tab. */
+export default function PressList({ items }: { items: PressItem[] }) {
+  return (
+    <ul className={styles.list}>
+      {items.map((item) => (
+        <li key={item.href}>
+          <a
+            className={styles.row}
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className={styles.source}>{item.source}</span>
+            <span className={styles.title}>{item.title}</span>
+            <span className={styles.date}>{item.date}</span>
+            <LineArrowRightIcon className={styles.arrow} />
+            <span className={styles.visuallyHidden}> (새 창)</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
