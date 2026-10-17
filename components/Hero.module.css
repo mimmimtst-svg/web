@@ -18,51 +18,72 @@
   z-index: 0;
 }
 
+/* Desktop, Figma 612:1405 at 1920 x 1080, every length in --u: the
+   headline block (698u tall, text at its top) is centred in the area
+   below the 120u top padding, 40u from the left — English tagline 48u
+   Light with Bold initials, 20u, "FINE - KU" 135u Bold, 55u, the Korean
+   line 90u ExtraBold, each on a 120u line. */
 .inner {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: var(--content-max);
-  margin: 0 auto;
   min-height: 100dvh;
   display: flex;
   align-items: center;
-  padding: clamp(96px, 14vw, 160px) var(--space-page-x) clamp(48px, 6vw, 96px);
+  padding: calc(var(--header-height) + 45 * var(--u)) 0 0 calc(40 * var(--u));
 }
 
 .headline {
   display: flex;
   flex-direction: column;
-  gap: clamp(4px, 1vw, 12px);
-  width: 66.66%;
-  transform: translateY(-50px);
+  height: calc(698 * var(--u));
+  color: var(--color-white);
 }
 
-/* Web version stays a single line (white-space: nowrap) — only the phone
-   breakpoint below forces the two-line break. */
+.headlineEn,
+.headlineBrand,
 .headlineKr {
+  display: block;
   font-family: var(--font-kr);
-  font-weight: 800;
-  font-size: var(--fs-hero-kr);
-  line-height: 1.2;
-  color: var(--color-white);
-  opacity: 0;
-  animation: heroFadeIn 1700ms cubic-bezier(0.19, 1, 0.22, 1) 200ms forwards;
+  line-height: calc(120 * var(--u));
   white-space: nowrap;
+  opacity: 0;
+  animation: heroFadeIn 1700ms cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+.headlineEn {
+  font-weight: 300;
+  font-size: calc(48 * var(--u));
+  animation-delay: 200ms;
+}
+
+.headlineEn b {
+  font-weight: 700;
+}
+
+.headlineTitle {
+  display: flex;
+  flex-direction: column;
+  gap: calc(55 * var(--u));
+  margin-top: calc(20 * var(--u));
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+.headlineBrand {
+  font-weight: 700;
+  font-size: calc(135 * var(--u));
+  animation-delay: 350ms;
+}
+
+.headlineKr {
+  font-weight: 800;
+  font-size: calc(90 * var(--u));
+  animation-delay: 500ms;
 }
 
 .headlineLine {
   display: inline;
-}
-
-.headlineEn {
-  font-family: var(--font-kr);
-  font-weight: 300;
-  font-size: var(--fs-hero-en);
-  line-height: 1.2;
-  color: var(--color-white);
-  opacity: 0;
-  animation: heroFadeIn 1700ms cubic-bezier(0.19, 1, 0.22, 1) 500ms forwards;
 }
 
 @keyframes heroFadeIn {
@@ -77,59 +98,42 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .headlineKr,
-  .headlineEn {
+  .headlineEn,
+  .headlineBrand,
+  .headlineKr {
     animation: none;
     opacity: 1;
   }
 }
 
+/* Figma "유병현_프로파일_사진" (796:1991): the figure (this file is it,
+   trimmed of the transparent margin) is 788u wide, its right shoulder 87u
+   past the screen edge and the lower 265u below the fold — head ~180u
+   from the top at 16:9. Anchored to the bottom so taller screens still
+   have the photo standing on the bottom edge (2026-10-17: sized by width
+   alone, the head ran off the top on shorter screens). */
 .portraitWrap {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: calc(-87 * var(--u));
+  bottom: calc(-265 * var(--u));
   z-index: 1;
-  width: clamp(200px, 33vw, 640px);
+  width: calc(788 * var(--u));
   line-height: 0;
 }
 
-/* New portrait from Figma (2026-10-17): already facing the right way,
-   so no mirroring; trimmed to the figure, transparent around it. */
+/* Already facing the right way: no mirroring. */
 .portrait {
   display: block;
   width: 100%;
   height: auto;
   aspect-ratio: 1241 / 1835;
-  object-fit: cover;
-  object-position: bottom;
-}
-
-/* Below 1024px the portrait stays pinned bottom-right (position: absolute,
-   inherited from the base rule) instead of dropping into normal flow —
-   an earlier static/centered layout let it drift to different spots as
-   the viewport width changed. Only its size and the headline's alignment
-   adjust per breakpoint. */
-@media (max-width: 1023px) {
-  .inner {
-    align-items: flex-start;
-    padding-top: clamp(88px, 18vw, 140px);
-  }
-
-  .headline {
-    width: 100%;
-    transform: none;
-  }
-
-  .portraitWrap {
-    width: clamp(180px, 48vw, 320px);
-  }
 }
 
 /* Mobile layout (portrait, Figma 629:8002 section1_hero): a 598px-tall
    band — not a full screen — with the two-line 38px / 55px headline at
    20px from the left and 166px from the top (section pt 120 + h1 pt 46),
    the 16px English line 10px under it in a 36px box, and the 248 x 347
-   portrait pinned bottom-right. Overrides the max-width: 1023px block. */
+   portrait pinned bottom-right. */
 @media (orientation: portrait) {
   /* First screen fills the phone (2026-10-01 user request): at least
      Figma's 598px band, stretched to the screen height so the next
@@ -151,15 +155,29 @@
   .inner {
     min-height: 0;
     height: 100%;
-    max-width: none;
     align-items: flex-start;
     padding: calc(166 * var(--mu)) calc(20 * var(--mu)) 0;
   }
 
+  /* Figma's mobile hero still shows the old wording; the new lines follow
+     the desktop order at phone sizes: 16 / 48 / 38 (two lines). */
   .headline {
-    width: auto;
-    gap: calc(10 * var(--mu));
-    transform: none;
+    height: auto;
+  }
+
+  .headlineEn {
+    font-size: calc(16 * var(--mu));
+    line-height: calc(28 * var(--mu));
+  }
+
+  .headlineTitle {
+    gap: calc(14 * var(--mu));
+    margin-top: calc(4 * var(--mu));
+  }
+
+  .headlineBrand {
+    font-size: calc(48 * var(--mu));
+    line-height: calc(56 * var(--mu));
   }
 
   .headlineKr {
@@ -173,12 +191,9 @@
     display: block;
   }
 
-  .headlineEn {
-    font-size: calc(16 * var(--mu));
-    line-height: calc(36 * var(--mu));
-  }
-
   .portraitWrap {
+    right: 0;
+    bottom: 0;
     width: calc(248 * var(--mu));
   }
 }

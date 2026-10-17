@@ -17,13 +17,20 @@ export default function Hero() {
         alt=""
         aria-hidden="true"
       />
+      {/* Figma 612:1405 (2026-10-17): the English tagline with its four
+          initials in bold, "FINE - KU", then the Korean line. */}
       <div className={styles.inner}>
         <div className={styles.headline}>
-          <h1 className={styles.headlineKr}>
-            <span className={styles.headlineLine}>자유로운 지성,</span>{" "}
-            <span className={styles.headlineLine}>시대를 여는 고대</span>
+          <p className={styles.headlineEn}>
+            <b>F</b>ree <b>I</b>ntelligence, a <b>N</b>ew <b>E</b>ra
+          </p>
+          <h1 className={styles.headlineTitle}>
+            <span className={styles.headlineBrand}>FINE - KU</span>
+            <span className={styles.headlineKr}>
+              <span className={styles.headlineLine}>자유로운 지성,</span>{" "}
+              <span className={styles.headlineLine}>시대를 여는 고대</span>
+            </span>
           </h1>
-          <p className={styles.headlineEn}>Free Minds, a New Era</p>
         </div>
       </div>
       <div className={styles.portraitWrap}>
