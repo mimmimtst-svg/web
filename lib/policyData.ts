@@ -191,7 +191,7 @@ export type PlanCard = {
 // Figma (node 612:1416, synced 2026-09-28) reordered these to 다함께 →
 // 나답게 → 앞으로 and gave all three the same full-bleed background photo
 // (previously campus-tiger/campus-aerial alternated per card). 앞으로 was
-// renamed 더높게 on 2026-10-17. Each card opens its part of the P2-1
+// renamed 더높게 on 2026-10-17. Each card opens its part of the P2-2
 // detail page (app/plan).
 export const planCards: PlanCard[] = [
   {

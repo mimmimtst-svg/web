@@ -1,90 +1,40 @@
-/* P2-1 detail page (components/PlanDetail.tsx). A long, freely scrolling
+/* P2-2 detail page (components/PlanDetail.tsx). A long, freely scrolling
    reading page — no SectionPager — so sizes are fluid clamp()s rather
    than the one-screen --u scale; the portrait block below switches to
    --mu like the rest of the mobile layout. Palette, type and line icons
-   are the main page's: key red band, Pretendard, #2C2C2C text, the beige
-   card colour, light-gray hairlines. */
+   are the main page's: Pretendard, #2C2C2C text, key red accents, the
+   beige card colour, light-gray hairlines. */
 .page {
   --detail-max: 1440px;
   background-color: var(--color-white);
   color: var(--color-charcoal);
 }
 
-/* ---------- Intro band: the hero's red + multiply line pattern ---------- */
-.intro {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  padding: calc(var(--header-height) + clamp(64px, 10vh, 136px)) var(--space-page-x)
-    clamp(56px, 8vh, 104px);
-  background-color: var(--color-key);
-  color: var(--color-white);
+/* ---------- Part links: a white strip under the (solid) header ----------
+   (2026-10-17: replaced the red intro band — title and lead removed, the
+   three links kept, without numbers.) */
+.jumpBar {
+  padding: calc(var(--header-height) + clamp(32px, 4.5vh, 56px)) var(--space-page-x)
+    clamp(32px, 4.5vh, 56px);
+  border-bottom: 1px solid var(--color-light-gray);
 }
 
-.introBg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  mix-blend-mode: multiply;
-  z-index: -1;
-}
-
-.introInner {
+.jumpList {
   max-width: var(--detail-max);
   margin: 0 auto;
-}
-
-.eyebrow {
-  font-family: var(--font-kr);
-  font-weight: 500;
-  font-size: clamp(0.9375rem, 0.85rem + 0.35vw, 1.25rem);
-  line-height: 1.4;
-  opacity: 0.85;
-}
-
-.introTitle {
-  margin-top: clamp(14px, 1.4vw, 24px);
-  font-family: var(--font-kr);
-  font-weight: 800;
-  font-size: clamp(2.75rem, 1.6rem + 4.6vw, 6.5rem);
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-}
-
-.introDot {
-  margin: 0 0.04em;
-  font-weight: 300;
-  opacity: 0.6;
-}
-
-.introLead {
-  margin-top: clamp(18px, 1.8vw, 32px);
-  font-family: var(--font-kr);
-  font-weight: 400;
-  font-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.5rem);
-  line-height: 1.5;
-  opacity: 0.92;
-}
-
-/* Three shortcuts to the parts: a hairline over each, thickening on hover. */
-.jumpList {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(16px, 2vw, 40px);
-  margin-top: clamp(48px, 7vh, 96px);
 }
 
+/* A hairline over each link, turning key red and thicker on hover. */
 .jump {
   position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: baseline;
-  column-gap: 12px;
-  row-gap: 6px;
-  padding-top: 20px;
-  color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 18px;
+  color: var(--color-charcoal);
 }
 
 .jump::before {
@@ -94,16 +44,8 @@
   left: 0;
   right: 0;
   height: 1px;
-  background-color: rgba(255, 255, 255, 0.45);
+  background-color: var(--color-light-gray);
   transition: background-color 250ms ease, height 250ms ease;
-}
-
-.jumpNumber {
-  font-family: var(--font-en);
-  font-weight: 700;
-  font-size: 0.875rem;
-  letter-spacing: 0.06em;
-  opacity: 0.75;
 }
 
 .jumpTitle {
@@ -111,26 +53,30 @@
   font-weight: 700;
   font-size: clamp(1.25rem, 1.05rem + 0.8vw, 2rem);
   line-height: 1.2;
+  transition: color 200ms ease;
 }
 
 .jumpSub {
-  grid-column: 2;
   font-family: var(--font-kr);
   font-weight: 400;
   font-size: clamp(0.875rem, 0.82rem + 0.25vw, 1.125rem);
   line-height: 1.4;
-  opacity: 0.8;
+  color: var(--color-label);
 }
 
 @media (hover: hover) {
   .jump:hover::before {
     height: 3px;
-    background-color: var(--color-white);
+    background-color: var(--color-key);
+  }
+
+  .jump:hover .jumpTitle {
+    color: var(--color-key);
   }
 }
 
 .jump:focus-visible {
-  outline: 1px solid var(--color-white);
+  outline: 1px solid var(--color-charcoal);
   outline-offset: 6px;
 }
 
@@ -211,39 +157,23 @@
   min-width: 0;
 }
 
-/* Introductory paragraphs: a one-line key over the original text. */
-.paragraphs {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(40px, 4vw, 64px);
-}
-
-.key {
+/* A short summary of the part (2026-10-17: replaces three full
+   paragraphs — the booklet will be a download). */
+.summary {
   font-family: var(--font-kr);
-  font-weight: 700;
-  font-size: clamp(1.25rem, 1.05rem + 0.75vw, 1.875rem);
-  line-height: 1.4;
-  letter-spacing: -0.01em;
+  font-weight: 500;
+  font-size: clamp(1.125rem, 1rem + 0.45vw, 1.5rem);
+  line-height: 1.7;
   word-break: keep-all;
 }
 
-.body {
-  margin-top: clamp(12px, 1vw, 18px);
-  font-family: var(--font-kr);
-  font-weight: 400;
-  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
-  line-height: 1.85;
-  color: var(--color-line);
-  word-break: keep-all;
-  overflow-wrap: break-word;
-}
-
-/* The section-heading pattern (plus icon + regular-weight title). */
+/* The section-heading pattern (plus icon + regular-weight title), with
+   no rule under it. */
 .pillarsHeading {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: clamp(72px, 8vw, 128px);
+  margin-top: clamp(56px, 6vw, 96px);
   font-family: var(--font-kr);
   font-weight: 400;
   font-size: clamp(1.25rem, 1.05rem + 0.75vw, 1.875rem);
@@ -258,66 +188,90 @@
 }
 
 .pillars {
-  margin-top: clamp(20px, 2.4vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 4vw, 64px);
+  margin-top: clamp(24px, 2.6vw, 40px);
 }
 
-.pillar {
-  padding: clamp(32px, 3.4vw, 56px) 0;
-  border-top: 1px solid var(--color-light-gray);
-}
-
-.pillar:last-child {
-  padding-bottom: 0;
-}
-
-.pillarOrder {
-  font-family: var(--font-kr);
-  font-weight: 600;
-  font-size: clamp(0.875rem, 0.84rem + 0.15vw, 1rem);
-  line-height: 1.4;
-  color: var(--color-key);
-}
-
+/* "1. ~한 대학" followed by a hairline to the column's edge. */
 .pillarTitle {
-  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.4vw, 24px);
   font-family: var(--font-kr);
   font-weight: 700;
-  font-size: clamp(1.1875rem, 1.04rem + 0.6vw, 1.75rem);
+  font-size: clamp(1.1875rem, 1.04rem + 0.55vw, 1.625rem);
   line-height: 1.45;
+}
+
+.pillarTitle span {
+  flex: 0 1 auto;
+  min-width: 0;
   word-break: keep-all;
 }
 
-/* 세부 공약: on the beige card colour (white on the beige part). */
+.pillarTitle::after {
+  content: "";
+  flex: 1 0 clamp(24px, 4vw, 64px);
+  height: 1px;
+  background-color: var(--color-light-gray);
+}
+
+.body {
+  margin-top: clamp(10px, 0.9vw, 14px);
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: clamp(1rem, 0.96rem + 0.15vw, 1.0625rem);
+  line-height: 1.75;
+  color: var(--color-line);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* The pledges, grouped by policy area (선도적 연구 … 헌신과 존중의
+   리더십), each with the P4 cards' key-red check. Two areas sit side by
+   side; one area's list runs in two columns, top to bottom. */
 .pledges {
-  margin-top: clamp(20px, 2vw, 32px);
+  margin-top: clamp(18px, 1.8vw, 28px);
   padding: clamp(18px, 1.8vw, 28px) clamp(20px, 2vw, 32px);
   border-radius: var(--radius-card);
   background-color: var(--color-card-bg);
+}
+
+.pledgesSplit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px clamp(20px, 2.4vw, 40px);
 }
 
 .partAlt .pledges {
   background-color: var(--color-white);
 }
 
-.pledgesLabel {
+.pledgeArea {
   font-family: var(--font-kr);
   font-weight: 600;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   line-height: 1.4;
-  color: var(--color-label);
+  color: var(--color-key);
 }
 
 .pledgeList {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px clamp(16px, 2vw, 32px);
-  margin-top: 12px;
+  margin-top: 10px;
+}
+
+.pledges:not(.pledgesSplit) .pledgeList {
+  columns: 2;
+  column-gap: clamp(20px, 2.4vw, 40px);
 }
 
 .pledge {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 4px 0;
+  break-inside: avoid;
   font-family: var(--font-kr);
   font-weight: 500;
   font-size: clamp(0.9375rem, 0.9rem + 0.12vw, 1.0625rem);
@@ -325,12 +279,11 @@
   word-break: keep-all;
 }
 
-.pledgeCode {
-  flex: 0 0 3em;
-  font-family: var(--font-en);
-  font-weight: 700;
-  font-size: 0.8125rem;
-  font-variant-numeric: tabular-nums;
+.pledge svg {
+  flex: 0 0 auto;
+  width: 12px;
+  height: auto;
+  margin-top: 0.5em;
   color: var(--color-key);
 }
 
@@ -339,57 +292,30 @@ footer.footer {
   padding-right: calc(var(--detail-float-x) + 52px + 16px);
 }
 
-/* Narrow landscape (small laptops / tablets): one pledge per row. */
+/* Narrow landscape (small laptops / tablets): one column of pledges. */
 @media (max-width: 1100px) {
-  .pledgeList {
+  .pledgesSplit {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pledges:not(.pledgesSplit) .pledgeList {
+    columns: 1;
   }
 }
 
 /* ---------- Mobile layout (portrait): one column, --mu sizes ---------- */
 @media (orientation: portrait) {
-  .intro {
-    padding: calc(84 * var(--mu) + 48 * var(--mu)) calc(20 * var(--mu)) calc(40 * var(--mu));
-  }
-
-  .eyebrow {
-    font-size: calc(13 * var(--mu));
-  }
-
-  /* The three words stacked (side by side they broke after the second
-     dot, leaving it dangling at the line end). */
-  .introTitle {
-    margin-top: calc(12 * var(--mu));
-    font-size: calc(48 * var(--mu));
-    line-height: 1.12;
-  }
-
-  .introWord {
-    display: block;
-  }
-
-  .introDot {
-    display: none;
-  }
-
-  .introLead {
-    margin-top: calc(16 * var(--mu));
-    font-size: calc(15 * var(--mu));
+  .jumpBar {
+    padding: calc(84 * var(--mu) + 28 * var(--mu)) calc(20 * var(--mu)) calc(28 * var(--mu));
   }
 
   .jumpList {
     gap: calc(12 * var(--mu));
-    margin-top: calc(40 * var(--mu));
   }
 
   .jump {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: calc(4 * var(--mu));
+    gap: calc(4 * var(--mu));
     padding-top: calc(14 * var(--mu));
-  }
-
-  .jumpNumber {
-    font-size: calc(11 * var(--mu));
   }
 
   .jumpTitle {
@@ -397,7 +323,6 @@ footer.footer {
   }
 
   .jumpSub {
-    grid-column: 1;
     font-size: calc(11 * var(--mu));
   }
 
@@ -433,24 +358,14 @@ footer.footer {
     font-size: calc(15 * var(--mu));
   }
 
-  .paragraphs {
-    margin-top: calc(48 * var(--mu));
-    gap: calc(36 * var(--mu));
-  }
-
-  .key {
-    font-size: calc(18 * var(--mu));
-  }
-
-  .body {
-    margin-top: calc(10 * var(--mu));
-    font-size: calc(15 * var(--mu));
-    line-height: 1.75;
+  .summary {
+    margin-top: calc(36 * var(--mu));
+    font-size: calc(16 * var(--mu));
   }
 
   .pillarsHeading {
     gap: calc(8 * var(--mu));
-    margin-top: calc(64 * var(--mu));
+    margin-top: calc(48 * var(--mu));
     font-size: calc(20 * var(--mu));
   }
 
@@ -460,44 +375,55 @@ footer.footer {
   }
 
   .pillars {
+    gap: calc(36 * var(--mu));
     margin-top: calc(20 * var(--mu));
   }
 
-  .pillar {
-    padding: calc(28 * var(--mu)) 0;
-  }
-
-  .pillarOrder {
-    font-size: calc(13 * var(--mu));
-  }
-
   .pillarTitle {
-    margin-top: calc(6 * var(--mu));
+    gap: calc(12 * var(--mu));
     font-size: calc(17 * var(--mu));
   }
 
+  .pillarTitle::after {
+    flex-basis: calc(20 * var(--mu));
+  }
+
+  .body {
+    margin-top: calc(8 * var(--mu));
+    font-size: calc(14.5 * var(--mu));
+    line-height: 1.7;
+  }
+
   .pledges {
-    margin-top: calc(18 * var(--mu));
+    margin-top: calc(16 * var(--mu));
     padding: calc(16 * var(--mu));
   }
 
-  .pledgesLabel {
-    font-size: calc(12 * var(--mu));
+  .pledgesSplit {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(16 * var(--mu));
+  }
+
+  .pledges:not(.pledgesSplit) .pledgeList {
+    columns: 1;
+  }
+
+  .pledgeArea {
+    font-size: calc(12.5 * var(--mu));
   }
 
   .pledgeList {
-    grid-template-columns: minmax(0, 1fr);
-    gap: calc(8 * var(--mu));
-    margin-top: calc(10 * var(--mu));
+    margin-top: calc(8 * var(--mu));
   }
 
   .pledge {
-    gap: calc(10 * var(--mu));
+    gap: calc(8 * var(--mu));
+    padding: calc(3 * var(--mu)) 0;
     font-size: calc(14 * var(--mu));
   }
 
-  .pledgeCode {
-    font-size: calc(12 * var(--mu));
+  .pledge svg {
+    width: calc(11 * var(--mu));
   }
 
   footer.footer {

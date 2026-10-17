@@ -17,9 +17,11 @@ type HeaderProps = {
       so it works at the site root and at the preview address alike). The
       brand and menu links then lead back there. */
   homeHref?: string;
+  /** The white bar from the start, for pages without a red hero. */
+  solid?: boolean;
 };
 
-export default function Header({ homeHref }: HeaderProps = {}) {
+export default function Header({ homeHref, solid: alwaysSolid = false }: HeaderProps = {}) {
   const headerRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -154,7 +156,7 @@ export default function Header({ homeHref }: HeaderProps = {}) {
   }, [mobile]);
 
   const hidden = mobile && autoHide === "hidden" && !menuOpen;
-  const solid = scrolled || (mobile && autoHide === "shown");
+  const solid = alwaysSolid || scrolled || (mobile && autoHide === "shown");
 
   return (
     <>
