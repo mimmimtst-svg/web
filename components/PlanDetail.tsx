@@ -10,8 +10,9 @@ import { groupPledges, planParts } from "@/lib/planDetail";
 const NAV_ITEMS = planParts.map(({ id, title }) => ({ id, label: title }));
 
 /**
- * P2-2: the page behind section 2's three cards. A white strip with the
- * three parts as links, then one part per card (나답게 · 다함께 · 더높게):
+ * P2-2: the page behind section 2's three cards. At the top, the three
+ * parts side by side with their numbered pillars (all links), then one
+ * part per card (나답게 · 다함께 · 더높게):
  * a sticky title column beside a short summary and the numbered pillars
  * ("~한 대학", one or two lines each), each with its pledges grouped by
  * policy area. Each card links to its part by hash (plan/#<id>).
@@ -25,14 +26,26 @@ export default function PlanDetail() {
     <>
       <Header homeHref="../" solid />
       <main className={styles.page}>
-        <nav className={styles.jumpBar} aria-label="나답게 · 다함께 · 더높게">
+        {/* The whole page at a glance: each part with its numbered
+            pillars, every line a link down to it. */}
+        <nav className={styles.jumpBar} aria-label="나답게 · 다함께 · 더높게 공약 요약">
           <ol className={styles.jumpList}>
             {planParts.map((part) => (
-              <li key={part.id}>
+              <li className={styles.jumpItem} key={part.id}>
                 <a className={styles.jump} href={`#${part.id}`}>
                   <span className={styles.jumpTitle}>{part.title}</span>
                   <span className={styles.jumpSub}>{part.subtitle}</span>
                 </a>
+                <ol className={styles.jumpPillars}>
+                  {part.pillars.map((pillar, pillarIndex) => (
+                    <li key={pillar.title}>
+                      <a className={styles.jumpPillar} href={`#${part.id}-${pillarIndex + 1}`}>
+                        <span className={styles.jumpPillarNumber}>{pillarIndex + 1}.</span>
+                        <span>{pillar.title}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
               </li>
             ))}
           </ol>
@@ -47,7 +60,6 @@ export default function PlanDetail() {
             <div className={styles.partInner}>
               <header className={styles.partHead}>
                 <Reveal>
-                  <p className={styles.partNumber}>{part.number}</p>
                   <h2 className={styles.partTitle}>{part.title}</h2>
                   <p className={styles.partSub}>{part.subtitle}</p>
                   <p className={styles.partLead}>{part.lead}</p>
@@ -68,10 +80,11 @@ export default function PlanDetail() {
                     const groups = groupPledges(pillar.pledges);
                     return (
                       <Reveal as="li" className={styles.pillar} key={pillar.title}>
-                        <h4 className={styles.pillarTitle}>
-                          <span>
-                            {pillarIndex + 1}. {pillar.title}
-                          </span>
+                        <h4
+                          className={styles.pillarTitle}
+                          id={`${part.id}-${pillarIndex + 1}`}
+                        >
+                          {pillarIndex + 1}. {pillar.title}
                         </h4>
                         <p className={styles.body}>{pillar.body}</p>
                         <div

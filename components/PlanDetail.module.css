@@ -10,13 +10,13 @@
   color: var(--color-charcoal);
 }
 
-/* ---------- Part links: a white strip under the (solid) header ----------
-   (2026-10-17: replaced the red intro band — title and lead removed, the
-   three links kept, without numbers.) */
+/* ---------- Summary at the top ----------
+   Each part (title + subtitle) over its numbered pillars, three columns,
+   every line a link to that spot below. No rules — the hairlines over the
+   columns and under the strip were taken out (2026-10-17). */
 .jumpBar {
-  padding: calc(var(--header-height) + clamp(32px, 4.5vh, 56px)) var(--space-page-x)
-    clamp(32px, 4.5vh, 56px);
-  border-bottom: 1px solid var(--color-light-gray);
+  padding: calc(var(--header-height) + clamp(48px, 7vh, 96px)) var(--space-page-x)
+    clamp(24px, 4vh, 56px);
 }
 
 .jumpList {
@@ -24,60 +24,69 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(16px, 2vw, 40px);
+  gap: clamp(24px, 3vw, 56px);
 }
 
-/* A hairline over each link, turning key red and thicker on hover. */
 .jump {
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding-top: 18px;
   color: var(--color-charcoal);
-}
-
-.jump::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background-color: var(--color-light-gray);
-  transition: background-color 250ms ease, height 250ms ease;
 }
 
 .jumpTitle {
   font-family: var(--font-kr);
-  font-weight: 700;
-  font-size: clamp(1.25rem, 1.05rem + 0.8vw, 2rem);
-  line-height: 1.2;
+  font-weight: 800;
+  font-size: clamp(1.75rem, 1.3rem + 1.6vw, 3rem);
+  line-height: 1.1;
   transition: color 200ms ease;
 }
 
 .jumpSub {
   font-family: var(--font-kr);
-  font-weight: 400;
-  font-size: clamp(0.875rem, 0.82rem + 0.25vw, 1.125rem);
+  font-weight: 500;
+  font-size: clamp(0.9375rem, 0.86rem + 0.3vw, 1.25rem);
   line-height: 1.4;
   color: var(--color-label);
 }
 
-@media (hover: hover) {
-  .jump:hover::before {
-    height: 3px;
-    background-color: var(--color-key);
-  }
+.jumpPillars {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 0.8vw, 12px);
+  margin-top: clamp(20px, 2.2vw, 32px);
+}
 
-  .jump:hover .jumpTitle {
+.jumpPillar {
+  display: flex;
+  gap: 8px;
+  font-family: var(--font-kr);
+  font-weight: 500;
+  font-size: clamp(0.9375rem, 0.88rem + 0.2vw, 1.125rem);
+  line-height: 1.5;
+  color: var(--color-line);
+  word-break: keep-all;
+  transition: color 200ms ease;
+}
+
+.jumpPillarNumber {
+  flex: 0 0 auto;
+  min-width: 1.2em;
+  font-weight: 600;
+  color: var(--color-key);
+}
+
+@media (hover: hover) {
+  .jump:hover .jumpTitle,
+  .jumpPillar:hover {
     color: var(--color-key);
   }
 }
 
-.jump:focus-visible {
+.jump:focus-visible,
+.jumpPillar:focus-visible {
   outline: 1px solid var(--color-charcoal);
-  outline-offset: 6px;
+  outline-offset: 4px;
 }
 
 /* ---------- Parts ---------- */
@@ -113,17 +122,8 @@
   align-self: start;
 }
 
-.partNumber {
-  font-family: var(--font-en);
-  font-weight: 700;
-  font-size: clamp(0.875rem, 0.82rem + 0.25vw, 1.0625rem);
-  letter-spacing: 0.08em;
-  color: var(--color-key);
-}
-
 /* The section 2 card title's size (120px at 1920). */
 .partTitle {
-  margin-top: clamp(12px, 1.2vw, 20px);
   font-family: var(--font-kr);
   font-weight: 800;
   font-size: clamp(3rem, 1.8rem + 4.4vw, 7.5rem);
@@ -143,8 +143,6 @@
 .partLead {
   margin-top: clamp(24px, 2.4vw, 40px);
   max-width: 26em;
-  padding-left: 16px;
-  border-left: 2px solid var(--color-key);
   font-family: var(--font-kr);
   font-weight: 600;
   font-size: clamp(1rem, 0.92rem + 0.35vw, 1.25rem);
@@ -194,28 +192,15 @@
   margin-top: clamp(24px, 2.6vw, 40px);
 }
 
-/* "1. ~한 대학" followed by a hairline to the column's edge. */
+/* "1. ~한 대학". Also the target of the summary links at the top, so
+   it clears the fixed header when jumped to. */
 .pillarTitle {
-  display: flex;
-  align-items: center;
-  gap: clamp(14px, 1.4vw, 24px);
   font-family: var(--font-kr);
   font-weight: 700;
   font-size: clamp(1.1875rem, 1.04rem + 0.55vw, 1.625rem);
   line-height: 1.45;
-}
-
-.pillarTitle span {
-  flex: 0 1 auto;
-  min-width: 0;
   word-break: keep-all;
-}
-
-.pillarTitle::after {
-  content: "";
-  flex: 1 0 clamp(24px, 4vw, 64px);
-  height: 1px;
-  background-color: var(--color-light-gray);
+  scroll-margin-top: calc(var(--header-height) + 32px);
 }
 
 .body {
@@ -306,24 +291,34 @@ footer.footer {
 /* ---------- Mobile layout (portrait): one column, --mu sizes ---------- */
 @media (orientation: portrait) {
   .jumpBar {
-    padding: calc(84 * var(--mu) + 28 * var(--mu)) calc(20 * var(--mu)) calc(28 * var(--mu));
+    padding: calc(84 * var(--mu) + 36 * var(--mu)) calc(20 * var(--mu)) calc(8 * var(--mu));
   }
 
   .jumpList {
-    gap: calc(12 * var(--mu));
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(32 * var(--mu));
   }
 
   .jump {
     gap: calc(4 * var(--mu));
-    padding-top: calc(14 * var(--mu));
   }
 
   .jumpTitle {
-    font-size: calc(18 * var(--mu));
+    font-size: calc(28 * var(--mu));
   }
 
   .jumpSub {
-    font-size: calc(11 * var(--mu));
+    font-size: calc(13 * var(--mu));
+  }
+
+  .jumpPillars {
+    gap: calc(6 * var(--mu));
+    margin-top: calc(14 * var(--mu));
+  }
+
+  .jumpPillar {
+    gap: calc(6 * var(--mu));
+    font-size: calc(14.5 * var(--mu));
   }
 
   .part {
@@ -338,12 +333,7 @@ footer.footer {
     position: static;
   }
 
-  .partNumber {
-    font-size: calc(13 * var(--mu));
-  }
-
   .partTitle {
-    margin-top: calc(10 * var(--mu));
     font-size: calc(48 * var(--mu));
   }
 
@@ -354,7 +344,6 @@ footer.footer {
 
   .partLead {
     margin-top: calc(20 * var(--mu));
-    padding-left: calc(12 * var(--mu));
     font-size: calc(15 * var(--mu));
   }
 
@@ -380,12 +369,7 @@ footer.footer {
   }
 
   .pillarTitle {
-    gap: calc(12 * var(--mu));
     font-size: calc(17 * var(--mu));
-  }
-
-  .pillarTitle::after {
-    flex-basis: calc(20 * var(--mu));
   }
 
   .body {
