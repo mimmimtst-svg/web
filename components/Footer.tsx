@@ -1,10 +1,5 @@
 import styles from "./Footer.module.css";
-import { FacebookIcon, NaverIcon } from "./icons";
-
-const SNS_LINKS = [
-  { label: "네이버 블로그", href: "https://m.blog.naver.com/pfyoo", Icon: NaverIcon },
-  { label: "페이스북", href: "https://www.facebook.com/pfyoo", Icon: FacebookIcon },
-];
+import SnsLinks from "./SnsLinks";
 
 type FooterProps = {
   className?: string;
@@ -21,23 +16,9 @@ export default function Footer({ className = "" }: FooterProps) {
               bhyoo@korea.ac.kr
             </a>
           </div>
-          <ul className={styles.sns}>
-            {SNS_LINKS.map(({ label, href, Icon }) => (
-              <li key={href}>
-                <a
-                  className={styles.snsLink}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${label} (새 창)`}
-                >
-                  <Icon />
-                </a>
-              </li>
-            ))}
-          </ul>
+          <SnsLinks className={styles.sns} linkClassName={styles.snsLink} />
         </div>
-        <p className={styles.copy}>Byung-Hyun Yoo©2026</p>
+        <p className={styles.copy}>© 2026 Byung-Hyun Yoo. All Rights Reserved.</p>
       </div>
     </footer>
   );

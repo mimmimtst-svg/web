@@ -242,6 +242,8 @@ export function FacebookIcon({ className }: IconProps) {
       <path
         d="M13.3 19.5v-6.4h2.2l.33-2.6H13.3V8.9c0-.74.21-1.25 1.27-1.25h1.36V5.36A18 18 0 0 0 13.95 5.25c-1.96 0-3.3 1.2-3.3 3.4v1.85H8.45v2.6h2.2v6.4z"
         fill="currentColor"
+        /* Drawn a touch smaller than the Naver mark; 12% up to match. */
+        transform="translate(12 12) scale(1.12) translate(-12 -12)"
       />
     </svg>
   );

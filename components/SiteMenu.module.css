@@ -185,13 +185,58 @@
 
 /* div.footer-detail (Figma 2026-09-30): 20px top padding, 5px gap,
    #AEA89B. Label 12px / 12px Pretendard Regular "E-Mail" (was Space
-   Mono caps); address 14px / 22.4px lowercase (was 16px caps). */
+   Mono caps); address 14px / 22.4px lowercase (was 16px caps). The
+   Naver Blog / Facebook icons sit beside it (2026-10-17). */
 .footer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-top: 20px;
+  color: var(--color-muted);
+}
+
+.footerDetail {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  padding-top: 20px;
+}
+
+.sns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* The footer's outlined circles in the menu's muted beige; key red on
+   hover. */
+.snsLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-muted);
+  border-radius: 999px;
   color: var(--color-muted);
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+
+.snsLink svg {
+  width: 19px;
+  height: 19px;
+}
+
+@media (hover: hover) {
+  .snsLink:hover {
+    border-color: var(--color-key);
+    background-color: var(--color-key);
+    color: var(--color-white);
+  }
+}
+
+.snsLink:focus-visible {
+  outline: 1px solid #333;
+  outline-offset: 2px;
 }
 
 .footerLabel {

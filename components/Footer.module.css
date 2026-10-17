@@ -100,9 +100,13 @@
     padding: calc(20 * var(--mu));
   }
 
+  /* The copyright on its own line under the e-mail and icons: beside
+     them the full "© 2026 … All Rights Reserved." broke mid-name. */
   .inner {
-    align-items: flex-end;
+    flex-direction: column;
+    align-items: flex-start;
     flex-wrap: nowrap;
+    gap: calc(12 * var(--mu));
   }
 
   .contact {
@@ -140,6 +144,8 @@
   }
 
   .copy {
-    font-size: calc(12 * var(--mu));
+    font-size: calc(11 * var(--mu));
+    white-space: nowrap;
+    opacity: 0.85;
   }
 }

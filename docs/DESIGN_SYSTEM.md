@@ -247,7 +247,7 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 ```
 섹션이 한 화면을 다 못 채우면 Footer가 자연스럽게 화면 하단에 붙고, 카드가 많아 한 화면을 넘으면 Footer를 보기 위해 조금 더 스크롤하면 된다 — 강제로 맞추지 않는다.
 
-> **Footer SNS (2026-10-17)**: 이메일 오른쪽에 네이버 블로그(`NaverIcon`, https://m.blog.naver.com/pfyoo)·페이스북(`FacebookIcon`, https://www.facebook.com/pfyoo) 링크. 34px(모바일 28mu) 흰 1px 테두리 원 + 흰 마크, hover 시 흰 원에 키 컬러 마크. 새 창(`target="_blank" rel="noopener noreferrer"`), `aria-label`에 "(새 창)". 모든 페이지가 같은 `Footer`를 쓰므로 한 곳만 고치면 된다.
+> **Footer SNS (2026-10-17)**: 이메일 오른쪽에 네이버 블로그(`NaverIcon`, https://m.blog.naver.com/pfyoo)·페이스북(`FacebookIcon`, https://www.facebook.com/pfyoo) 링크. 34px(모바일 28mu) 흰 1px 테두리 원 + 흰 마크, hover 시 흰 원에 키 컬러 마크. 새 창(`target="_blank" rel="noopener noreferrer"`), `aria-label`에 "(새 창)". 모든 페이지가 같은 `Footer`를 쓰므로 한 곳만 고치면 된다. 링크 목록은 `components/SnsLinks.tsx` 하나 — 햄버거 메뉴 하단 이메일 옆에도 같은 컴포넌트(메뉴에선 `--color-muted` 테두리·마크 32px, hover 시 키 컬러 원에 흰 마크). 저작권 문구는 **"© 2026 Byung-Hyun Yoo. All Rights Reserved."**(2026-10-17 확정). 모바일 푸터는 이 문구를 이메일·아이콘 아래 한 줄로 따로 둔다(옆에 두면 이름 중간에서 줄이 바뀌었다).
 
 ### 4.11 히어로 2/3·1/3 비대칭 레이아웃 (엣지 정렬 이미지)
 텍스트가 좌측 2/3, 인물/제품 이미지가 우측 1/3을 섹션의 실제 가장자리(오른쪽·하단)에 여백 없이 맞닿게 배치하는 패턴:

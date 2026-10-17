@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import styles from "./SiteMenu.module.css";
 import { CloseIcon } from "./icons";
+import SnsLinks from "./SnsLinks";
 import { goToSection } from "@/lib/pageNav";
 import { MENU_OPEN_ATTR } from "@/lib/menuState";
 
@@ -160,10 +161,13 @@ export default function SiteMenu({ id, open, onClose, homeHref }: SiteMenuProps)
           </nav>
         </div>
         <div className={styles.footer}>
-          <span className={styles.footerLabel}>E-Mail</span>
-          <a className={styles.footerEmail} href="mailto:bhyoo@korea.ac.kr">
-            bhyoo@korea.ac.kr
-          </a>
+          <div className={styles.footerDetail}>
+            <span className={styles.footerLabel}>E-Mail</span>
+            <a className={styles.footerEmail} href="mailto:bhyoo@korea.ac.kr">
+              bhyoo@korea.ac.kr
+            </a>
+          </div>
+          <SnsLinks className={styles.sns} linkClassName={styles.snsLink} />
         </div>
       </div>
     </div>
