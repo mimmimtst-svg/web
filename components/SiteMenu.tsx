@@ -6,16 +6,19 @@ import { CloseIcon } from "./icons";
 import { goToSection } from "@/lib/pageNav";
 import { MENU_OPEN_ATTR } from "@/lib/menuState";
 
-type MenuItem = { label: string; target?: string };
+/** `target`: a section of the main page. `page`: another page, as a path
+    relative to the main page (e.g. "direction/"). */
+type MenuItem = { label: string; target?: string; page?: string };
 
-// Figma hamburger (697:6208). Labels are Figma's own, placeholder
-// parentheses included. "언론 보도 자료" has no section on this page yet.
+// Figma hamburger (697:6208); labels final as of 2026-10-17 (the
+// parentheses were placeholders). 발전 방향 opens the P2-1 page;
+// "언론 보도 자료" has nothing to link to yet.
 const MENU_ITEMS: MenuItem[] = [
   { label: "유 병 현", target: "hero" },
-  { label: "(비전/리더십)", target: "plan" },
-  { label: "(주요 공약)", target: "promises" },
-  { label: "(발전 계획서)", target: "policies" },
-  { label: "(언론 보도 자료)" },
+  { label: "발전 방향", page: "direction/" },
+  { label: "주요 공약", target: "promises" },
+  { label: "발전계획서", target: "policies" },
+  { label: "언론 보도 자료" },
 ];
 
 // Keys that would scroll the page behind the open menu.
@@ -96,7 +99,8 @@ export default function SiteMenu({ id, open, onClose, homeHref }: SiteMenuProps)
     if (target) goToSection(target);
   };
 
-  const hrefFor = (target?: string) => {
+  const hrefFor = ({ target, page }: MenuItem) => {
+    if (page) return `${homeHref ?? ""}${page}`;
     if (!target) return "#";
     if (homeHref === undefined) return `#${target}`;
     return target === "hero" ? homeHref : `${homeHref}#${target}`;
@@ -139,11 +143,11 @@ export default function SiteMenu({ id, open, onClose, homeHref }: SiteMenuProps)
                 >
                   <a
                     className={styles.link}
-                    href={hrefFor(item.target)}
+                    href={hrefFor(item)}
                     onClick={(e) => {
-                      // From a detail page a section link is a real page
-                      // load; let the browser follow it.
-                      if (homeHref !== undefined && item.target) return;
+                      // Another page, or (from a detail page) a main-page
+                      // section: a real page load the browser follows.
+                      if (item.page || (homeHref !== undefined && item.target)) return;
                       e.preventDefault();
                       go(item.target);
                     }}

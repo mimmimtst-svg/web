@@ -1,0 +1,197 @@
+/* P2-1 발전 방향 (components/DirectionPage.tsx): one screen split into
+   three side-by-side panels, sized in --u like the main page's sections
+   so the whole composition scales as one piece; stacked and free
+   scrolling in portrait (--mu). Each panel is one link to its part of
+   P2-2: on hover it takes the beige card colour, the title turns key
+   red and the arrow moves. */
+/* body is a min-height: 100% flex column (globals.css): growing <main>
+   leaves exactly the footer's height, so panels + footer fill one
+   screen. */
+.page {
+  flex: 1 0 auto;
+  display: flex;
+  padding-top: var(--header-height);
+  background-color: var(--color-white);
+  color: var(--color-charcoal);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Thin light-gray rules between the three panels. */
+.panels {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+}
+
+.panel {
+  display: flex;
+  min-width: 0;
+}
+
+.panel + .panel {
+  border-left: 1px solid var(--color-light-gray);
+}
+
+/* Titles start at the same height in all three panels and "세부 공약
+   보기" sits on the same line at the bottom (vertical centring left them
+   staggered, the texts being different lengths). */
+.link {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: max(calc(56 * var(--u)), 24px);
+  padding: max(calc(150 * var(--u)), 40px) max(calc(70 * var(--u)), 24px)
+    max(calc(90 * var(--u)), 32px);
+  color: inherit;
+  transition: background-color 300ms ease;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: max(calc(24 * var(--u)), 10px);
+}
+
+/* The section 2 card title's size. */
+.title {
+  font-family: var(--font-kr);
+  font-weight: 800;
+  font-size: max(calc(120 * var(--u)), 2.75rem);
+  line-height: 0.95;
+  white-space: nowrap;
+  transition: color 250ms ease;
+}
+
+.subtitle {
+  font-family: var(--font-kr);
+  font-weight: 500;
+  font-size: max(calc(32 * var(--u)), 1rem);
+  line-height: 1.3;
+  color: var(--color-label);
+}
+
+.text {
+  display: block;
+  font-family: var(--font-kr);
+  font-size: max(calc(22 * var(--u)), 0.9375rem);
+  line-height: 1.75;
+  word-break: keep-all;
+}
+
+.vision {
+  font-weight: 400;
+  color: var(--color-line);
+}
+
+/* The booklet sets the closing line in bold; here bold in key red. */
+.lead {
+  font-weight: 700;
+  color: var(--color-key);
+}
+
+.more {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: max(calc(18 * var(--u)), 0.875rem);
+  line-height: 1.4;
+  color: var(--color-charcoal);
+  transition: gap 250ms cubic-bezier(0.16, 1, 0.3, 1), color 250ms ease;
+}
+
+.more svg {
+  width: max(calc(26 * var(--u)), 18px);
+  height: auto;
+}
+
+@media (hover: hover) {
+  .link:hover {
+    background-color: var(--color-card-bg);
+  }
+
+  .link:hover .title,
+  .link:hover .more {
+    color: var(--color-key);
+  }
+
+  .link:hover .more {
+    gap: 16px;
+  }
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-key);
+  outline-offset: -8px;
+}
+
+/* Room on the right for the back-to-top button. */
+footer.footer {
+  padding-right: calc(var(--detail-float-x) + 52px + 16px);
+}
+
+/* Portrait (mobile layout): the three stacked, ruled apart. */
+@media (orientation: portrait) {
+  .page {
+    padding-top: calc(84 * var(--mu));
+  }
+
+  .panels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .panel + .panel {
+    border-left: 0;
+    border-top: 1px solid var(--color-light-gray);
+  }
+
+  .link {
+    gap: calc(24 * var(--mu));
+    padding: calc(44 * var(--mu)) calc(20 * var(--mu));
+  }
+
+  .more {
+    margin-top: 0;
+  }
+
+  .titleBlock {
+    gap: calc(12 * var(--mu));
+  }
+
+  .title {
+    font-size: calc(48 * var(--mu));
+  }
+
+  .subtitle {
+    font-size: calc(18 * var(--mu));
+  }
+
+  .text {
+    font-size: calc(15 * var(--mu));
+    line-height: 1.75;
+  }
+
+  .more {
+    gap: calc(8 * var(--mu));
+    font-size: calc(14 * var(--mu));
+  }
+
+  .more svg {
+    width: calc(20 * var(--mu));
+  }
+
+  footer.footer {
+    padding-right: calc(20 * var(--mu) + 44px + 12px);
+  }
+}

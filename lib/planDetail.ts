@@ -27,6 +27,9 @@ export type PlanPart = {
   subtitle: string;
   /** The booklet's bold closing line — the part in one sentence. */
   lead: string;
+  /** P2-1 (발전 방향): the booklet's short statement of the part (p. 8),
+      shown above `lead`. */
+  vision: string;
   /** What the part covers, in the booklet's own words — it introduces
       the pillars listed under it. */
   summary: string;
@@ -63,6 +66,8 @@ export const planParts: PlanPart[] = [
     title: "나답게",
     subtitle: "대학의 본질 회복",
     lead: "내적 충실함을 바탕으로 고려대학교가 더욱 고려대학교답게 발전하도록 하겠습니다.",
+    vision:
+      "대학의 본질은 교육과 연구입니다. 외형적 성장을 좇기보다 대학 본연의 기능에 충실하여 우리 스스로의 실력을 키우겠습니다. 좋은 연구와 교육이 이루어지고 구성원들이 자신의 역량을 충분히 발휘할 수 있는 대학을 만들겠습니다.",
     summary:
       "대학의 본질은 교육과 연구입니다. 교수는 연구에 몰입하고 학생은 좋은 교육으로 성장할 수 있도록 교육과 연구의 기본을 튼튼히 하겠습니다. 재정과 행정, 평가 체계를 내실 있게 바로 세우고, 대학을 지탱하는 구성원의 헌신과 생활을 함께 뒷받침하겠습니다.",
     pillars: [
@@ -121,6 +126,8 @@ export const planParts: PlanPart[] = [
     title: "다함께",
     subtitle: "조화로운 다양성",
     lead: "서로 다르기 때문에 더 강하고, 함께하기 때문에 더 멀리 나아가는 고려대학교를 만들겠습니다.",
+    vision:
+      "다양성과 포용성은 대학 발전의 중요한 힘입니다. 서로 다른 학문과 교육, 구성원이 각자의 특성과 가치를 인정받고 함께 발전할 수 있는 대학을 만들겠습니다. 다양성을 더욱 넓히는 동시에 서로의 차이를 존중하고 소통하며 조화롭게 협력하도록 하겠습니다.",
     summary:
       "대학은 서로 다른 학문과 구성원이 함께하는 공동체입니다. 각 학문과 구성원의 특성과 가치를 존중하고, 한 사람도 놓치지 않는 교육과 단과대학·학과 중심의 자율적인 운영을 이루겠습니다. 서로의 차이를 인정하고 소통하며 존중이 일상이 되는 대학을 만들겠습니다.",
     pillars: [
@@ -175,6 +182,8 @@ export const planParts: PlanPart[] = [
     title: "더높게",
     subtitle: "한계를 넘는 도약",
     lead: "우리 스스로 키운 실력과 함께 모은 힘으로 한계를 넘어 도약하는 고려대학교를 만들겠습니다.",
+    vision:
+      "우리의 실력과 다양성의 힘을 바탕으로 더 높은 목표를 향해 끊임없이 도전하겠습니다. 예산과 제도, 관행의 제약을 넘어 구성원의 창의적인 도전이 현실이 될 수 있도록 필요한 자원과 환경을 마련하겠습니다. 새로운 학문의 영역을 개척하고 세계를 향한 연구와 교육에 과감하게 도전하겠습니다.",
     summary:
       "지금까지 잘해 온 것을 지키는 데 머물지 않겠습니다. 세계를 선도하는 연구와 세계를 향해 열린 교육에 도전하고, 새로운 재원 발굴과 행정 혁신으로 그 도전을 뒷받침하겠습니다. 헌신과 존중의 리더십으로 세계가 인정하는 고려대학교를 만들겠습니다.",
     pillars: [
