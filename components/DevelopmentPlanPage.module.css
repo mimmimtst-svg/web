@@ -1,5 +1,6 @@
 /* 발전계획서 (components/DevelopmentPlanPage.tsx). The press page's frame
-   — white page, centred 800 title — over one beige box: a line icon, the
+   — white page, centred 800 title — over one beige box as wide as the press list (2026-10-17: was 720px,
+   "좀 넓게"): a line icon, the
    title, the booklet's slogan (Korean, then English), a line of text and
    a key-red pill button. (The second box, an opinion e-mail link, was
    dropped at the user's request, 2026-10-17.) */
@@ -25,8 +26,7 @@
 }
 
 .cardWrap {
-  max-width: 720px;
-  margin: clamp(40px, 5vw, 64px) auto 0;
+  margin-top: clamp(40px, 5vw, 64px);
 }
 
 .card {
