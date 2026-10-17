@@ -1,7 +1,8 @@
 /* Detail-page part navigation (components/DetailNav.tsx).
    Landscape: 10px dots on the right edge, 16px apart, vertically
    centred; inactive dots are the muted beige at 50%, the current one key
-   red and a little larger, with its name beside it. */
+   red and a little larger. Names appear beside the dots on hover only —
+   a permanent label covered the body text on narrower screens. */
 .nav {
   position: fixed;
   right: var(--detail-float-x);
@@ -75,8 +76,6 @@
 
 .current .label {
   color: var(--color-key);
-  opacity: 1;
-  transform: translateX(0);
 }
 
 /* Hovering the column shows every part's name. */

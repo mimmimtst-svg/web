@@ -280,6 +280,7 @@ footer      { flex: 0 0 auto; }   /* Footer.module.css 쪽, scroll-snap-align �
 - ⚠️ **카드 타이틀이 헤더 아이콘과 겹칠 수 있다.** `.cardTitle`에 `white-space: nowrap`을 걸어뒀더니, 카드 중 하나("전문적 행정과 인사경영")처럼 유독 긴 타이틀이 `.cardHeadLink` 화살표 아이콘까지 침범했다. 고친 방법: `white-space`를 `normal`로 풀어 2줄까지 자연스럽게 줄바꿈되게 하고, `.cardTitleRow`에 `flex-wrap: wrap; align-items: flex-start;`를 걸고, `.card` 너비도 Figma 원본(504px)보다 넓은 `clamp(340px, 30vw, 560px)`로 살짝 키워서 대부분의 타이틀은 한 줄에 들어가고 예외만 2줄로 줄바꿈되게 했다.
 
 ### 4.13 2-컬럼 x 3-로우 약속 그리드 (`Promises`)
+> **(2026-10-17)** "자세히 보기" 링크 삭제(약속에는 상세 페이지가 없다). SCROLL DOWN과 마지막 줄이 붙어 보여 섹션 하단 패딩을 `max(130u, 72px)`로 늘렸고, 콘텐츠 폭 상한을 `max(--content-max, 1840u)`로 바꿨다 — 2560 화면에서 글자는 `--u`로 커지는데 폭만 1920에 묶여 한 줄씩 더 줄바꿈되며 겹쳤다.
 > **(2026-09-30) 웹 버전 텍스트**: 번호·제목 34/48 SemiBold, 본문 **22px** Light / 28.66px(Figma, 예전 18px — P4 카드 본문과 맞춘 크기). **제목·본문 모두 왼쪽 정렬 + `word-break: keep-all`** — 양쪽 맞춤은 단어 사이 벌어짐을 피하려고 `word-break: normal`이 필요했고, 그게 한글 단어를 중간에서 잘랐다("설 / 치하겠습니다"). 헤딩 `+` 아이콘은 `--color-muted`(#AEA89B).
 Figma가 (node 614:6269, 2026-09-28 동기화) 3개였던 "약속"을 6개로 늘리면서, 예전의 "6컬럼 그리드 + 오른쪽 정렬 + 구분선" 레이아웃을 진짜 2열 카드형 그리드로 바꿨다. 새 패턴:
 ```css
@@ -402,7 +403,7 @@ const revealedCount = useSequentialReveal(promises.length, settled, entered);
 ### 4.22 사이트 메뉴 — 햄버거 버튼 (`components/SiteMenu.tsx`, Figma `697:6208`)
 헤더의 햄버거 버튼(`aria-expanded`/`aria-controls`)이 여는 오른쪽 슬라이드 패널. `Header.tsx`가 열림 상태를 갖고 `<SiteMenu>`를 헤더 옆에 렌더링한다.
 - **디자인(Figma)**: 흰 패널 폭 456px·화면 전체 높이, 패딩 20/40, 그림자 `-10px 0 10px rgba(0,0,0,.25)`. 상단: 브랜드 두 줄(12px Regular / 20px ExtraBold, 간격 8, `#333`) + 24px X(`CloseIcon`, 1px 선). 40 아래로 메뉴 5개(22px SemiBold `#333`, 위아래 10 패딩, 간격 10). 맨 아래 "E-Mail"(12px/12px Pretendard Regular) + 5px + 이메일(**14px/22.4px 소문자**), 둘 다 `--color-muted` (2026-09-30 Figma 수정, 예전 Space Mono 대문자 라벨 + 16px 대문자 주소). 폰에서는 폭 `min(456px, 100vw - 48px)` — 어두운 배경이 한 줄 남아 탭해서 닫을 수 있다.
-- **메뉴 항목 → 섹션**: 유 병 현 → `#hero`, (비전/리더십) → `#plan`, (주요 공약) → `#promises`, (발전 계획서) → `#policies`, (언론 보도 자료) → 아직 연결할 섹션이 없어 닫기만 한다. 라벨의 괄호는 Figma 문구 그대로(가제). 이동은 `goToSection()`(페이지 넘김과 같은 애니메이션).
+- **메뉴 항목 → 섹션**: 유 병 현 → `#hero`, (비전/리더십) → `#plan`, (주요 공약) → `#promises`, (발전 계획서) → `#policies`, (언론 보도 자료) → 아직 연결할 섹션이 없어 닫기만 한다. 라벨의 괄호는 Figma 문구 그대로(가제). 이동은 `goToSection()`(페이지 넘김과 같은 애니메이션). 상세 페이지에서는(`<Header homeHref="../">`) 같은 항목이 메인 페이지의 해당 섹션으로 가는 실제 링크(`../#promises` 등)가 되고, 헤더 브랜드는 메인 페이지 맨 위로 간다.
 - **배경**: 검정 50%(`rgba(0,0,0,.5)`, 사용자 지정). 클릭하면 닫힌다.
 - **모션 (2026-09-30 "너무 빠르다" → 느리게)**: 열림 — 배경 800ms fade, 패널 오른쪽에서 **1000ms** `cubic-bezier(0.22,1,0.36,1)`, 메뉴 항목은 350ms 뒤부터 90ms 간격으로 32px 옆에서 fade-in(700~900ms). 닫힘 — 패널 500ms ease-in으로 빠져나가고, **메뉴 글자는 따로 fade-out 하지 않는다**(사용자 요청) — 패널에 실린 채 나가고, 패널이 사라진 뒤(550ms) 숨김 상태로 리셋된다. 패널은 항상 마운트해 두고 `visibility`(닫힘 전환이 끝난 뒤 숨김) + `inert`로 닫힌 상태에서 포커스·클릭을 막는다.
 - **X hover**: 450ms로 **90°만** 한 번 — `transition`이 아니라 `.close:hover svg`의 1회짜리 `@keyframes turnOnce`. ⚠️ **X는 90°마다 똑같은 모양이라 360° 회전은 네 바퀴로 보인다**("세네 바퀴 도는 것 같다" 피드백, 2026-09-30) — 대칭 아이콘을 "한 바퀴" 돌릴 때는 대칭 각도만큼만 돌린다. 마우스를 떼면 아무 애니메이션도 없고(예전 transition 방식은 떼면 역회전해 두 바퀴처럼 보였다, "너무 과하다"), 다시 올리면 새로 한 바퀴. 터치 기기(hover 없음)와 OS의 "동작 줄이기" 설정에서는 돌지 않는다.
@@ -411,11 +412,21 @@ const revealedCount = useSequentialReveal(promises.length, settled, entered);
 
 ### 4.23 비공개(준비 중) 모드 (`lib/siteMode.ts`, 2026-10-15)
 사이트가 완성되기 전 잠깐 가려두는 모드. 배포 워크플로의 `NEXT_PUBLIC_SITE_PRIVATE: "true"`가 켜져 있으면 `byunghyun.kr/`에는 `components/ComingSoon.tsx`("웹사이트를 준비하고 있습니다", 히어로의 빨강+패턴)만 보이고, 실제 사이트(`components/SiteHome.tsx`)는 **목록에 없는 미리보기 주소**에서만 볼 수 있다. 두 페이지 모두 `noindex, nofollow`.
-- **미리보기 주소는 저장소에 적지 않는다.** 이 저장소는 공개라서, 주소를 코드·문서·커밋 메시지 어디에 써도 누구나 볼 수 있다(처음 쓴 주소는 그래서 폐기했다). 주소는 저장소 Secret **`PREVIEW_SLUG`**(영소문자·숫자·`-`)에만 있고, 워크플로가 빌드 직전에 `preview-template/page.tsx`를 `app/<PREVIEW_SLUG>/page.tsx`로 복사한다. 빌드 로그에서는 GitHub이 Secret 값을 `***`로 가린다. Secret이 없으면 미리보기 페이지 없이 빌드된다. 로컬에서는 `/`가 그대로 전체 사이트다.
+- **미리보기 주소는 저장소에 적지 않는다.** 이 저장소는 공개라서, 주소를 코드·문서·커밋 메시지 어디에 써도 누구나 볼 수 있다(처음 쓴 주소는 그래서 폐기했다). 주소는 저장소 Secret **`PREVIEW_SLUG`**(영소문자·숫자·`-`)에만 있고, 워크플로가 빌드 직전에 `preview-template/` 폴더 전체를 `app/<PREVIEW_SLUG>/`로 복사한다(`page.tsx` → 메인, `plan/` → P2-1 상세 페이지). 새 상세 페이지를 만들면 `app/<경로>/page.tsx`(비공개 모드에선 `ComingSoon`)와 `preview-template/<경로>/page.tsx`를 **둘 다** 추가한다. 빌드 로그에서는 GitHub이 Secret 값을 `***`로 가린다. Secret이 없으면 미리보기 페이지 없이 빌드된다. 로컬에서는 `/`가 그대로 전체 사이트다.
 - **주소 바꾸기**: Secret 값만 새로 바꾸고 배포를 다시 돌린다(코드 수정 없음).
 - **한계**: 저장소가 공개인 동안 사이트의 코드·문구·이미지 자체는 누구나 저장소에서 볼 수 있다 — 이 모드는 "도메인에서 바로 보이지 않게" 가리는 수준이다. 완전히 숨기려면 저장소를 비공개로 해야 하고, 그러려면 GitHub Pages에 유료 플랜(GitHub Pro 등)이 필요하다. 또 배포용 빌드 결과물(Actions의 `github-pages` 아티팩트, 보존 1일)에는 미리보기 폴더가 들어 있어 로그인한 GitHub 사용자가 받아 볼 수 있다.
 - **공개하기**: `.github/workflows/deploy-pages.yml`에서 `NEXT_PUBLIC_SITE_PRIVATE` 줄을 지우고 push. GitHub Pages 설정·커스텀 도메인·DNS는 건드리지 않는다(도메인 연결을 끊으면 다른 사람이 도메인을 가로챌 수 있다).
 - `next.config.ts`의 `trailingSlash: true`는 미리보기 경로 때문 — 정적 export가 `<route>.html`과 같은 이름의 `<route>/` 폴더(RSC 페이로드)를 함께 만들면 GitHub Pages가 폴더로 해석해 404가 난다. `<route>/index.html`로 내보낸다.
+
+### 4.24 상세 페이지 — P2-1 `나답게 · 다함께 · 더높게` (`app/plan`, `components/PlanDetail.tsx`, 2026-10-17)
+섹션 2 카드 세 장 뒤의 상세 페이지. 내용은 공약집 원문(8~17쪽)에서 가져왔고 데이터는 `lib/planDetail.ts`. 2026-10-17 "앞으로"는 **"더높게"**로 이름이 바뀌었다(카드·P4 라벨·P4 제목 모두).
+- **구조**: 히어로와 같은 빨강+패턴 인트로 밴드(`id="hero"`라 헤더가 그 위에서 투명) → 파트 3개(`#essence` 나답게 / `#together` 다함께 / `#higher` 더높게, 가운데 파트는 `--color-card-bg` 배경) → Footer. 파트 = 왼쪽 sticky 제목 열(번호·120px급 제목·부제·원문의 굵은 결론 문장을 키 컬러 인용으로) + 오른쪽 본문(4:7 그리드, 최대 1440px).
+- **글 정리 규칙(사용자 요청)**: 모든 원문을 그대로 늘어놓지 않고, **각 문단의 핵심을 한 줄로(굵게) 먼저, 그 아래 원문 본문**. 도입 문단 3개는 한 줄 요약을 새로 썼고(`key`), "첫째, …" 실천 항목은 원문의 그 문장 자체가 한 줄 요약이다. 세부 공약은 `세부 공약` 상자(베이지, 베이지 파트에서는 흰색) 안에 번호(Inter, 키 컬러)+문구 2열(1100px 이하·모바일 1열).
+- **카드 → 파트 이동**: 카드의 "자세히 보기" 링크가 `plan/#<id>` **상대 경로**(사이트 루트에서도 미리보기 주소에서도 맞는 위치로 간다). 링크의 `::after`가 카드 전체를 덮어 카드 어디를 눌러도 열린다. 도착 페이지에서 `Header`가 주소의 `#id`로 스크롤한다(수동 스크롤 복원 때문에 원래는 항상 맨 위로 갔다). ⚠️ 캐러셀 마우스 드래그(`useHorizontalCarousel`)는 6px 이상 움직였을 때만 포인터를 캡처한다 — 누르자마자 캡처하면 click이 트랙으로 넘어가 카드 링크가 동작하지 않았다.
+- **페이지 내 내비게이션(`components/DetailNav.tsx`, 상세 페이지 공용)**: 가로 화면은 오른쪽 가장자리 세로 점(10px, 비활성 `--color-muted` 50%, 현재 파트 키 컬러 ×1.3), hover하면 파트 이름이 점 옆에 뜬다(항상 띄우면 좁은 화면에서 본문을 가렸다). 본문 좌우 패딩을 `max(--space-page-x, --detail-float-x + 64px)`로 둬 점 전용 여백을 확보한다. 세로 화면은 하단 가운데 알약 모양 이름 탭(현재 파트 키 컬러 배경), Footer가 보이면 숨는다. 인트로 위에서는 둘 다 숨김. 클릭하면 부드럽게 스크롤 + 주소를 `#id`로 바꾼다.
+- **맨 위로 버튼(`components/ScrollTopButton.tsx`, 모든 상세 페이지에 필수 — 사용자 요청)**: 오른쪽 아래, 흰 원 52px(모바일 44px) + 1px 연회색 테두리 + 1px 선 화살표(`LineArrowUpIcon`), hover 시 키 컬러. 한 화면의 60%를 내려가면 나타난다. 위치 토큰 `--detail-float-x/-y`(globals.css, 하단은 iOS safe-area 포함). Footer 오른쪽에 버튼 자리만큼 패딩을 더해 저작권 문구와 겹치지 않게 한다.
+- **크기**: 자유 스크롤 읽기 페이지라 `--u`(한 화면 맞춤)가 아니라 `clamp()` 유동 크기, 세로 화면은 `--mu`. 본문 16~18px / 1.85, 핵심 한 줄 20~30px Bold, 실천 항목 제목 19~28px Bold.
+- **비공개 모드**: `/plan/`도 준비 중 화면을 보여주고, 실제 페이지는 미리보기 주소 아래(`preview-template/plan/`)에만 만들어진다(4.23).
 
 ## 5. 코드 컨벤션
 

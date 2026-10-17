@@ -135,8 +135,12 @@
 }
 
 /* ---------- Parts ---------- */
+/* Side padding leaves the right-edge dot nav (DetailNav) its own lane,
+   both sides alike so the content stays centred — at 1440 the text ran
+   under the dots. */
 .part {
-  padding: clamp(88px, 11vh, 168px) var(--space-page-x);
+  padding: clamp(88px, 11vh, 168px)
+    max(var(--space-page-x), calc(var(--detail-float-x) + 64px));
 }
 
 .part + .part {
