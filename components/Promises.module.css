@@ -10,9 +10,9 @@
   flex-direction: column;
   /* Bottom padding keeps the grid clear of the SCROLL DOWN cue pinned
      to the section's bottom edge (24 + label 24 + 19 + chevron 24 ≈ 91u,
-     plus breathing room) — they used to touch. */
+     plus ~60u of air) — the list's last row is pushed down to here. */
   padding: calc(var(--header-height) + 40 * var(--u)) calc(40 * var(--u))
-    max(calc(130 * var(--u)), 72px);
+    max(calc(150 * var(--u)), 80px);
   overflow: hidden;
   background-color: #201a1a;
   isolation: isolate;
@@ -77,11 +77,17 @@
   line-height: 1.4;
 }
 
-/* body: 2 columns, 100px column gap, 30px row gap. */
+/* body: 2 columns, 100px column gap. The three rows are spread over
+   the whole height between the heading and the SCROLL DOWN cue — first
+   row under the heading, last row down at the bottom, equal space in
+   between (2026-10-17, "위아래 양끝 맞춤"; the rows used to bunch up at
+   the top with a 30px gap and an empty band below). 30px stays as the
+   minimum gap. */
 .list {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: space-between;
   column-gap: max(calc(100 * var(--u)), 16px);
   row-gap: max(calc(30 * var(--u)), 12px);
 }
