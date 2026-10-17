@@ -248,3 +248,47 @@ export function FacebookIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+/** 발전계획서 download: a 1px line arrow down onto a tray. */
+export function LineDownloadIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 30 30"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M15 3.5V19.5M8 12.5L15 19.5L22 12.5M3.5 20.5V26.5H26.5V20.5"
+        stroke="currentColor"
+        strokeWidth={1}
+        vectorEffect="non-scaling-stroke"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** Opinion mail link: a 1px line envelope. */
+export function LineMailIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 30 30"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M3.5 7.5H26.5V23.5H3.5Z M3.5 7.5L15 16.5L26.5 7.5"
+        stroke="currentColor"
+        strokeWidth={1}
+        vectorEffect="non-scaling-stroke"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
