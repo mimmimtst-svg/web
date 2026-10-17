@@ -191,3 +191,25 @@ export function LineArrowRightIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+/** Back-to-top button arrow: the policy-card line arrow turned upward. */
+export function LineArrowUpIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 30 30"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M15 28.5V1.5M5 11.5L15 1.5L25 11.5"
+        stroke="currentColor"
+        strokeWidth={1}
+        vectorEffect="non-scaling-stroke"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}

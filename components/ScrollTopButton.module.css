@@ -1,0 +1,73 @@
+/* Back-to-top button (detail pages): a white circle with the 1px line
+   arrow — the same line-icon language as the menu, close and policy-card
+   arrows — over a light-gray hairline, turning key red on hover. */
+.button {
+  position: fixed;
+  right: var(--detail-float-x);
+  bottom: var(--detail-float-y);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--color-light-gray);
+  border-radius: 999px;
+  background-color: var(--color-white);
+  color: var(--color-charcoal);
+  box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 300ms ease, transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 300ms, background-color 200ms ease, color 200ms ease,
+    border-color 200ms ease;
+}
+
+.shown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
+
+.button svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+  .button:hover {
+    border-color: var(--color-key);
+    background-color: var(--color-key);
+    color: var(--color-white);
+  }
+
+  .button:hover svg {
+    transform: translateY(-3px);
+  }
+}
+
+.button:focus-visible {
+  outline: 1px solid var(--color-charcoal);
+  outline-offset: 3px;
+}
+
+@media (orientation: portrait) {
+  .button {
+    width: 44px;
+    height: 44px;
+  }
+
+  .button svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transform: none;
+  }
+}

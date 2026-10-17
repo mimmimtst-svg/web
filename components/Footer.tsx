@@ -1,8 +1,12 @@
 import styles from "./Footer.module.css";
 
-export default function Footer() {
+type FooterProps = {
+  className?: string;
+};
+
+export default function Footer({ className = "" }: FooterProps) {
   return (
-    <footer className={styles.footer} id="contact">
+    <footer className={`${styles.footer} ${className}`} id="contact">
       <div className={styles.inner}>
         <div className={styles.detail}>
           <span className={styles.label}>E-Mail</span>

@@ -38,7 +38,7 @@ jobs:
             echo "PREVIEW_SLUG may only use a-z, 0-9 and -." && exit 1
           else
             mkdir -p "app/$PREVIEW_SLUG"
-            cp preview-template/page.tsx "app/$PREVIEW_SLUG/page.tsx"
+            cp -R preview-template/. "app/$PREVIEW_SLUG/"
           fi
       - run: npm run build
         env:

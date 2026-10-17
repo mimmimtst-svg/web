@@ -94,6 +94,11 @@
      no page turns). Capped so a portrait tablet doesn't blow the phone
      design up past ~1.4x. */
   --mu: min(calc(100vw / 402), 1.4px);
+
+  /* Detail pages' floating controls (DetailNav, ScrollTopButton): their
+     distance from the screen's right and bottom edges. */
+  --detail-float-x: clamp(16px, 2.1vw, 40px);
+  --detail-float-y: calc(clamp(16px, 2.1vw, 40px) + env(safe-area-inset-bottom, 0px));
 }
 
 /* ---------------------------------------------------

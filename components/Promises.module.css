@@ -8,8 +8,11 @@
   height: 100dvh;
   display: flex;
   flex-direction: column;
+  /* Bottom padding keeps the grid clear of the SCROLL DOWN cue pinned
+     to the section's bottom edge (24 + label 24 + 19 + chevron 24 ≈ 91u,
+     plus breathing room) — they used to touch. */
   padding: calc(var(--header-height) + 40 * var(--u)) calc(40 * var(--u))
-    calc(40 * var(--u));
+    max(calc(130 * var(--u)), 72px);
   overflow: hidden;
   background-color: #201a1a;
   isolation: isolate;
@@ -33,10 +36,14 @@
   z-index: -1;
 }
 
-/* section3_body: heading, then an 80px gap, then the 2x3 grid. */
+/* section3_body: heading, then an 80px gap, then the 2x3 grid. On
+   screens wider than 1920 the cap grows with --u (Figma's 1840px content
+   width): a fixed --content-max cap let the type grow while the columns
+   didn't, so lines wrapped once more and the last row ran into SCROLL
+   DOWN at 2560x1440 (2026-10-17). */
 .inner {
   width: 100%;
-  max-width: var(--content-max);
+  max-width: max(var(--content-max), calc(1840 * var(--u)));
   margin: 0 auto;
   flex: 1 1 auto;
   min-height: 0;
@@ -97,7 +104,7 @@
   white-space: nowrap;
 }
 
-/* div.text-18-24: title, 20px gap, body, link. */
+/* div.text-18-24: title, 20px gap, body. */
 .itemBody {
   flex: 1 1 auto;
   min-width: 0;
@@ -133,34 +140,12 @@
   overflow-wrap: break-word;
 }
 
-.itemLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 8px 0;
-  font-family: var(--font-en);
-  font-size: var(--fs-btn);
-  line-height: 14px;
-  color: var(--color-muted);
-  transition: gap 200ms ease, color 200ms ease;
-}
-
-.itemLink:hover {
-  gap: 9px;
-  color: var(--color-white);
-}
-
-.itemLink svg {
-  width: 14px;
-  height: auto;
-}
-
 /* Mobile layout (portrait, Figma 629:8045 section3, updated 2026-09-30):
    free-scrolling, single column. Heading row padded 20 (16px icon, 8px
    gap, 20px title), then the list padded 20 with 30px between items;
    58px number column (18px / 24px SemiBold), 10px gap; 18px / 26px
    SemiBold title at -0.9px tracking, 12px gap, 12px / 17.2px Light body,
-   then the link. Left-aligned: justify on a phone-width column opened
+   Left-aligned: justify on a phone-width column opened
    wide gaps in the English copy. */
 @media (orientation: portrait) {
   .section {
@@ -224,16 +209,5 @@
     font-size: calc(12 * var(--mu));
     line-height: 1.433;
     text-align: left;
-  }
-
-  /* Figma draws this at 8.47px; floored so it stays legible/tappable. */
-  .itemLink {
-    gap: calc(4 * var(--mu));
-    padding: calc(6.3 * var(--mu)) 0;
-    font-size: max(calc(8.47 * var(--mu)), 10px);
-  }
-
-  .itemLink svg {
-    width: max(calc(11 * var(--mu)), 12px);
   }
 }

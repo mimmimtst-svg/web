@@ -25,6 +25,9 @@ type SiteMenuProps = {
   id: string;
   open: boolean;
   onClose: () => void;
+  /** On a detail page: the main page's address. The links then go there
+      (and to its sections by hash) instead of gliding within this page. */
+  homeHref?: string;
 };
 
 /**
@@ -32,7 +35,7 @@ type SiteMenuProps = {
  * mounted so it can animate both ways; `inert` + `visibility` take it out
  * of the tab order and hit-testing while closed.
  */
-export default function SiteMenu({ id, open, onClose }: SiteMenuProps) {
+export default function SiteMenu({ id, open, onClose, homeHref }: SiteMenuProps) {
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -93,6 +96,12 @@ export default function SiteMenu({ id, open, onClose }: SiteMenuProps) {
     if (target) goToSection(target);
   };
 
+  const hrefFor = (target?: string) => {
+    if (!target) return "#";
+    if (homeHref === undefined) return `#${target}`;
+    return target === "hero" ? homeHref : `${homeHref}#${target}`;
+  };
+
   return (
     <div className={`${styles.root} ${open ? styles.open : ""}`} inert={!open}>
       <div className={styles.backdrop} onClick={onClose} aria-hidden="true" />
@@ -130,8 +139,11 @@ export default function SiteMenu({ id, open, onClose }: SiteMenuProps) {
                 >
                   <a
                     className={styles.link}
-                    href={item.target ? `#${item.target}` : "#"}
+                    href={hrefFor(item.target)}
                     onClick={(e) => {
+                      // From a detail page a section link is a real page
+                      // load; let the browser follow it.
+                      if (homeHref !== undefined && item.target) return;
                       e.preventDefault();
                       go(item.target);
                     }}

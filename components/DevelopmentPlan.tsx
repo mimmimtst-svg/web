@@ -104,7 +104,15 @@ export default function DevelopmentPlan() {
                       <span className={styles.cardSubtitle}>{card.subtitle}</span>
                     </div>
                     <p className={styles.cardDesc}>{card.description}</p>
-                    <a className={styles.cardLink} href="#">
+                    {/* Relative, so it lands on the detail page next to
+                        whichever page this is (the site root, or the
+                        preview address). Its ::after covers the whole
+                        card, so a click anywhere on the card opens it. */}
+                    <a
+                      className={styles.cardLink}
+                      href={`plan/#${card.detailId}`}
+                      aria-label={`${card.title} 자세히 보기`}
+                    >
                       <span>자세히 보기</span>
                       <ArrowRightIcon />
                     </a>

@@ -27,7 +27,7 @@ export const policyCards: PolicyCard[] = [
         ],
       },
       {
-        label: "앞으로  |  한계를 넘는 도약",
+        label: "더높게  |  한계를 넘는 도약",
         items: [
           "우수 석학 제도 개선",
           "World Class 석학 특별채용 프로그램 도입",
@@ -59,7 +59,7 @@ export const policyCards: PolicyCard[] = [
         ],
       },
       {
-        label: "앞으로  |  한계를 넘는 도약",
+        label: "더높게  |  한계를 넘는 도약",
         items: [
           "해외 Top-tier 대학과의 공동학위 확대",
           "해외 우수 인재의 대학원 유치",
@@ -83,7 +83,7 @@ export const policyCards: PolicyCard[] = [
         ],
       },
       {
-        label: "앞으로  |  한계를 넘는 도약",
+        label: "더높게  |  한계를 넘는 도약",
         items: [
           "모금 패러다임 전환",
           "기업연계 모금 확대",
@@ -114,7 +114,7 @@ export const policyCards: PolicyCard[] = [
         ],
       },
       {
-        label: "앞으로  |  한계를 넘는 도약",
+        label: "더높게  |  한계를 넘는 도약",
         items: ["행정 혁신 TF 출범", "직원 경력 사다리 구축"],
       },
     ],
@@ -180,6 +180,8 @@ export const promises: Promise[] = [
 ];
 
 export type PlanCard = {
+  /** Part anchor on the detail page (lib/planDetail.ts): plan/#<detailId>. */
+  detailId: string;
   title: string;
   subtitle: string;
   description: string;
@@ -188,9 +190,12 @@ export type PlanCard = {
 
 // Figma (node 612:1416, synced 2026-09-28) reordered these to 다함께 →
 // 나답게 → 앞으로 and gave all three the same full-bleed background photo
-// (previously campus-tiger/campus-aerial alternated per card).
+// (previously campus-tiger/campus-aerial alternated per card). 앞으로 was
+// renamed 더높게 on 2026-10-17. Each card opens its part of the P2-1
+// detail page (app/plan).
 export const planCards: PlanCard[] = [
   {
+    detailId: "together",
     title: "다함께",
     subtitle: "조화로운 다양성",
     description:
@@ -198,6 +203,7 @@ export const planCards: PlanCard[] = [
     image: "/images/plan-card-bg.png",
   },
   {
+    detailId: "essence",
     title: "나답게",
     subtitle: "대학의 본질 회복",
     description:
@@ -205,7 +211,8 @@ export const planCards: PlanCard[] = [
     image: "/images/plan-card-bg.png",
   },
   {
-    title: "앞으로",
+    detailId: "higher",
+    title: "더높게",
     subtitle: "한계를 넘는 도약",
     description:
       "우리 스스로 키운 실력과 함께 모은 힘으로 한계를 넘어 도약하는 고려대학교를 만들겠습니다",

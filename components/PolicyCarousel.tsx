@@ -44,7 +44,7 @@ export default function PolicyCarousel() {
       <div className={styles.headerWrap}>
         <div className={styles.heading}>
           <PlusIcon />
-          <h2 className={styles.headingTitle}>나답게・다함께・앞으로 핵심 공약</h2>
+          <h2 className={styles.headingTitle}>나답게・다함께・더높게 핵심 공약</h2>
         </div>
         <div className={styles.navButtons}>
           <button

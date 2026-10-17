@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./Promises.module.css";
-import { ArrowRightIcon, PlusIcon } from "./icons";
+import { PlusIcon } from "./icons";
 import { promises } from "@/lib/policyData";
 import { withBasePath } from "@/lib/basePath";
 import { useSectionSettled } from "@/hooks/useSectionSettled";
@@ -56,10 +56,6 @@ export default function Promises() {
               <div className={styles.itemBody}>
                 <p className={styles.itemTitle}>{item.title}</p>
                 <p className={styles.itemDesc}>{item.body}</p>
-                <a className={styles.itemLink} href="#">
-                  <span>자세히 보기</span>
-                  <ArrowRightIcon />
-                </a>
               </div>
             </Reveal>
           ))}

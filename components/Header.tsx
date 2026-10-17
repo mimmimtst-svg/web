@@ -12,7 +12,14 @@ const HIDE_AFTER_PX = 40;
 /** Scroll moves smaller than this don't flip the header (finger jitter). */
 const DIRECTION_SLOP_PX = 6;
 
-export default function Header() {
+type HeaderProps = {
+  /** Set on detail pages: the main page's address (relative, e.g. "../",
+      so it works at the site root and at the preview address alike). The
+      brand and menu links then lead back there. */
+  homeHref?: string;
+};
+
+export default function Header({ homeHref }: HeaderProps = {}) {
   const headerRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,7 +41,23 @@ export default function Header() {
     if ("scrollRestoration" in history) {
       history.scrollRestoration = "manual";
     }
-    window.scrollTo(0, 0);
+    // A link with a hash (a section 2 card → the detail page's part, or a
+    // detail page's menu → a main-page section) lands on that element
+    // instead. Manual scroll restoration would otherwise leave it at 0.
+    const hashTarget = (() => {
+      try {
+        const id = decodeURIComponent(location.hash.slice(1));
+        return id ? document.getElementById(id) : null;
+      } catch {
+        return null;
+      }
+    })();
+    const land = () => {
+      if (hashTarget) hashTarget.scrollIntoView({ block: "start" });
+      else window.scrollTo(0, 0);
+    };
+    land();
+    let landedAt = window.scrollY;
 
     // A single scrollTo on mount isn't always enough: self-hosted fonts
     // swapping in, or (on iPad Safari especially) the address-bar chrome
@@ -51,7 +74,10 @@ export default function Header() {
     // scrolled a real distance by the time 'load'/'pageshow' fires (slow
     // network, big hero image), this must not yank them back to the top.
     const reassert = () => {
-      if (window.scrollY < 100) window.scrollTo(0, 0);
+      if (Math.abs(window.scrollY - landedAt) < 100) {
+        land();
+        landedAt = window.scrollY;
+      }
     };
     window.addEventListener("load", reassert);
     window.addEventListener("pageshow", reassert);
@@ -141,8 +167,9 @@ export default function Header() {
         <div className={styles.wrapper}>
           <a
             className={styles.brand}
-            href="#hero"
+            href={homeHref ?? "#hero"}
             onClick={(e) => {
+              if (homeHref !== undefined) return;
               e.preventDefault();
               goToSection("hero");
             }}
@@ -164,7 +191,7 @@ export default function Header() {
           </button>
         </div>
       </header>
-      <SiteMenu id="site-menu" open={menuOpen} onClose={closeMenu} />
+      <SiteMenu id="site-menu" open={menuOpen} onClose={closeMenu} homeHref={homeHref} />
     </>
   );
 }
