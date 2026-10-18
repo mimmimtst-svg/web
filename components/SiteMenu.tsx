@@ -13,13 +13,13 @@ type MenuItem = { label: string; target?: string; page?: string };
 
 // Figma hamburger (697:6208); labels final as of 2026-10-17 (the
 // parentheses were placeholders). 유 병 현 opens the profile page,
-// 발전 방향 the P2-1 page, 주요 공약 the P4-2 page (until P4-1, the
-// overview, exists), 발전계획서 the download page, 언론 보도 자료 the
+// 발전 방향 the P2-1 page, 주요 공약 the P4-1 overview (which leads on to
+// P4-2), 발전계획서 the download page, 언론 보도 자료 the
 // press page.
 const MENU_ITEMS: MenuItem[] = [
   { label: "유 병 현", page: "profile/" },
   { label: "발전 방향", page: "direction/" },
-  { label: "주요 공약", page: "pledges/detail/" },
+  { label: "주요 공약", page: "pledges/" },
   { label: "발전계획서", page: "development-plan/" },
   { label: "언론 보도 자료", page: "press/" },
 ];

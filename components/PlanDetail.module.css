@@ -261,17 +261,35 @@
   column-gap: clamp(20px, 2.4vw, 40px);
 }
 
+/* Each pledge links to the same pledge, in full, on the 주요 공약 page
+   (P4-2; 2026-10-18). */
+.pledgeList li {
+  break-inside: avoid;
+}
+
 .pledge {
   display: flex;
   align-items: flex-start;
   gap: 10px;
   padding: 4px 0;
-  break-inside: avoid;
   font-family: var(--font-kr);
   font-weight: 500;
   font-size: clamp(0.9375rem, 0.9rem + 0.12vw, 1.0625rem);
   line-height: 1.5;
+  color: inherit;
   word-break: keep-all;
+  transition: color 200ms ease;
+}
+
+@media (hover: hover) {
+  .pledge:hover {
+    color: var(--color-key);
+  }
+}
+
+.pledge:focus-visible {
+  outline: 1px solid var(--color-charcoal);
+  outline-offset: 2px;
 }
 
 .pledge svg {

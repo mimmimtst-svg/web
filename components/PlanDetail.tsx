@@ -6,6 +6,7 @@ import DetailNav from "./DetailNav";
 import ScrollTopButton from "./ScrollTopButton";
 import { CheckIcon, PlusIcon } from "./icons";
 import { groupPledges, planParts } from "@/lib/planDetail";
+import { pledgeAnchor } from "@/lib/pledgeDetail";
 
 const NAV_ITEMS = planParts.map(({ id, title }) => ({ id, label: title }));
 
@@ -111,9 +112,16 @@ export default function PlanDetail() {
                               <p className={styles.pledgeArea}>{group.area}</p>
                               <ul className={styles.pledgeList}>
                                 {group.pledges.map((pledge) => (
-                                  <li className={styles.pledge} key={pledge.code}>
-                                    <CheckIcon />
-                                    <span>{pledge.label}</span>
+                                  <li key={pledge.code}>
+                                    {/* The same pledge, in full, on the
+                                        주요 공약 page (P4-2). */}
+                                    <a
+                                      className={styles.pledge}
+                                      href={`../pledges/detail/#${pledgeAnchor(pledge.code)}`}
+                                    >
+                                      <CheckIcon />
+                                      <span>{pledge.label}</span>
+                                    </a>
                                   </li>
                                 ))}
                               </ul>

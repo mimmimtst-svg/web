@@ -7,9 +7,10 @@ import { policyCards } from "./policyData";
  * pillar (2026-10-17: the full text was too long to read on the web; the
  * booklet itself will be offered as a download).
  *
- * A pledge's code ("1-4") is kept only for grouping: its first number is
- * the policy area (1 선도적 연구 … 5 헌신과 존중의 리더십 — the P4 cards'
- * titles), which labels the group in the 세부 공약 box.
+ * A pledge's code ("1-4") is not shown: its first number is the policy
+ * area (1 선도적 연구 … 5 헌신과 존중의 리더십 — the P4 cards' titles),
+ * which labels the group in the 세부 공약 box, and it links the pledge to
+ * its entry on the 주요 공약 page (lib/pledgeDetail.ts, same codes).
  */
 
 export type PlanPledge = { code: string; label: string };
