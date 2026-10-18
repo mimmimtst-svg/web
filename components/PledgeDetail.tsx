@@ -80,7 +80,7 @@ export default function PledgeDetail() {
                 delay={150}
                 duration={900}
               >
-                <div className={styles.hub} aria-hidden="true">
+                <div className={styles.hub} aria-hidden="true" data-red-surface="">
                   <span
                     className={`${styles.hubTitle} ${
                       part.title.length > 6 ? styles.hubTitleLong : ""

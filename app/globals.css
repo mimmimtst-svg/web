@@ -134,6 +134,21 @@ html[data-paged] body {
   overscroll-behavior-y: none;
 }
 
+/* Text selected with the mouse: key red with white text (2026-10-18).
+   On the key-red surfaces (hero, footer, coming-soon page, the 주요 공약
+   circles) it flips to white with key-red text, or it would vanish. */
+::selection {
+  background-color: var(--color-key);
+  color: var(--color-white);
+}
+
+#hero ::selection,
+footer ::selection,
+[data-red-surface] ::selection {
+  background-color: var(--color-white);
+  color: var(--color-key);
+}
+
 /* overflow-x: hidden lives on body only — the same rule on html
    disables CSS scroll-snap in some Chromium builds. */
 body {

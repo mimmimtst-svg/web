@@ -6,27 +6,36 @@
    name, keywords, headline, the four keyword boxes as a list, "자세히
    보기"; the rows line up across the five cards (subgrid). The whole card
    is the link. */
+/* Exactly one screen (2026-10-18): title and cards centred in it, the
+   footer just below. */
 .page {
   flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
   background-color: var(--color-card-bg);
   color: var(--color-charcoal);
 }
 
 .inner {
-  padding: calc(var(--header-height) + clamp(32px, 5vh, 72px)) var(--space-page-x)
-    clamp(56px, 8vh, 112px);
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(var(--header-height) + clamp(20px, 3.5vh, 64px)) var(--space-page-x)
+    clamp(24px, 4vh, 64px);
 }
 
 .heading {
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: clamp(2.25rem, 1.7rem + 2vw, 3.5rem);
+  font-size: min(clamp(2.25rem, 1.7rem + 2vw, 3.5rem), 6vh);
   line-height: 1.2;
   text-align: center;
 }
 
 .cards {
-  margin-top: clamp(28px, 4vh, 56px);
+  margin-top: clamp(18px, 3vh, 48px);
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   /* number · name · keywords · headline · boxes · more */
@@ -46,7 +55,7 @@
   display: grid;
   grid-template-rows: subgrid;
   align-content: start;
-  padding: clamp(28px, 2.4vw, 44px) clamp(22px, 1.8vw, 36px) clamp(24px, 2vw, 32px);
+  padding: clamp(20px, 3.4vh, 44px) clamp(22px, 1.8vw, 36px) clamp(18px, 2.8vh, 32px);
   border-radius: 12px;
   background-color: var(--color-white);
   color: inherit;
@@ -83,7 +92,7 @@
 }
 
 .title {
-  margin-top: clamp(12px, 1vw, 16px);
+  margin-top: clamp(8px, 1.2vh, 14px);
   font-family: var(--font-kr);
   font-weight: 800;
   font-size: clamp(1.5rem, 1.05rem + 0.9vw, 2.125rem);
@@ -93,7 +102,7 @@
 }
 
 .keywords {
-  margin-top: clamp(8px, 0.7vw, 12px);
+  margin-top: clamp(6px, 0.9vh, 10px);
   font-family: var(--font-kr);
   font-weight: 500;
   font-size: clamp(0.875rem, 0.84rem + 0.12vw, 0.9375rem);
@@ -102,7 +111,7 @@
 }
 
 .headline {
-  margin-top: clamp(20px, 1.8vw, 28px);
+  margin-top: clamp(12px, 2vh, 24px);
   font-family: var(--font-kr);
   font-weight: 500;
   font-size: clamp(1rem, 0.94rem + 0.2vw, 1.125rem);
@@ -115,8 +124,10 @@
 .boxes {
   display: flex;
   flex-direction: column;
-  gap: clamp(12px, 1.1vw, 16px);
-  margin-top: clamp(32px, 3vw, 48px);
+  /* All vertical space here follows the screen height, so the five cards
+     fit one screen (2026-10-18; 1920×1080 down to 1366×768). */
+  gap: clamp(8px, 1.3vh, 14px);
+  margin-top: clamp(16px, 2.4vh, 28px);
 }
 
 .box {
@@ -158,7 +169,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: clamp(24px, 2.2vw, 36px);
+  margin-top: clamp(16px, 2.6vh, 32px);
   font-family: var(--font-kr);
   font-weight: 600;
   font-size: clamp(0.9375rem, 0.92rem + 0.1vw, 1rem);
@@ -193,6 +204,10 @@ footer.footer {
 
 /* Portrait: one card per row, the boxes two by two. */
 @media (orientation: portrait) {
+  .page {
+    min-height: 0;
+  }
+
   .inner {
     padding: calc(84 * var(--mu) + 36 * var(--mu)) calc(20 * var(--mu)) calc(48 * var(--mu));
   }

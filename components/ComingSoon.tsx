@@ -8,7 +8,7 @@ import { withBasePath } from "@/lib/basePath";
  */
 export default function ComingSoon() {
   return (
-    <main className={styles.page}>
+    <main className={styles.page} data-red-surface="">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className={styles.bg} src={withBasePath("/images/hero-bg.png")} alt="" aria-hidden="true" />
       <div className={styles.inner}>
