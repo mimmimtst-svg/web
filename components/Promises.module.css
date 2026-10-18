@@ -36,15 +36,13 @@
   z-index: -1;
 }
 
-/* section3_body: heading, then a 50px gap, then the 2x3 grid. On
-   screens wider than 1920 the cap grows with --u (Figma's 1840px content
-   width): a fixed --content-max cap let the type grow while the columns
-   didn't, so lines wrapped once more and the last row ran into SCROLL
-   DOWN at 2560x1440 (2026-10-17). */
+/* section3_body: heading, then a 50px gap, then the 2x3 grid. No width
+   cap (2026-10-18): on a screen wider than 16:9 --u follows the height,
+   and the old 1830u cap left an empty band on the right while titles
+   wrapped — the grid now runs edge to edge between the side paddings,
+   so more lines fit on one line and the rows get more air between them. */
 .inner {
   width: 100%;
-  max-width: max(var(--content-max), calc(1830 * var(--u)));
-  margin: 0 auto;
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
@@ -128,8 +126,6 @@
   line-height: 1.412;
   letter-spacing: -0.03em;
   color: var(--color-white);
-  /* Figma's own line breaks ("\n" in lib/policyData.ts). */
-  white-space: pre-line;
   /* Indented 12px from the number column's gap. */
   padding-left: calc(12 * var(--u));
   /* Left-aligned, breaking between words (2026-09-30: justify needed
@@ -138,6 +134,8 @@
   text-align: left;
   word-break: keep-all;
   overflow-wrap: break-word;
+  /* No single word left alone on a last line. */
+  text-wrap: pretty;
 }
 
 /* p.text-18r: three bullet points, 22px / 38px Light, each indented 33px
@@ -152,7 +150,8 @@
   text-align: left;
   word-break: keep-all;
   overflow-wrap: break-word;
-  white-space: pre-line;
+  /* No single word left alone on a last line. */
+  text-wrap: pretty;
 }
 
 .itemPoints li {
@@ -177,7 +176,6 @@
   }
 
   .inner {
-    max-width: none;
     gap: 0;
   }
 
@@ -230,13 +228,11 @@
 
   .itemTitle {
     padding-left: 0;
-    white-space: normal;
   }
 
   .itemPoints {
     font-size: calc(12.5 * var(--mu));
     line-height: 1.6;
-    white-space: normal;
   }
 
   .itemPoints li {
