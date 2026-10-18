@@ -127,13 +127,11 @@
      the carousel has (card + 60 Figma px of padding), capped at
      Figma's own size and at one card fitting across the screen. */
   --cu: min(1px, calc(100cqh / (var(--card-h) + 60)), calc((100vw - 80px) / var(--card-w)));
-  --card-w: 1160;
-  --card-h: 460;
+  --card-w: 504;
+  --card-h: 724;
   height: 100%;
   display: flex;
-  /* The wide cards are shorter than the room the carousel has; centred
-     in it rather than leaving a band of white under them. */
-  align-items: center;
+  align-items: flex-start;
   gap: calc(40 * var(--cu));
   padding: calc(16 * var(--cu)) calc(40 * var(--u)) calc(44 * var(--cu));
   overflow-x: auto;
@@ -165,10 +163,10 @@
    yanked the track flush-left on hover). Visuals + hover live on
    .cardInner. Figma card: 504 x 624 (2026-09-30, was 584; the extra
    40px is empty space under the list). 2026-10-18: the cards took the
-   발전계획서 체계도's longer lists (up to 19 pledges) and are now wide —
-   1160 x 460, 나답게 / 다함께 / 더높게 side by side — at the user's choice
-   over growing only the cards that overflowed. 460 fits the tallest
-   (05, seven pledges in 다함께) with the usual 40 below. */
+   발전계획서 체계도's longer lists (up to 19 pledges): taller (504 x
+   724), with a smaller title, smaller list type and tighter spacing so
+   the longest card (05) fits. A wide three-column card was tried first
+   and read too wide. */
 .card {
   scroll-snap-align: start;
   flex: 0 0 auto;
@@ -220,15 +218,16 @@
   z-index: -1;
 }
 
-/* div.p-3: 40 / 30 / 20 / 40 padding; number + title, arrow icon right. */
+/* Number + title, arrow icon right (2026-10-18: 32 / 30 / 12 / 36, was
+   40 / 30 / 20 / 40). */
 .cardHead {
   flex: 0 0 auto;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: calc(14 * var(--cu));
-  padding: calc(40 * var(--cu)) calc(30 * var(--cu)) calc(20 * var(--cu))
-    calc(40 * var(--cu));
+  padding: calc(32 * var(--cu)) calc(30 * var(--cu)) calc(12 * var(--cu))
+    calc(36 * var(--cu));
 }
 
 .cardTitleRow {
@@ -239,12 +238,12 @@
   min-width: 0;
 }
 
-/* 34px ExtraBold (Figma 2026-09-30, was SemiBold), key color. */
+/* 26px ExtraBold, key color (2026-10-18: was Figma's 34px). */
 .cardNumber,
 .cardTitle {
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: max(calc(34 * var(--cu)), 1rem);
+  font-size: max(calc(26 * var(--cu)), 1rem);
   line-height: 1.2;
   color: var(--color-key);
 }
@@ -272,45 +271,45 @@
 }
 
 .cardHeadLink svg {
-  width: max(calc(30 * var(--cu)), 18px);
+  width: max(calc(26 * var(--cu)), 18px);
   height: auto;
 }
 
-/* contents: 25 / 50 / 40 padding; the three categories in three columns,
-   40px apart. */
+/* contents: 14 / 40 / 32 padding, 22px between category groups
+   (2026-10-18: was 25 / 50 / 40 and 35). */
 .cardCategories {
   flex: 0 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: calc(40 * var(--cu));
-  padding: calc(25 * var(--cu)) calc(50 * var(--cu)) calc(40 * var(--cu));
+  display: flex;
+  flex-direction: column;
+  gap: calc(22 * var(--cu));
+  padding: calc(14 * var(--cu)) calc(40 * var(--cu)) calc(32 * var(--cu));
 }
 
-/* Label, then 6.8px, then the item list. */
+/* Label, then 5px, then the item list. */
 .category {
   display: flex;
   flex-direction: column;
-  gap: calc(6.8 * var(--cu));
+  gap: calc(5 * var(--cu));
 }
 
-/* 14px / 19.6px Medium, key color. */
+/* 13px / 18.2px Medium, key color. */
 .categoryLabel {
   font-family: var(--font-kr);
   font-weight: 500;
-  font-size: max(calc(14 * var(--cu)), 0.625rem);
+  font-size: max(calc(13 * var(--cu)), 0.625rem);
   line-height: 1.4;
   color: var(--color-key);
   white-space: pre-wrap;
 }
 
-/* 4px between items. */
+/* 2px between items. */
 .categoryItems {
   display: flex;
   flex-direction: column;
-  gap: calc(4 * var(--cu));
+  gap: calc(2 * var(--cu));
 }
 
-/* Check icon + 18px Light text on a 28px row. */
+/* Check icon + 16px Light text on a 24px row (2026-10-18: was 18 / 28). */
 .categoryItem {
   display: flex;
   align-items: flex-start;
@@ -321,8 +320,8 @@
   flex-shrink: 0;
   width: max(calc(10 * var(--cu)), 8px);
   height: auto;
-  /* Centers the check on the first 28px text line. */
-  margin-top: calc(10.6 * var(--cu));
+  /* Centers the check on the first 24px text line. */
+  margin-top: calc(8.6 * var(--cu));
   color: var(--color-key);
 }
 
@@ -331,12 +330,12 @@
   min-width: 0;
   font-family: var(--font-kr);
   font-weight: 300;
-  font-size: max(calc(18 * var(--cu)), 0.6875rem);
-  line-height: 1.556;
+  font-size: max(calc(16 * var(--cu)), 0.6875rem);
+  line-height: 1.5;
   color: var(--color-charcoal);
 }
 
-/* "(Chaired Professor)": 14px against the 18px line. */
+/* A Latin parenthetical: a size smaller than the line. */
 .itemNote {
   font-size: 0.778em;
 }
@@ -423,9 +422,7 @@
     width: calc(15.36 * var(--mu));
   }
 
-  /* One column on the phone card, as before. */
   .cardCategories {
-    grid-template-columns: minmax(0, 1fr);
     gap: calc(20 * var(--mu));
     padding: calc(5 * var(--mu)) calc(20 * var(--mu)) calc(20 * var(--mu));
   }
