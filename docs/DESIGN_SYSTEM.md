@@ -498,6 +498,11 @@ P4-1(4.31)의 카드, 메인 P4 카드, P2-2의 세부 공약 줄에서 오는 �
 ### 4.32 텍스트 선택(드래그) 색 (`app/globals.css`, 2026-10-18)
 `::selection`: 키 컬러 배경 + 흰 글자(사이트 전체). 키 컬러 면 위(히어로 `#hero`, `footer`, `[data-red-surface]` — 준비 중 화면, 주요 공약 인포그래픽의 원)에서는 반대로 흰 배경 + 키 컬러 글자 — 같은 색이면 선택이 안 보인다. 새로 키 컬러 면을 만들면 `data-red-surface`를 단다.
 
+### 4.33 탭 아이콘 · 링크 공유 썸네일 (`app/icon.png`, `app/favicon.ico`, `app/apple-icon.png`, `app/opengraph-image.png`, 2026-10-18)
+- **탭 아이콘**: 키 컬러 둥근 사각형(512px, 모서리 112) 위 흰 "FINE / KU" 두 줄(Pretendard 800) — 핵심 슬로건(사용자 지정). `icon.png`(512), `apple-icon.png`(180, 휴대폰 홈 화면), `favicon.ico`(16·32·48 PNG 내장, Next 기본 세모 아이콘 대체).
+- **링크 썸네일(Open Graph, 1200×630)**: 히어로와 같은 키 컬러 + 배경 패턴(multiply), 왼쪽에 "Free Intelligence, a New Era"(200) / **FINE-KU**(700, 92px) / "자유로운 지성, 시대를 여는 고대"(800) / 짧은 흰 선 / "고려대학교 제22대 총장 후보" / **유병현**(800), 오른쪽에 히어로 인물 사진(머리 위 여백을 두고 아래로 내림). `twitter-image.png`도 같은 파일. `layout.tsx`의 `metadataBase`(https://byunghyun.kr)로 이미지 주소가 절대 경로가 된다.
+- 이미지는 Pretendard·히어로 사진으로 HTML을 만들어 Chromium으로 렌더링해 만든 정적 파일. ⚠️ 카카오톡 등은 썸네일을 오래 캐시한다 — 바꾼 뒤 예전 썸네일이 보이면 카카오 개발자 "공유 디버거"에서 캐시를 지운다.
+
 ## 5. 코드 컨벤션
 
 - **스타일링**: CSS Modules (`*.module.css`), Tailwind 미사용
