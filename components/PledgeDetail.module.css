@@ -5,7 +5,7 @@
    light-gray hairlines, no icons. */
 .page {
   --tabs-h: 64px;
-  --hub: 240px;
+  --hub: 300px;
   flex: 1 0 auto;
   padding-top: var(--header-height);
   background-color: var(--color-white);
@@ -88,14 +88,20 @@
   transition: background-color 250ms ease, color 250ms ease;
 }
 
+/* Only the current part's number is key red; the others dark gray. */
 .tabNumber {
   font-weight: 700;
-  color: var(--color-key);
+  color: #555;
+  transition: color 250ms ease;
 }
 
 .tabActive {
   background-color: rgba(44, 44, 44, 0.07);
   color: var(--color-charcoal);
+}
+
+.tabActive .tabNumber {
+  color: var(--color-key);
 }
 
 @media (hover: hover) {
@@ -110,13 +116,12 @@
 }
 
 /* ---------- Parts ---------- */
+/* A scroll that stops near a part's top settles on it (PledgeNav), so
+   the headline and infographic fill the screen. No rule between parts
+   (2026-10-18) — the space separates them. */
 .part {
   padding: clamp(28px, 3.5vh, 56px) 0 clamp(72px, 9vh, 128px);
   scroll-margin-top: calc(var(--header-height) + var(--tabs-h));
-}
-
-.part + .part {
-  border-top: 1px solid var(--color-light-gray);
 }
 
 .inner {
@@ -183,27 +188,28 @@
   transform: translate(-50%, -50%);
 }
 
-/* 2026-10-18: bigger (was 184px / 22px). A long name ("전문적 행정과
-   인사경영") a size down so it breaks into two lines, not three. */
+/* 2026-10-18: bigger, twice (184px / 22px → 240 / 30 → 300 / 38). A long
+   name ("전문적 행정과 인사경영") a size down so it breaks into two lines,
+   not three. */
 .hubTitle {
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: 1.875rem;
-  line-height: 1.25;
+  font-size: 2.375rem;
+  line-height: 1.22;
   word-break: keep-all;
 }
 
 .hubTitleLong {
-  font-size: 1.5rem;
+  font-size: 1.875rem;
 }
 
 .hubKeywords {
-  margin-top: 12px;
-  padding-top: 12px;
+  margin-top: 14px;
+  padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.4);
   font-family: var(--font-kr);
   font-weight: 500;
-  font-size: 0.8125rem;
+  font-size: 1rem;
   line-height: 1.4;
   white-space: nowrap;
   opacity: 0.9;
@@ -350,15 +356,23 @@
 }
 
 /* Title on the left, the lead and points on the right (the profile
-   page's 4 : 7). Briefly beige when a box line jumps here. */
+   page's 4 : 7). Briefly beige when a box line jumps here. No rule under
+   a part's last pledge (2026-10-18). */
 .pledge {
-  display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
-  column-gap: clamp(32px, 4vw, 64px);
   padding: clamp(28px, 3vw, 40px) 16px;
   border-bottom: 1px solid var(--color-light-gray);
   scroll-margin-top: calc(var(--header-height) + var(--tabs-h) + 16px);
   transition: background-color 700ms ease;
+}
+
+.pledge:last-child {
+  border-bottom: 0;
+}
+
+.pledgeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  column-gap: clamp(32px, 4vw, 64px);
 }
 
 .pledge[data-flash] {
@@ -443,7 +457,7 @@ footer.footer {
 @media (orientation: portrait) {
   .page {
     --tabs-h: calc(52 * var(--mu));
-    --hub: calc(170 * var(--mu));
+    --hub: calc(196 * var(--mu));
     padding-top: calc(84 * var(--mu));
   }
 
@@ -507,17 +521,17 @@ footer.footer {
   }
 
   .hubTitle {
-    font-size: calc(23 * var(--mu));
+    font-size: calc(28 * var(--mu));
   }
 
   .hubTitleLong {
-    font-size: calc(19 * var(--mu));
+    font-size: calc(22 * var(--mu));
   }
 
   .hubKeywords {
     margin-top: calc(8 * var(--mu));
     padding-top: calc(8 * var(--mu));
-    font-size: calc(11 * var(--mu));
+    font-size: calc(13 * var(--mu));
   }
 
   .box:nth-child(n) {
@@ -570,10 +584,13 @@ footer.footer {
   }
 
   .pledge {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: calc(10 * var(--mu));
     padding: calc(24 * var(--mu)) calc(4 * var(--mu));
     scroll-margin-top: calc(84 * var(--mu) + var(--tabs-h) + 8px);
+  }
+
+  .pledgeGrid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: calc(10 * var(--mu));
   }
 
   .pledgeTitle {

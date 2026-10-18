@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./PledgeDetail.module.css";
+import { PORTRAIT } from "@/hooks/useMediaQuery";
+import { isMenuOpen } from "@/lib/menuState";
 
 export type PledgeNavItem = { id: string; number: string; label: string };
 
@@ -71,6 +73,62 @@ export default function PledgeNav({ items }: { items: PledgeNavItem[] }) {
     const left = tab.offsetLeft - (list.clientWidth - tab.offsetWidth) / 2;
     list.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
   }, [active]);
+
+  // A magnet at each part's top (landscape): when the user's own scroll
+  // comes to rest with a part's top near the tab bar, the page glides the
+  // rest of the way, so the headline and infographic fill the screen. In
+  // between, through the pledges, it scrolls freely. It only ever glides
+  // on in the direction the user was scrolling — down onto a part coming
+  // up, or up onto a part whose head has just gone under the bar — so a
+  // slow, notch-by-notch scroll is never pulled back. CSS proximity
+  // snapping was too weak to notice in Chrome. Links and the tabs scroll
+  // on their own and are left alone (only wheel, touch and keys arm it).
+  useEffect(() => {
+    const portrait = window.matchMedia(PORTRAIT);
+    let armed = false;
+    let lastY = window.scrollY;
+    let direction = 0;
+    let idle: ReturnType<typeof setTimeout> | undefined;
+    const arm = () => {
+      armed = true;
+    };
+    const settle = () => {
+      if (!armed || !direction || portrait.matches || isMenuOpen()) return;
+      armed = false;
+      const line = navRef.current?.getBoundingClientRect().bottom ?? 0;
+      const vh = window.innerHeight;
+      let best: number | null = null;
+      for (const { id } of items) {
+        const top = document.getElementById(id)?.getBoundingClientRect().top;
+        if (top === undefined) continue;
+        const d = top - line;
+        if (direction > 0 ? d > 2 && d < vh * 0.28 : d < -2 && -d < vh * 0.28) {
+          if (best === null || Math.abs(d) < Math.abs(best)) best = d;
+        }
+      }
+      if (best === null) return;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: window.scrollY + best, behavior: reduce ? "auto" : "smooth" });
+    };
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y !== lastY) direction = Math.sign(y - lastY);
+      lastY = y;
+      clearTimeout(idle);
+      idle = setTimeout(settle, 160);
+    };
+    window.addEventListener("wheel", arm, { passive: true });
+    window.addEventListener("touchstart", arm, { passive: true });
+    window.addEventListener("keydown", arm);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      clearTimeout(idle);
+      window.removeEventListener("wheel", arm);
+      window.removeEventListener("touchstart", arm);
+      window.removeEventListener("keydown", arm);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [items]);
 
   // Arriving on a pledge's address: Header has already scrolled to it.
   useEffect(() => {

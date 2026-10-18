@@ -3,10 +3,16 @@ import Header from "./Header";
 import Footer from "./Footer";
 import ScrollTopButton from "./ScrollTopButton";
 import PledgeNav from "./PledgeNav";
+import Reveal from "./Reveal";
 import { CheckIcon, LineArrowRightIcon, PlusIcon } from "./icons";
 import { pledgeAnchor, pledgeParts, type PledgeLine } from "@/lib/pledgeDetail";
 
 const NAV_ITEMS = pledgeParts.map(({ id, number, title }) => ({ id, number, label: title }));
+
+/** The first part's head and infographic are on screen when the page
+    opens: shown as is, not animated in (P2-2's rule). The rest rise in
+    as they scroll into view. */
+const shownAtOnce = (partIndex: number) => (partIndex === 0 ? true : undefined);
 
 /** A box line's target: a pledge code ("1-1") or a part id. */
 const hrefFor = (to: string) => `#${/^\d/.test(to) ? pledgeAnchor(to) : to}`;
@@ -53,22 +59,27 @@ export default function PledgeDetail() {
         <h1 className={styles.visuallyHidden}>주요 공약</h1>
         <PledgeNav items={NAV_ITEMS} />
 
-        {pledgeParts.map((part) => (
+        {pledgeParts.map((part, partIndex) => (
           <section className={styles.part} id={part.id} key={part.id} aria-labelledby={`${part.id}-title`}>
             <div className={styles.inner}>
               {/* The tab bar already names the part, so the head is just the
                   headline and sub-headline (2026-10-18: the part label and
                   the three intro lines are gone, the infographic comes
                   straight after). */}
-              <header className={styles.partHead}>
+              <Reveal as="header" className={styles.partHead} visible={shownAtOnce(partIndex)}>
                 <h2 className={styles.headline} id={`${part.id}-title`}>
                   <span className={styles.visuallyHidden}>{part.title}: </span>
                   {part.headline}
                 </h2>
                 <p className={styles.subline}>{part.subline}</p>
-              </header>
+              </Reveal>
 
-              <div className={styles.infographic}>
+              <Reveal
+                className={styles.infographic}
+                visible={shownAtOnce(partIndex)}
+                delay={150}
+                duration={900}
+              >
                 <div className={styles.hub} aria-hidden="true">
                   <span
                     className={`${styles.hubTitle} ${
@@ -94,12 +105,12 @@ export default function PledgeDetail() {
                     </ul>
                   </div>
                 ))}
-              </div>
+              </Reveal>
 
-              <h3 className={styles.pledgesHeading}>
+              <Reveal as="h3" className={styles.pledgesHeading}>
                 <PlusIcon />
                 세부 공약
-              </h3>
+              </Reveal>
               <ol className={styles.pledges}>
                 {part.pledges.map((pledge) => (
                   <li
@@ -109,19 +120,22 @@ export default function PledgeDetail() {
                     key={pledge.code}
                   >
                     {/* No running number (2026-10-18): "01" read like the
-                        part numbers in the tab bar. */}
-                    <h4 className={styles.pledgeTitle}>{pledge.title}</h4>
-                    <div className={styles.pledgeBody}>
-                      <p className={styles.pledgeLead}>{pledge.lead}</p>
-                      <ul className={styles.pledgePoints}>
-                        {pledge.points.map((point) => (
-                          <li key={point}>
-                            <CheckIcon />
-                            <span>{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                        part numbers in the tab bar. Each pledge rises in
+                        as it scrolls into view. */}
+                    <Reveal className={styles.pledgeGrid}>
+                      <h4 className={styles.pledgeTitle}>{pledge.title}</h4>
+                      <div className={styles.pledgeBody}>
+                        <p className={styles.pledgeLead}>{pledge.lead}</p>
+                        <ul className={styles.pledgePoints}>
+                          {pledge.points.map((point) => (
+                            <li key={point}>
+                              <CheckIcon />
+                              <span>{point}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </Reveal>
                   </li>
                 ))}
               </ol>
