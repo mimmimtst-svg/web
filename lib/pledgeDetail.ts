@@ -18,6 +18,8 @@ export type PledgeLine = PledgeLink[];
 
 export type PledgeBox = { name: string; tagline: string; lines: PledgeLine[] };
 
+/** `title`: "\n" marks where a long title breaks — after "및", or at a
+    phrase boundary rather than wherever the column runs out (2026-10-18). */
 export type Pledge = { code: string; title: string; lead: string; points: string[] };
 
 export type PledgePart = {
@@ -89,7 +91,7 @@ export const pledgeParts: PledgePart[] = [
     pledges: [
       {
         code: "1-1",
-        title: "단과대별 연구기금 조성 및 기본연구비 신설",
+        title: "단과대별 연구기금 조성 및\n기본연구비 신설",
         lead: "본부가 책임지고 재원을 확보하여 전임교원이 안정적으로 연구할 수 있는 기본적인 연구 기반을 마련하겠습니다.",
         points: [
           "전임교원 1인당 1억 원 규모의 단과대별 연구기금 단계적 조성",
@@ -99,7 +101,7 @@ export const pledgeParts: PledgePart[] = [
       },
       {
         code: "1-2",
-        title: "연구동 신축 추진 및 안정적 연구 공간 확보",
+        title: "연구동 신축 추진 및\n안정적 연구 공간 확보",
         lead: "연구 공간도 연구경쟁력입니다. 계열을 불문하고 늘어나는 연구 공간 수요에 대응하겠습니다.",
         points: [
           "연구 전용 공간을 갖춘 연구동 신축 추진",
@@ -120,7 +122,7 @@ export const pledgeParts: PledgePart[] = [
       },
       {
         code: "1-4",
-        title: "학과 자율 기반으로 우수 교원을 확보하는 채용제도 확립",
+        title: "학과 자율 기반으로 우수 교원을\n확보하는 채용제도 확립",
         lead: "신임교원 채용에서 학과의 자율성을 확대하고 학문 분야별 특성이 충분히 존중되도록 하겠습니다.",
         points: [
           "학과 자율성 확대 및 획일적 연구업적 기준 지양",
@@ -141,7 +143,7 @@ export const pledgeParts: PledgePart[] = [
       },
       {
         code: "1-6",
-        title: "KU Grand Challenge 융합연구 프로그램 신설",
+        title: "KU Grand Challenge\n융합연구 프로그램 신설",
         lead: "학과는 학문의 기반이 되고, 융합은 새로운 학문을 여는 힘이 되게 하겠습니다.",
         points: [
           "단과대학·학과 경계를 넘어 연구자가 자유롭게 팀을 구성하는 프로그램 신설",
@@ -173,7 +175,7 @@ export const pledgeParts: PledgePart[] = [
       },
       {
         code: "1-9",
-        title: "World Class 석학 특별채용 프로그램 도입",
+        title: "World Class 석학 특별채용\n프로그램 도입",
         lead: "세계 최고의 연구자가 고려대학교를 선택할 수 있는 환경을 조성하겠습니다.",
         points: [
           "세계적 석학과 미래의 세계적 연구자를 발굴·유치하는 유연한 특별채용 프로그램 도입",
@@ -192,7 +194,7 @@ export const pledgeParts: PledgePart[] = [
       },
       {
         code: "1-11",
-        title: "국제 공동연구 Seed Fund를 글로벌 대형연구로 연결",
+        title: "국제 공동연구 Seed Fund를\n글로벌 대형연구로 연결",
         lead: "고려대학교 연구자가 세계적인 연구 네트워크의 중심에 설 수 있도록 하겠습니다.",
         points: [
           "해외 Top-tier 대학·연구기관과의 실질적 공동연구를 위한 Seed Fund 확대",
@@ -450,7 +452,7 @@ export const pledgeParts: PledgePart[] = [
       },
       {
         code: "3-2",
-        title: "스마트 리소스 캠퍼스 (Smart Resource Campus)",
+        title: "스마트 리소스 캠퍼스\n(Smart Resource Campus)",
         lead: "캠퍼스 공간과 에너지를 알차고 효율적으로 활용하여 재정에 보탬이 되고, 기후변화에 대응하는 사회적 책임을 다하겠습니다.",
         points: ["공간 활용 및 공유 제도의 체계적 정비", "전기, 수도, 에너지 절약 체계 구축"],
       },
@@ -516,7 +518,7 @@ export const pledgeParts: PledgePart[] = [
       },
       {
         code: "3-9",
-        title: "Idea to Venture - 아이디어가 글로벌 기업이 되는 고려대학교",
+        title: "Idea to Venture -\n아이디어가 글로벌 기업이 되는 고려대학교",
         lead: "고대 구성원 누구나 아이디어를 주저 없이 사업화할 수 있도록 창업의 전 주기(예비 → 성장 → 재도전)를 지원하겠습니다.",
         points: [
           "창업자, 학생, 대학이 이익을 공유하는 체계 구축",
@@ -784,7 +786,7 @@ export const pledgeParts: PledgePart[] = [
       },
       {
         code: "5-4",
-        title: "캠퍼스·병원 특성화 및 통합 발전 전략 추진",
+        title: "캠퍼스·병원 특성화 및\n통합 발전 전략 추진",
         lead: "서울·세종캠퍼스와 안암·구로·안산 고대병원이 각자의 특성을 살리면서 함께 성장하도록 하겠습니다.",
         points: [
           "서울캠퍼스와 세종캠퍼스의 특성을 고려하면서 전체가 함께 성장하는 전략 수립",
@@ -874,7 +876,7 @@ export const pledgeParts: PledgePart[] = [
       },
       {
         code: "5-13",
-        title: "고대병원 교직원 및 학생 전용창구 및 상담사 설치",
+        title: "고대병원 교직원 및 학생\n전용창구 및 상담사 설치",
         lead: "모든 구성원이 의료 혜택을 더욱 편리하게 받을 수 있도록 하겠습니다.",
         points: ["고대병원에 교원·직원·학생을 위한 전용창구 설치", "전용 상담사 배치"],
       },

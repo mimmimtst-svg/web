@@ -101,19 +101,16 @@ export default function PledgeDetail() {
                 세부 공약
               </h3>
               <ol className={styles.pledges}>
-                {part.pledges.map((pledge, index) => (
+                {part.pledges.map((pledge) => (
                   <li
                     className={styles.pledge}
                     id={pledgeAnchor(pledge.code)}
                     data-pledge=""
                     key={pledge.code}
                   >
-                    <div className={styles.pledgeHead}>
-                      <span className={styles.pledgeNumber}>
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <h4 className={styles.pledgeTitle}>{pledge.title}</h4>
-                    </div>
+                    {/* No running number (2026-10-18): "01" read like the
+                        part numbers in the tab bar. */}
+                    <h4 className={styles.pledgeTitle}>{pledge.title}</h4>
                     <div className={styles.pledgeBody}>
                       <p className={styles.pledgeLead}>{pledge.lead}</p>
                       <ul className={styles.pledgePoints}>
