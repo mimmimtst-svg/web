@@ -267,8 +267,20 @@
   transition: opacity 200ms ease;
 }
 
-.cardHeadLink:hover {
-  opacity: 0.6;
+/* The whole card opens its part of the 주요 공약 page: the arrow link's
+   ::after covers the card (as section 2's cards do). The pledge rows sit
+   above it and open their own pledges. */
+.cardHeadLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+@media (hover: hover) {
+  .cardInner:hover .cardHeadLink {
+    opacity: 0.6;
+  }
 }
 
 .cardHeadLink svg {
@@ -318,6 +330,8 @@
 /* Check icon + 19px Light text on a 28px row (2026-10-18: was 18 / 28).
    Each item is a link to its pledge on the 주요 공약 page. */
 .categoryItem {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: flex-start;
   gap: calc(10 * var(--cu));
