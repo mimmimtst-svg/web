@@ -1,20 +1,20 @@
-/* P4-1, 주요 공약 (components/PledgeOverview.tsx): the press page's frame
-   (white page, centred 800 title) over five beige cards in a row, each a
-   P4-2 infographic in brief and centred: number, a key-red circle with
-   the part's name (the infographic's hub), keywords, headline, then the
-   four keyword boxes as white tiles. One screen on a 1920×1080 desktop.
-   The whole card is the link; hover lifts it onto white. */
+/* P4-1, 주요 공약 (components/PledgeOverview.tsx). A soft beige band (the
+   card colour, like P2-2's summary band) the width of the screen, five
+   plain white cards across it. No circles, no tiles (2026-10-18: the
+   first version — beige cards, a red circle each, white tiles — "too
+   cramped, use the width"). Each card reads top to bottom: number,
+   name, keywords, headline, the four keyword boxes as a list, "자세히
+   보기"; the rows line up across the five cards (subgrid). The whole card
+   is the link. */
 .page {
   flex: 1 0 auto;
-  background-color: var(--color-white);
+  background-color: var(--color-card-bg);
   color: var(--color-charcoal);
 }
 
 .inner {
-  max-width: 1680px;
-  margin: 0 auto;
-  padding: calc(var(--header-height) + clamp(28px, 4.5vh, 72px)) var(--space-page-x)
-    clamp(64px, 9vh, 120px);
+  padding: calc(var(--header-height) + clamp(32px, 5vh, 72px)) var(--space-page-x)
+    clamp(56px, 8vh, 112px);
 }
 
 .heading {
@@ -26,38 +26,40 @@
 }
 
 .cards {
-  margin-top: clamp(24px, 3.5vh, 56px);
+  margin-top: clamp(28px, 4vh, 56px);
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: clamp(12px, 1.2vw, 24px);
+  /* number · name · keywords · headline · boxes · more */
+  grid-template-rows: repeat(6, auto);
+  gap: 0 clamp(12px, 1.2vw, 24px);
   list-style: none;
 }
 
-.cards > li {
-  display: flex;
+.item {
+  grid-row: span 6;
+  display: grid;
+  grid-template-rows: subgrid;
 }
 
 .card {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: clamp(24px, 2vw, 36px) clamp(16px, 1.3vw, 24px) clamp(20px, 1.6vw, 28px);
-  border-radius: var(--radius-card);
-  background-color: var(--color-card-bg);
+  grid-row: span 6;
+  display: grid;
+  grid-template-rows: subgrid;
+  align-content: start;
+  padding: clamp(28px, 2.4vw, 44px) clamp(22px, 1.8vw, 36px) clamp(24px, 2vw, 32px);
+  border-radius: 12px;
+  background-color: var(--color-white);
   color: inherit;
-  text-align: center;
-  transition: background-color 300ms ease, box-shadow 300ms ease,
-    transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: box-shadow 300ms ease, transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (hover: hover) {
   .card:hover {
-    background-color: var(--color-white);
-    box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 18px 36px -18px rgba(0, 0, 0, 0.28);
     transform: translateY(-6px);
   }
 
+  .card:hover .title,
   .card:hover .more {
     color: var(--color-key);
   }
@@ -75,94 +77,79 @@
 .number {
   font-family: var(--font-kr);
   font-weight: 700;
-  font-size: 0.9375rem;
+  font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);
   line-height: 1;
   color: var(--color-key);
 }
 
-/* The infographic's hub, small. */
-.hub {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: clamp(132px, 8.6vw, 156px);
-  height: clamp(132px, 8.6vw, 156px);
-  margin-top: 14px;
-  padding: 0 8px;
-  border-radius: 50%;
-  background-color: var(--color-key);
-  color: var(--color-white);
-}
-
-.hubTitle {
+.title {
+  margin-top: clamp(12px, 1vw, 16px);
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: clamp(1.25rem, 1rem + 0.5vw, 1.5rem);
+  font-size: clamp(1.5rem, 1.05rem + 0.9vw, 2.125rem);
   line-height: 1.25;
   word-break: keep-all;
-}
-
-/* "전문적 행정과 / 인사경영": two lines, not three. */
-.hubTitleLong {
-  font-size: clamp(0.9375rem, 0.5rem + 0.55vw, 1.1875rem);
+  transition: color 250ms ease;
 }
 
 .keywords {
-  margin-top: 16px;
+  margin-top: clamp(8px, 0.7vw, 12px);
   font-family: var(--font-kr);
-  font-weight: 600;
-  font-size: 0.875rem;
+  font-weight: 500;
+  font-size: clamp(0.875rem, 0.84rem + 0.12vw, 0.9375rem);
   line-height: 1.4;
-  color: var(--color-key);
+  color: var(--color-label);
 }
 
-/* Grows, so the box tiles line up across the five cards. */
 .headline {
-  flex: 1 0 auto;
-  margin-top: 14px;
+  margin-top: clamp(20px, 1.8vw, 28px);
   font-family: var(--font-kr);
-  font-weight: 600;
-  font-size: clamp(0.9375rem, 0.88rem + 0.2vw, 1.0625rem);
-  line-height: 1.6;
+  font-weight: 500;
+  font-size: clamp(1rem, 0.94rem + 0.2vw, 1.125rem);
+  line-height: 1.65;
   word-break: keep-all;
-  text-wrap: balance;
 }
 
+/* The four keyword boxes as a list: name, tagline under it, a key-red
+   dot before each. */
 .boxes {
-  align-self: stretch;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 20px;
+  gap: clamp(12px, 1.1vw, 16px);
+  margin-top: clamp(32px, 3vw, 48px);
 }
 
 .box {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 11px 14px;
-  border-radius: 8px;
-  background-color: var(--color-white);
-  text-align: left;
-  transition: background-color 300ms ease;
+  padding-left: 16px;
 }
 
-.card:hover .box {
-  background-color: var(--color-card-bg);
+.box::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--color-key);
 }
 
 .boxName {
   font-family: var(--font-kr);
   font-weight: 700;
-  font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);
-  line-height: 1.35;
+  font-size: clamp(1rem, 0.96rem + 0.15vw, 1.125rem);
+  line-height: 1.4;
 }
 
 .boxTagline {
   font-family: var(--font-kr);
   font-weight: 400;
-  font-size: 0.8125rem;
-  line-height: 1.4;
+  font-size: clamp(0.8125rem, 0.8rem + 0.1vw, 0.9375rem);
+  line-height: 1.45;
   color: var(--color-label);
   word-break: keep-all;
 }
@@ -171,12 +158,12 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 20px;
+  margin-top: clamp(24px, 2.2vw, 36px);
   font-family: var(--font-kr);
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: clamp(0.9375rem, 0.92rem + 0.1vw, 1rem);
   line-height: 1.3;
-  transition: color 200ms ease;
+  transition: color 250ms ease;
 }
 
 .more svg {
@@ -190,10 +177,11 @@ footer.footer {
   padding-right: calc(var(--detail-float-x) + 52px + 16px);
 }
 
-/* Narrower landscape screens: rows of three (then two). */
+/* Narrower landscape screens: rows of three, then two. */
 @media (max-width: 1280px) {
   .cards {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 16px;
   }
 }
 
@@ -203,10 +191,10 @@ footer.footer {
   }
 }
 
-/* Portrait: one card per row, the box tiles two by two. */
+/* Portrait: one card per row, the boxes two by two. */
 @media (orientation: portrait) {
   .inner {
-    padding: calc(84 * var(--mu) + 40 * var(--mu)) calc(20 * var(--mu)) calc(56 * var(--mu));
+    padding: calc(84 * var(--mu) + 36 * var(--mu)) calc(20 * var(--mu)) calc(48 * var(--mu));
   }
 
   .heading {
@@ -216,50 +204,36 @@ footer.footer {
   .cards {
     margin-top: calc(24 * var(--mu));
     grid-template-columns: minmax(0, 1fr);
-    gap: calc(14 * var(--mu));
+    row-gap: calc(14 * var(--mu));
   }
 
   .card {
-    padding: calc(28 * var(--mu)) calc(18 * var(--mu)) calc(22 * var(--mu));
+    padding: calc(26 * var(--mu)) calc(22 * var(--mu)) calc(22 * var(--mu));
   }
 
   .number {
     font-size: calc(15 * var(--mu));
   }
 
-  .hub {
-    width: calc(136 * var(--mu));
-    height: calc(136 * var(--mu));
-    margin-top: calc(12 * var(--mu));
-  }
-
-  .hubTitle {
-    font-size: calc(23 * var(--mu));
-  }
-
-  .hubTitleLong {
-    font-size: calc(18 * var(--mu));
+  .title {
+    margin-top: calc(10 * var(--mu));
+    font-size: calc(26 * var(--mu));
   }
 
   .keywords {
-    margin-top: calc(14 * var(--mu));
     font-size: calc(14 * var(--mu));
   }
 
   .headline {
-    margin-top: calc(12 * var(--mu));
+    margin-top: calc(16 * var(--mu));
     font-size: calc(16.5 * var(--mu));
   }
 
   .boxes {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: calc(8 * var(--mu));
-    margin-top: calc(18 * var(--mu));
-  }
-
-  .box {
-    padding: calc(11 * var(--mu)) calc(12 * var(--mu));
+    gap: calc(14 * var(--mu)) calc(12 * var(--mu));
+    margin-top: calc(24 * var(--mu));
   }
 
   .boxName {
@@ -271,7 +245,7 @@ footer.footer {
   }
 
   .more {
-    margin-top: calc(18 * var(--mu));
+    margin-top: calc(20 * var(--mu));
     font-size: calc(15 * var(--mu));
   }
 

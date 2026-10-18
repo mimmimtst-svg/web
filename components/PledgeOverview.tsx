@@ -7,10 +7,10 @@ import { LineArrowRightIcon } from "./icons";
 import { pledgeParts } from "@/lib/pledgeDetail";
 
 /**
- * P4-1, 주요 공약 (menu): the five policy areas side by side, each its
- * infographic in brief — number, the key-red circle with its name, the
- * keywords, the headline and the four keyword boxes (name + tagline).
- * The whole card opens that part on P4-2 (detail/#<part>).
+ * P4-1, 주요 공약 (menu): the five policy areas side by side across the
+ * screen, each its P4-2 infographic in brief — number, name, keywords,
+ * headline and the four keyword boxes (name + tagline). The whole card
+ * opens that part on P4-2 (detail/#<part>).
  */
 export default function PledgeOverview() {
   return (
@@ -21,18 +21,10 @@ export default function PledgeOverview() {
           <h1 className={styles.heading}>주요 공약</h1>
           <ol className={styles.cards}>
             {pledgeParts.map((part, index) => (
-              <Reveal as="li" key={part.id} delay={index * 120}>
+              <Reveal as="li" className={styles.item} key={part.id} delay={index * 100}>
                 <a className={styles.card} href={`detail/#${part.id}`}>
                   <span className={styles.number}>{part.number}</span>
-                  <span className={styles.hub}>
-                    <span
-                      className={`${styles.hubTitle} ${
-                        part.title.length > 6 ? styles.hubTitleLong : ""
-                      }`}
-                    >
-                      {part.title}
-                    </span>
-                  </span>
+                  <span className={styles.title}>{part.title}</span>
                   <span className={styles.keywords}>{part.keywords}</span>
                   <span className={styles.headline}>{part.headline}</span>
                   <span className={styles.boxes}>
