@@ -3,6 +3,7 @@
 import styles from "./PolicyCarousel.module.css";
 import { CheckIcon, ChevronIcon, LineArrowRightIcon, PlusIcon } from "./icons";
 import { policyCards } from "@/lib/policyData";
+import { pledgeAnchor, pledgeParts } from "@/lib/pledgeDetail";
 import { useHorizontalCarousel } from "@/hooks/useHorizontalCarousel";
 import { withBasePath } from "@/lib/basePath";
 import CarouselDots from "./CarouselDots";
@@ -12,6 +13,20 @@ import Footer from "./Footer";
 // 나답게 / 다함께 / 더높게 groups so it still fits (05, with 19); the
 // others get more air between them.
 const DENSE_ITEMS = 15;
+
+// Each card opens its part of the 주요 공약 page (P4-2), and each pledge
+// on it opens that pledge there. The cards list the pledges in the same
+// order as the page (the booklet's 1-1, 1-2 …), so the n-th item of card
+// k is the n-th pledge of part k. Relative path: the main page sits at
+// the site root or under the unlisted preview address.
+const PLEDGE_PAGE = "pledges/detail/";
+
+/** Where the n-th pledge on card `cardIndex` opens. */
+const pledgeHref = (cardIndex: number, n: number) => {
+  const part = pledgeParts[cardIndex];
+  const code = part?.pledges[n]?.code;
+  return `${PLEDGE_PAGE}#${code ? pledgeAnchor(code) : (part?.id ?? "")}`;
+};
 
 // A Latin parenthetical inside an item, e.g. "(Chaired Professor)", is set
 // a size smaller in Figma (14px against the 18px line on desktop).
@@ -83,7 +98,7 @@ export default function PolicyCarousel() {
           onPointerLeave={endDrag}
           onPointerCancel={endDrag}
         >
-          {policyCards.map((card) => (
+          {policyCards.map((card, cardIndex) => (
             <li className={styles.card} key={card.number}>
               <div className={styles.cardInner}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -98,7 +113,12 @@ export default function PolicyCarousel() {
                     <span className={styles.cardNumber}>{card.number}</span>
                     <span className={styles.cardTitle}>{card.title}</span>
                   </span>
-                  <a className={styles.cardHeadLink} href="#" aria-label="자세히 보기">
+                  <a
+                    className={styles.cardHeadLink}
+                    href={`${PLEDGE_PAGE}#${pledgeParts[cardIndex]?.id ?? ""}`}
+                    aria-label={`${card.title} 자세히 보기`}
+                    draggable={false}
+                  >
                     <LineArrowRightIcon />
                   </a>
                 </div>
@@ -109,16 +129,27 @@ export default function PolicyCarousel() {
                       : ""
                   }`}
                 >
-                  {card.categories.map((category) => (
+                  {card.categories.map((category, categoryIndex) => (
                     <div className={styles.category} key={category.label}>
                       <p className={styles.categoryLabel}>{category.label}</p>
                       <ul className={styles.categoryItems}>
-                        {category.items.map((item) => (
-                          <li className={styles.categoryItem} key={item}>
-                            <CheckIcon />
-                            <span>
-                              <ItemText text={item} />
-                            </span>
+                        {category.items.map((item, itemIndex) => (
+                          <li key={item}>
+                            <a
+                              className={styles.categoryItem}
+                              href={pledgeHref(
+                                cardIndex,
+                                card.categories
+                                  .slice(0, categoryIndex)
+                                  .reduce((n, c) => n + c.items.length, itemIndex)
+                              )}
+                              draggable={false}
+                            >
+                              <CheckIcon />
+                              <span>
+                                <ItemText text={item} />
+                              </span>
+                            </a>
                           </li>
                         ))}
                       </ul>

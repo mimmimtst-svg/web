@@ -315,11 +315,25 @@
   gap: calc(2 * var(--cu));
 }
 
-/* Check icon + 19px Light text on a 28px row (2026-10-18: was 18 / 28). */
+/* Check icon + 19px Light text on a 28px row (2026-10-18: was 18 / 28).
+   Each item is a link to its pledge on the 주요 공약 page. */
 .categoryItem {
   display: flex;
   align-items: flex-start;
   gap: calc(10 * var(--cu));
+  color: inherit;
+  transition: color 200ms ease;
+}
+
+@media (hover: hover) {
+  .categoryItem:hover > span {
+    color: var(--color-key);
+  }
+}
+
+.categoryItem:focus-visible {
+  outline: 1px solid var(--color-charcoal);
+  outline-offset: 2px;
 }
 
 .categoryItem svg {
@@ -339,6 +353,7 @@
   font-size: max(calc(19 * var(--cu)), 0.6875rem);
   line-height: 1.474;
   color: var(--color-charcoal);
+  transition: color 200ms ease;
 }
 
 /* A Latin parenthetical: a size smaller than the line. */

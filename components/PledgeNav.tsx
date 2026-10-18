@@ -8,15 +8,29 @@ export type PledgeNavItem = { id: string; number: string; label: string };
 /** How long a pledge stays highlighted after a jump to it. */
 const FLASH_MS = 1800;
 
+let flashTimer: ReturnType<typeof setTimeout> | undefined;
+
+/** Briefly highlights a pledge that a link has just jumped to. */
+function flash(target: Element) {
+  if (!target.hasAttribute("data-pledge")) return;
+  document.querySelectorAll("[data-flash]").forEach((el) => el.removeAttribute("data-flash"));
+  target.setAttribute("data-flash", "");
+  clearTimeout(flashTimer);
+  flashTimer = setTimeout(() => target.removeAttribute("data-flash"), FLASH_MS);
+}
+
 /**
  * The 주요 공약 page's tab bar: the five parts, sticky under the header,
  * the current one marked as you scroll. It also handles every in-page
  * link on the page (tabs and the infographic's box lines): a smooth
  * scroll instead of a jump, the address updated to the target, and a
- * pledge briefly highlighted where it lands.
+ * pledge briefly highlighted where it lands — also when the page opens
+ * on a pledge's address (the main page's P4 cards link to them). No
+ * rule under the bar: a soft shadow once the page scrolls beneath it.
  */
 export default function PledgeNav({ items }: { items: PledgeNavItem[] }) {
   const [active, setActive] = useState(items[0]?.id ?? null);
+  const [stuck, setStuck] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
@@ -34,6 +48,7 @@ export default function PledgeNav({ items }: { items: PledgeNavItem[] }) {
         if (el && el.getBoundingClientRect().top <= line) current = id;
       }
       setActive(current);
+      setStuck(window.scrollY > 4);
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -57,9 +72,14 @@ export default function PledgeNav({ items }: { items: PledgeNavItem[] }) {
     list.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
   }, [active]);
 
+  // Arriving on a pledge's address: Header has already scrolled to it.
+  useEffect(() => {
+    const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (target) flash(target);
+  }, []);
+
   // In-page links anywhere in <main>.
   useEffect(() => {
-    let flashTimer: ReturnType<typeof setTimeout> | undefined;
     const onClick = (e: MouseEvent) => {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
       const link = (e.target as Element).closest?.("main a[href^='#']");
@@ -71,22 +91,14 @@ export default function PledgeNav({ items }: { items: PledgeNavItem[] }) {
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
       history.replaceState(null, "", `#${id}`);
-      if (target.hasAttribute("data-pledge")) {
-        document.querySelectorAll("[data-flash]").forEach((el) => el.removeAttribute("data-flash"));
-        target.setAttribute("data-flash", "");
-        clearTimeout(flashTimer);
-        flashTimer = setTimeout(() => target.removeAttribute("data-flash"), FLASH_MS);
-      }
+      flash(target);
     };
     document.addEventListener("click", onClick);
-    return () => {
-      document.removeEventListener("click", onClick);
-      clearTimeout(flashTimer);
-    };
+    return () => document.removeEventListener("click", onClick);
   }, []);
 
   return (
-    <nav className={styles.tabs} ref={navRef} aria-label="주요 공약 분야">
+    <nav className={`${styles.tabs} ${stuck ? styles.tabsStuck : ""}`} ref={navRef} aria-label="주요 공약 분야">
       <ul className={styles.tabList} ref={listRef}>
         {items.map((item) => {
           const current = item.id === active;

@@ -40,8 +40,8 @@ function BoxLine({ line }: { line: PledgeLine }) {
 /**
  * P4-2, 주요 공약 (menu): the booklet's five policy areas. A sticky tab bar
  * of the five parts; each part opens with its infographic — headline,
- * sub-headline, three intro lines, then four keyword boxes around a
- * key-red circle with the part's name and keywords — and below it every
+ * sub-headline, then four keyword boxes around a key-red circle with the
+ * part's name and keywords — and below it every
  * pledge, cut to one lead sentence and its key points. Each box line
  * links down to the pledge it sums up.
  */
@@ -56,23 +56,27 @@ export default function PledgeDetail() {
         {pledgeParts.map((part) => (
           <section className={styles.part} id={part.id} key={part.id} aria-labelledby={`${part.id}-title`}>
             <div className={styles.inner}>
+              {/* The tab bar already names the part, so the head is just the
+                  headline and sub-headline (2026-10-18: the part label and
+                  the three intro lines are gone, the infographic comes
+                  straight after). */}
               <header className={styles.partHead}>
-                <p className={styles.partLabel} id={`${part.id}-title`}>
-                  <span className={styles.partNumber}>{part.number}</span>
-                  {part.title}
-                </p>
-                <h2 className={styles.headline}>{part.headline}</h2>
+                <h2 className={styles.headline} id={`${part.id}-title`}>
+                  <span className={styles.visuallyHidden}>{part.title}: </span>
+                  {part.headline}
+                </h2>
                 <p className={styles.subline}>{part.subline}</p>
-                <ul className={styles.intro}>
-                  {part.intro.map((text) => (
-                    <li key={text}>{text}</li>
-                  ))}
-                </ul>
               </header>
 
               <div className={styles.infographic}>
                 <div className={styles.hub} aria-hidden="true">
-                  <span className={styles.hubTitle}>{part.title}</span>
+                  <span
+                    className={`${styles.hubTitle} ${
+                      part.title.length > 6 ? styles.hubTitleLong : ""
+                    }`}
+                  >
+                    {part.title}
+                  </span>
                   <span className={styles.hubKeywords}>{part.keywords}</span>
                 </div>
                 {part.boxes.map((box) => (

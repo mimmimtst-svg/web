@@ -1,15 +1,15 @@
 /**
  * 주요 공약 detail page (P4-2, app/pledges/detail): the booklet's five
  * policy areas (V. 주요 공약, pp. 21–57). Each part opens with its
- * infographic — headline, sub-headline, three intro lines, the keywords in
- * the centre circle and four keyword boxes — redrawn without icons and
- * without the booklet's "세부 공약" block; every box item links down to
+ * infographic — headline, sub-headline, the keywords in the centre circle
+ * and four keyword boxes — redrawn without icons, without the three intro
+ * lines and without the booklet's "세부 공약" block; every box item links down to
  * the pledge it summarises. The pledges below are cut down to one lead
  * sentence and the booklet's own bullet points, in its words.
  */
 
 /** One link in a box line: its text and the pledge code ("1-1") it opens,
-    or a part id for a line that sums up the part's intro. */
+    or a part id for a line from the part's opening paragraph. */
 export type PledgeLink = { text: string; to: string };
 
 /** A box line. Usually one link; a line naming two pledges ("한마음의
@@ -26,7 +26,6 @@ export type PledgePart = {
   title: string;
   headline: string;
   subline: string;
-  intro: string[];
   keywords: string;
   boxes: PledgeBox[];
   pledges: Pledge[];
@@ -44,11 +43,6 @@ export const pledgeParts: PledgePart[] = [
     title: "선도적 연구",
     headline: "연구의 기본은 대학이 책임지고, 연구의 방향은 연구자가 결정하겠습니다.",
     subline: "모든 학문의 가치를 존중하고, 연구자의 도전을 든든하게 뒷받침하겠습니다.",
-    intro: [
-      "기초학문부터 첨단·전략 분야까지 연구자의 자유와 자율성을 존중하겠습니다.",
-      "연구비·연구공간·우수 인재·전문 행정을 함께 지원하여 연구 몰입의 기반을 만들겠습니다.",
-      "융합연구와 국제공동연구, AI 연구 인프라를 통해 세계 학문을 선도하겠습니다.",
-    ],
     keywords: "기반 · 인재 · 융합 · 글로벌",
     boxes: [
       {
@@ -235,11 +229,6 @@ export const pledgeParts: PledgePart[] = [
     title: "열린 교육",
     headline: "학생의 가능성을 열고, 학문의 경계를 열며, 세계로 향하는 길을 열겠습니다.",
     subline: "인간이 주체가 되는 AI 교육, 학생이 주인이 되는 자율교육을 실현하겠습니다.",
-    intro: [
-      "새로운 문제를 제기하고 정보를 비판적으로 검증하는 지성을 기르겠습니다.",
-      "전공은 더 깊게, 교양은 더 넓게 배우고 각자의 학업을 스스로 설계하도록 돕겠습니다.",
-      "한 사람도 놓치지 않는 교육과 글로벌 교류로 학생의 성장을 지원하겠습니다.",
-    ],
     keywords: "교양 · 자율 · 포용 · 세계",
     boxes: [
       {
@@ -402,11 +391,6 @@ export const pledgeParts: PledgePart[] = [
     title: "건전 재정",
     headline: "우리 대학의 내실화를 위해 지속적으로 재정을 확충하겠습니다.",
     subline: "지속 가능한 재정이 더 큰 도약을 만듭니다.",
-    intro: [
-      "모금 시스템을 정비하고, 예산의 효율성을 높이며, 다양한 수입원을 발굴하겠습니다.",
-      "장기발전기금과 교우·기업 협력을 강화하고, 교육·연구·학생지원·행정의 기반을 튼튼히 하겠습니다.",
-      "재정의 투명성과 지속가능성을 높여 고려대학교의 미래를 책임지겠습니다.",
-    ],
     keywords: "효율 · 모금 · 투자 · 혁신",
     boxes: [
       {
@@ -550,11 +534,6 @@ export const pledgeParts: PledgePart[] = [
     title: "전문적 행정과 인사경영",
     headline: "좋은 행정은 교육과 연구에 집중할 수 있게 하고, 구성원의 도전을 가능하게 합니다.",
     subline: "전문성과 신뢰를 바탕으로, 구성원과 함께 더 큰 고려대학교를 만들겠습니다.",
-    intro: [
-      "대학의 교육과 연구가 충실히 이루어지도록 전문적이고 신뢰받는 행정을 구축하겠습니다.",
-      "불필요한 절차는 줄이고, 구성원이 참여하는 결정과 공정한 인사제도를 확립하겠습니다.",
-      "직원 성장을 지원하고 AI·디지털 기술로 행정의 전문성과 효율성을 높이겠습니다.",
-    ],
     keywords: "지원 · 참여 · 성장 · 미래혁신",
     boxes: [
       {
@@ -722,11 +701,6 @@ export const pledgeParts: PledgePart[] = [
     title: "헌신과 존중의 리더십",
     headline: "총장과 경영진이 먼저 헌신하고, 존중과 화합을 실천하겠습니다.",
     subline: "서로 신뢰하고 함께 성장하는 학문 공동체를 만들겠습니다.",
-    intro: [
-      "교원과 직원의 상호존중을 실천하고, 구성원의 헌신을 정당하게 인정하겠습니다.",
-      "학생의 생활 안정과 교우 협력, 경영진과 구성원의 소통을 통해 공동체의 신뢰를 높이겠습니다.",
-      "캠퍼스·병원 발전과 글로벌·AI 행정, 준법지원을 통해 대학의 미래를 준비하겠습니다.",
-    ],
     keywords: "헌신 · 존중 · 소통 · 화합",
     boxes: [
       {
