@@ -137,45 +137,71 @@ export const policyCards: PolicyCard[] = [
 
 export type Promise = {
   index: string;
+  /** "\n" marks Figma's own line breaks — kept on the desktop layout,
+      read as a space on the phone layout. */
   title: string;
-  body: string;
+  points: string[];
+  /** Figma tightens this item's bullets (-0.03em) so its long lines fit. */
+  tight?: boolean;
 };
 
-// Figma (node 614:6269, synced 2026-09-28) expanded this from 3 to 6
-// promises. Items 4-6 still carry the file's own placeholder copy for both
-// title and body ("Your bold vision, our trusted craft...") — the designer
-// hasn't written real Korean copy for them yet, so it's reproduced here
-// verbatim rather than invented. Swap these in once real text lands in Figma.
+// Figma section3 (node 612:1471, synced 2026-10-18): six promises, each a
+// title over three bullet points.
 export const promises: Promise[] = [
   {
     index: "첫째,",
-    title: "단과대학별로 전임교원 1인당 1억원 규모로 연구기금을 설치하겠습니다",
-    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
+    title: "도전적, 창의적 연구를 위한 연구기금을 조성하겠습니다",
+    points: [
+      "장학금, 건축 중심에서 연구비 중심으로 기부금 구조를 전환",
+      "전임교원 약 1,800명 기준 1인당 1억 원 규모 조성 목표",
+      "단과대학별 연구자 중심의 자율적 연구비 집행체계 마련",
+    ],
   },
   {
     index: "둘째,",
-    title: "AI시대에 걸맞는 교육과정을 확립하겠습니다",
-    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
+    title: "AI 시대에 걸맞는 대학 본연의 교육을 확립하겠습니다",
+    points: [
+      "AI를 활용한 창의적이고 독창적인 교육 지원",
+      "대학 본연의 사명에 충실한 사고력과 판단력 중심 교육 강화",
+      "문제 해결능력과 사회기여를 키우는 자유로운 지성 교육 확대",
+    ],
   },
   {
     index: "셋째,",
-    title: "행정혁신TF를 설치하여 학교 행정을 원점에서부터 살피겠습니다",
-    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
+    title: "학생의 복리와 안전을 증진하기 위한 다양하고 구체적인 정책을 펴겠습니다",
+    points: [
+      "수요자(학생) 중심의 자기주도형 전공설계 지원 및 상담체계 구축",
+      "학비 지원을 넘어서 생활비 지원으로 장학금 패러다임의 전환",
+      "학생의 복지와 안전을 강화하는 주거환경 조성\n(1인 1실 기숙사 확대, 주거시설 인증제)",
+    ],
   },
   {
     index: "넷째,",
-    title: "Your bold vision, our trusted craft. We partner with forward-thinking companies",
-    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
+    title: "전문성과 균형으로 행정발전을 도모하고 구성원이\n행복한 일터를 만들겠습니다",
+    points: [
+      "책임행정 구현을 위한 행정역량TF의 구성과 이를 통한 행정체계의 정교화와 안정화",
+      "직원의 체계적·지속적 교육·훈련을 통한 전문성 강화 및 일과 삶의 균형(워라밸)을\n보장하는 근무 형태 확대",
+      "상호 신뢰와 존중에 기반한 협력적 노사문화의 정착",
+    ],
+    tight: true,
   },
   {
     index: "다섯째,",
-    title: "Your bold vision, our trusted craft. We partner with forward-thinking companies",
-    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
+    title: "고려대학교 브랜드를 세계 수준으로 올려놓겠습니다",
+    points: [
+      "세계 최고 수준의 대학, 기업, 국제기구와 글로벌 파트너십 강화",
+      "3개 고대병원의 특성화를 통한 대학병원 브랜드 이미지 강화",
+      "해외 파견(outgoing)과 유치(incoming)의 결합을 통한 시너지 창출",
+    ],
   },
   {
     index: "여섯째,",
-    title: "Your bold vision, our trusted craft. We partner with forward-thinking companies",
-    body: "Your bold vision, our trusted craft. We partner with forward-thinking companies to redefine and elevate the building, construction and architecture landscape.",
+    title: "사회에 공헌하고 학문 공동체를 선도하는 대학을\n만들겠습니다",
+    points: [
+      "공적 책임을 다하는 대학의 사회적 역할(USR) 강화",
+      "국내 최고의 대학으로서 위상에 걸맞는 국가와 사회에 대한 실질적 기여의 확대",
+      "전 세계에 흩어진 교우들이 자부심을 느낄 수 있는 선도적 품격의 확립",
+    ],
   },
 ];
 

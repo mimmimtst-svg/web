@@ -55,7 +55,11 @@ export default function Promises() {
               <span className={styles.itemNumber}>{item.index}</span>
               <div className={styles.itemBody}>
                 <p className={styles.itemTitle}>{item.title}</p>
-                <p className={styles.itemDesc}>{item.body}</p>
+                <ul className={`${styles.itemPoints} ${item.tight ? styles.itemPointsTight : ""}`}>
+                  {item.points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
               </div>
             </Reveal>
           ))}

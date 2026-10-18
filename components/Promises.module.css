@@ -8,11 +8,11 @@
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  /* Bottom padding keeps the grid clear of the SCROLL DOWN cue pinned
-     to the section's bottom edge (24 + label 24 + 19 + chevron 24 ≈ 91u,
-     plus ~60u of air) — the list's last row is pushed down to here. */
-  padding: calc(var(--header-height) + 40 * var(--u)) calc(40 * var(--u))
-    max(calc(150 * var(--u)), 80px);
+  /* Figma 2026-10-18: body padded 40 / 50 / 70 / 40 inside a section with
+     40 more at the bottom — 110u under the last row, just clear of the
+     SCROLL DOWN cue pinned 24u above the bottom edge (≈ 90u tall). */
+  padding: calc(var(--header-height) + 40 * var(--u)) calc(50 * var(--u))
+    max(calc(110 * var(--u)), 80px) calc(40 * var(--u));
   overflow: hidden;
   background-color: #201a1a;
   isolation: isolate;
@@ -36,21 +36,21 @@
   z-index: -1;
 }
 
-/* section3_body: heading, then an 80px gap, then the 2x3 grid. On
+/* section3_body: heading, then a 50px gap, then the 2x3 grid. On
    screens wider than 1920 the cap grows with --u (Figma's 1840px content
    width): a fixed --content-max cap let the type grow while the columns
    didn't, so lines wrapped once more and the last row ran into SCROLL
    DOWN at 2560x1440 (2026-10-17). */
 .inner {
   width: 100%;
-  max-width: max(var(--content-max), calc(1840 * var(--u)));
+  max-width: max(var(--content-max), calc(1830 * var(--u)));
   margin: 0 auto;
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: max(calc(80 * var(--u)), 24px);
+  gap: max(calc(50 * var(--u)), 24px);
 }
 
 /* h2.text-24-32: 32px plus icon, 16px gap, 39.9px title. */
@@ -77,7 +77,7 @@
   line-height: 1.4;
 }
 
-/* body: 2 columns, 100px column gap. The three rows are spread over
+/* body: 2 columns, 115px column gap. The three rows are spread over
    the whole height between the heading and the SCROLL DOWN cue — first
    row under the heading, last row down at the bottom, equal space in
    between (2026-10-17, "위아래 양끝 맞춤"; the rows used to bunch up at
@@ -88,15 +88,16 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-content: space-between;
-  column-gap: max(calc(100 * var(--u)), 16px);
+  column-gap: max(calc(115 * var(--u)), 16px);
   row-gap: max(calc(30 * var(--u)), 12px);
 }
 
-/* numN: 98px number column, 40px gap to the text. */
+/* numN: 98px number column, 25px gap to the text (the longer numbers —
+   다섯째, 여섯째, — run a little past the column, as in Figma). */
 .item {
   display: flex;
   align-items: flex-start;
-  gap: max(calc(40 * var(--u)), 10px);
+  gap: max(calc(25 * var(--u)), 10px);
 }
 
 /* 34px / 48px SemiBold — same size as the item title. */
@@ -110,14 +111,14 @@
   white-space: nowrap;
 }
 
-/* div.text-18-24: title, 20px gap, body. */
+/* div.text-18-24: title, 10px gap, bullet points. */
 .itemBody {
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: max(calc(20 * var(--u)), 6px);
+  gap: max(calc(10 * var(--u)), 6px);
 }
 
 .itemTitle {
@@ -125,7 +126,12 @@
   font-weight: 600;
   font-size: max(calc(34 * var(--u)), 0.875rem);
   line-height: 1.412;
+  letter-spacing: -0.03em;
   color: var(--color-white);
+  /* Figma's own line breaks ("\n" in lib/policyData.ts). */
+  white-space: pre-line;
+  /* Indented 12px from the number column's gap. */
+  padding-left: calc(12 * var(--u));
   /* Left-aligned, breaking between words (2026-09-30: justify needed
      word-break: normal to avoid huge gaps, which split Korean words
      mid-way — "설 / 치하겠습니다"). */
@@ -134,16 +140,27 @@
   overflow-wrap: break-word;
 }
 
-/* p.text-18r: 22px / 28.66px Light (Figma 2026-09-30, was 18px). */
-.itemDesc {
+/* p.text-18r: three bullet points, 22px / 38px Light, each indented 33px
+   with the disc hanging outside (Figma 2026-10-18; was one paragraph). */
+.itemPoints {
   font-family: var(--font-kr);
   font-weight: 300;
   font-size: max(calc(22 * var(--u)), 0.8125rem);
-  line-height: 1.303;
+  line-height: 1.727;
   color: var(--color-white);
+  list-style: disc outside;
   text-align: left;
   word-break: keep-all;
   overflow-wrap: break-word;
+  white-space: pre-line;
+}
+
+.itemPoints li {
+  margin-left: calc(33 * var(--u));
+}
+
+.itemPointsTight {
+  letter-spacing: -0.03em;
 }
 
 /* Mobile layout (portrait, Figma 629:8045 section3, updated 2026-09-30):
@@ -211,9 +228,18 @@
     word-break: keep-all;
   }
 
-  .itemDesc {
-    font-size: calc(12 * var(--mu));
-    line-height: 1.433;
-    text-align: left;
+  .itemTitle {
+    padding-left: 0;
+    white-space: normal;
+  }
+
+  .itemPoints {
+    font-size: calc(12.5 * var(--mu));
+    line-height: 1.6;
+    white-space: normal;
+  }
+
+  .itemPoints li {
+    margin-left: calc(16 * var(--mu));
   }
 }
