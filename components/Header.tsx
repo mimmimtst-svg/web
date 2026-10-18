@@ -158,6 +158,13 @@ export default function Header({ homeHref, solid: alwaysSolid = false }: HeaderP
   const hidden = mobile && autoHide === "hidden" && !menuOpen;
   const solid = alwaysSolid || scrolled || (mobile && autoHide === "shown");
 
+  // Lets sticky bars that sit under the header (the 주요 공약 tab bar)
+  // move up into its place while it is slid away.
+  useEffect(() => {
+    document.documentElement.toggleAttribute("data-header-hidden", hidden);
+    return () => document.documentElement.removeAttribute("data-header-hidden");
+  }, [hidden]);
+
   return (
     <>
       <header

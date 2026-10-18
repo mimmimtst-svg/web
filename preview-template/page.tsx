@@ -7,7 +7,7 @@ import SiteHome from "@/components/SiteHome";
  * Pages workflow copies it to app/<secret path>/ at build time (this
  * file → the main page, profile/ → the profile, direction/ → P2-1,
  * plan/ → P2-2, press/ → the press page, development-plan/ → the
- * 발전계획서 download page),
+ * 발전계획서 download page, pledges/detail/ → P4-2),
  * using the PREVIEW_SLUG repository secret, so the address never appears
  * in this public repository. Never indexed.
  */
