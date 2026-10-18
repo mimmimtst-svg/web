@@ -276,14 +276,19 @@
   height: auto;
 }
 
-/* contents: 14 / 40 / 32 padding, 22px between category groups
-   (2026-10-18: was 25 / 50 / 40 and 35). */
+/* contents: 14 / 40 / 32 padding (2026-10-18: was 25 / 50 / 40). 34px
+   between the category groups; 22px on the one card with the most
+   pledges (05), which needs it to fit. */
 .cardCategories {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  gap: calc(22 * var(--cu));
+  gap: calc(34 * var(--cu));
   padding: calc(14 * var(--cu)) calc(40 * var(--cu)) calc(32 * var(--cu));
+}
+
+.cardCategoriesDense {
+  gap: calc(22 * var(--cu));
 }
 
 /* Label, then 5px, then the item list. */
@@ -391,13 +396,16 @@
     gap: calc(20 * var(--mu));
     /* Side padding centres the first/last card; 10px on top for the
        shadow, which overflow-x would otherwise clip. */
-    padding: calc(10 * var(--mu)) calc((100vw - 298 * var(--mu)) / 2) calc(30 * var(--mu));
+    padding: calc(10 * var(--mu)) calc((100vw - 330 * var(--mu)) / 2) calc(30 * var(--mu));
     scroll-padding: 0;
     scroll-snap-type: x mandatory;
   }
 
+  /* 2026-10-18: wider than Figma's 298 (and larger type below) — the
+     readers are mostly older, and on the phone the page scrolls freely
+     anyway. The next card still peeks in at the edges. */
   .card {
-    width: calc(298 * var(--mu));
+    width: calc(330 * var(--mu));
     height: auto;
     min-height: calc(372 * var(--mu));
     scroll-snap-align: center;
@@ -419,25 +427,26 @@
 
   .cardNumber,
   .cardTitle {
-    font-size: calc(16 * var(--mu));
+    font-size: calc(20 * var(--mu));
   }
 
   .cardHeadLink svg {
-    width: calc(15.36 * var(--mu));
+    width: calc(18 * var(--mu));
   }
 
-  .cardCategories {
-    gap: calc(20 * var(--mu));
+  .cardCategories,
+  .cardCategoriesDense {
+    gap: calc(24 * var(--mu));
     padding: calc(5 * var(--mu)) calc(20 * var(--mu)) calc(20 * var(--mu));
   }
 
   .category {
-    gap: 0;
+    gap: calc(4 * var(--mu));
   }
 
   .categoryLabel {
-    font-size: calc(10 * var(--mu));
-    line-height: 1.568;
+    font-size: calc(13 * var(--mu));
+    line-height: 1.5;
   }
 
   .categoryItems {
@@ -448,15 +457,15 @@
     gap: calc(8 * var(--mu));
   }
 
-  /* Centres the 5.3px-tall check on the 22.4px text row. */
+  /* Centres the ~6.7px-tall check on the 24px text row. */
   .categoryItem svg {
-    width: calc(8 * var(--mu));
-    margin-top: calc(8.5 * var(--mu));
+    width: calc(10 * var(--mu));
+    margin-top: calc(8.7 * var(--mu));
   }
 
   .categoryItem > span {
-    font-size: calc(12 * var(--mu));
-    line-height: 1.867;
+    font-size: calc(15.5 * var(--mu));
+    line-height: 1.55;
   }
 
   /* Mobile Figma keeps the parenthetical at the line's own 12px. */

@@ -8,6 +8,11 @@ import { withBasePath } from "@/lib/basePath";
 import CarouselDots from "./CarouselDots";
 import Footer from "./Footer";
 
+// A card with more pledges than this keeps the tight spacing between its
+// 나답게 / 다함께 / 더높게 groups so it still fits (05, with 19); the
+// others get more air between them.
+const DENSE_ITEMS = 15;
+
 // A Latin parenthetical inside an item, e.g. "(Chaired Professor)", is set
 // a size smaller in Figma (14px against the 18px line on desktop).
 const NOTE = /(\([A-Za-z][^)]*\))/;
@@ -97,7 +102,13 @@ export default function PolicyCarousel() {
                     <LineArrowRightIcon />
                   </a>
                 </div>
-                <div className={styles.cardCategories}>
+                <div
+                  className={`${styles.cardCategories} ${
+                    card.categories.reduce((n, c) => n + c.items.length, 0) > DENSE_ITEMS
+                      ? styles.cardCategoriesDense
+                      : ""
+                  }`}
+                >
                   {card.categories.map((category) => (
                     <div className={styles.category} key={category.label}>
                       <p className={styles.categoryLabel}>{category.label}</p>
