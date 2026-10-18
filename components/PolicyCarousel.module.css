@@ -1,13 +1,13 @@
 /* Section 4 — sized from Figma section4 (node 614:6270) at the 1920x1080
    frame. Heading and nav use the page-wide Figma unit --u (globals.css),
    so the title matches section 3's exactly; the cards use --cu (below),
-   which is --u capped by the height the carousel actually has, because
-   this section also carries the footer and the scroll indicator. */
+   which is --u capped by the height the carousel actually has.
+   2026-10-18: the footer is no longer squeezed into the same screen —
+   the heading and cards fill one screen (.contentWrap) and the footer
+   follows below it, one more page turn down (SectionPager pages into a
+   section taller than the screen), so the cards get its height. */
 .section {
   width: 100%;
-  /* Fixed height + overflow hidden: the one-screen-fit backstop
-     (docs/DESIGN_SYSTEM.md 4.9). */
-  height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -19,7 +19,8 @@
    ScrollDownIndicator — there's nowhere further to scroll. */
 .contentWrap {
   position: relative;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
+  height: calc(100dvh - var(--header-height) - 40 * var(--u));
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -128,7 +129,7 @@
      Figma's own size and at one card fitting across the screen. */
   --cu: min(1px, calc(100cqh / (var(--card-h) + 60)), calc((100vw - 80px) / var(--card-w)));
   --card-w: 504;
-  --card-h: 724;
+  --card-h: 812;
   height: 100%;
   display: flex;
   align-items: flex-start;
@@ -238,12 +239,12 @@
   min-width: 0;
 }
 
-/* 26px ExtraBold, key color (2026-10-18: was Figma's 34px). */
+/* 30px ExtraBold, key color (2026-10-18: was Figma's 34px). */
 .cardNumber,
 .cardTitle {
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: max(calc(26 * var(--cu)), 1rem);
+  font-size: max(calc(30 * var(--cu)), 1rem);
   line-height: 1.2;
   color: var(--color-key);
 }
@@ -292,11 +293,11 @@
   gap: calc(5 * var(--cu));
 }
 
-/* 13px / 18.2px Medium, key color. */
+/* 15px / 21px Medium, key color. */
 .categoryLabel {
   font-family: var(--font-kr);
   font-weight: 500;
-  font-size: max(calc(13 * var(--cu)), 0.625rem);
+  font-size: max(calc(15 * var(--cu)), 0.625rem);
   line-height: 1.4;
   color: var(--color-key);
   white-space: pre-wrap;
@@ -309,7 +310,7 @@
   gap: calc(2 * var(--cu));
 }
 
-/* Check icon + 16px Light text on a 24px row (2026-10-18: was 18 / 28). */
+/* Check icon + 19px Light text on a 28px row (2026-10-18: was 18 / 28). */
 .categoryItem {
   display: flex;
   align-items: flex-start;
@@ -320,8 +321,8 @@
   flex-shrink: 0;
   width: max(calc(10 * var(--cu)), 8px);
   height: auto;
-  /* Centers the check on the first 24px text line. */
-  margin-top: calc(8.6 * var(--cu));
+  /* Centers the check on the first 28px text line. */
+  margin-top: calc(10.6 * var(--cu));
   color: var(--color-key);
 }
 
@@ -330,8 +331,8 @@
   min-width: 0;
   font-family: var(--font-kr);
   font-weight: 300;
-  font-size: max(calc(16 * var(--cu)), 0.6875rem);
-  line-height: 1.5;
+  font-size: max(calc(19 * var(--cu)), 0.6875rem);
+  line-height: 1.474;
   color: var(--color-charcoal);
 }
 
@@ -348,8 +349,11 @@
    the mobile card isn't a uniform scale of the 504 x 624 one. */
 @media (orientation: portrait) {
   .section {
-    height: auto;
     padding-top: calc(20 * var(--mu));
+  }
+
+  .contentWrap {
+    height: auto;
   }
 
   .headerWrap {

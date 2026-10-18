@@ -24,8 +24,9 @@ const isTyping = (target: EventTarget | null) =>
  * place with an eased animation. Replaces free scrolling + snapping,
  * which read as the page pushing back against the user.
  *
- * Sections taller than the screen (phones) scroll natively inside and
- * only page-turn at their top/bottom edge. Anything another handler has
+ * A section taller than the screen (the last one, whose footer sits
+ * below the fold) is paged through too: a turn first shows the rest of
+ * it, then moves on. Anything another handler has
  * already claimed (`preventDefault`, e.g. Promises' step-through reveal,
  * which listens in the capture phase so it runs first) is left alone.
  */
@@ -54,15 +55,13 @@ export default function SectionPager() {
       });
     const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight;
 
-    // Every section fits one screen: the page only ever moves by whole
-    // pages, so native vertical panning is switched off in CSS
-    // (html[data-paged], globals.css). On iOS a pan that has started can't
-    // be cancelled from JS any more, and its momentum carried the page past
-    // the next section before the page turn pulled it back.
+    // The page only ever moves by page turns, so native vertical panning
+    // is switched off in CSS (html[data-paged], globals.css). On iOS a pan
+    // that has started can't be cancelled from JS any more, and its
+    // momentum carried the page past the next section before the page
+    // turn pulled it back.
     const updatePaged = () => {
-      const vh = window.innerHeight;
-      const fits = !mobile.matches && sections().every((s) => s.bottom - s.top <= vh + 2);
-      document.documentElement.toggleAttribute("data-paged", fits);
+      document.documentElement.toggleAttribute("data-paged", !mobile.matches);
     };
 
     const animateTo = (rawTarget: number, duration = DURATION_MS) => {
@@ -88,9 +87,9 @@ export default function SectionPager() {
       frame = requestAnimationFrame(step);
     };
 
-    /** Where one page turn in `dir` should go, or null to let the
-        browser scroll natively (inside a section taller than the screen,
-        or already at the first/last page). */
+    /** Where one page turn in `dir` should go, or null at the very
+        first/last page. Inside a section taller than the screen it goes
+        to that section's other end first (at most a screen away). */
     const pageTarget = (dir: 1 | -1, y = window.scrollY) => {
       const vh = window.innerHeight;
       const list = sections();
@@ -99,10 +98,10 @@ export default function SectionPager() {
       if (i === -1) i = y < list[0].top ? 0 : list.length - 1;
       const current = list[i];
       if (dir > 0) {
-        if (y + vh < current.bottom - 2) return null;
+        if (y + vh < current.bottom - 2) return Math.min(current.bottom - vh, y + vh);
         return list[i + 1]?.top ?? null;
       }
-      if (y > current.top + 2) return null;
+      if (y > current.top + 2) return Math.max(current.top, y - vh);
       const prev = list[i - 1];
       return prev ? Math.max(prev.top, prev.bottom - vh) : null;
     };
