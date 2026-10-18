@@ -4,14 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./PledgeDetail.module.css";
 import { PORTRAIT } from "@/hooks/useMediaQuery";
 import { isMenuOpen } from "@/lib/menuState";
+import { isNewWheelGesture } from "@/lib/wheelGesture";
 
 export type PledgeNavItem = { id: string; number: string; label: string };
 
 /** How long a pledge stays highlighted after a jump to it. */
 const FLASH_MS = 1800;
 
-/** How long the magnet takes to glide a part into place. */
-const GLIDE_MS = 650;
+/** One page turn — the main page's SectionPager duration. */
+const PAGE_MS = 850;
 
 let flashTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -77,113 +78,180 @@ export default function PledgeNav({ items }: { items: PledgeNavItem[] }) {
     list.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
   }, [active]);
 
-  // A magnet at each part's top (landscape), like the main page's page
-  // turns: the moment the user's own scroll (wheel, touch, keys) carries
-  // a part's top across the tab bar — down into a new part, or up back to
-  // a part's head — the page stops there and glides the part into place,
-  // headline and infographic filling the screen, and the rest of that
-  // flick is swallowed. A scroll that comes to rest just short of a part
-  // is pulled the rest of the way. In between, through the pledges, it
-  // scrolls freely, so a slow, notch-by-notch scroll is never pulled
-  // back. Links and the tabs scroll on their own and are left alone.
-  // (CSS proximity snapping barely caught at all in Chrome; waiting for
-  // the scroll to stop let a flick fly far past the part, 2026-10-18.)
+  // Page turns, like the main page (SectionPager), in landscape: one
+  // scroll gesture (a wheel flick, a swipe, an arrow / Page key) turns one
+  // page, gliding with the same easing. The pages: each part's headline +
+  // infographic, then its pledges a screenful at a time — a page down
+  // starts at the first pledge that didn't fit, so none is cut in half;
+  // a page up shows what was above, ending where this page began. Same
+  // either way, nothing catches or blocks (2026-10-18: a "magnet" that
+  // caught parts mid-scroll got in the way scrolling back up).
   useEffect(() => {
     const portrait = window.matchMedia(PORTRAIT);
-    let armed = false;
-    let lastY = window.scrollY;
-    let direction = 0;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let animating = false;
-    let lockUntil = 0;
     let frame = 0;
-    let idle: ReturnType<typeof setTimeout> | undefined;
+    let gestureUsed = false;
+    let touch: { x: number; y: number; scrollY: number; axis: "x" | "y" | null } | null = null;
 
-    const active = () => !portrait.matches && !isMenuOpen();
-    /** Scroll positions at which each part's top sits under the tab bar. */
-    const snapPoints = () => {
-      const line = navRef.current?.getBoundingClientRect().bottom ?? 0;
-      return items
-        .map(({ id }) => document.getElementById(id))
-        .filter((el): el is HTMLElement => !!el)
-        .map((el) => Math.round(el.getBoundingClientRect().top + window.scrollY - line));
+    const off = () => portrait.matches || isMenuOpen();
+    const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight;
+    const lineAt = () => navRef.current?.getBoundingClientRect().bottom ?? 0;
+
+    /** Scroll positions where a page may begin: each part's top, its
+        "세부 공약" heading and each pledge, sitting just under the tab bar. */
+    const stops = () => {
+      const line = lineAt();
+      const y = window.scrollY;
+      const max = maxScroll();
+      const at = (el: Element, gap: number) =>
+        Math.round(el.getBoundingClientRect().top + y - line - gap);
+      const list: number[] = [];
+      for (const { id } of items) {
+        const part = document.getElementById(id);
+        if (!part) continue;
+        list.push(at(part, 0));
+        // The "+ 세부 공약" heading starts the pledges' first page. It is
+        // measured from the list under it: the heading itself is offset
+        // while it waits to rise in (Reveal).
+        const pledges = part.querySelector("ol");
+        const heading = pledges?.previousElementSibling as HTMLElement | null;
+        if (pledges && heading) {
+          const above = heading.offsetHeight + parseFloat(getComputedStyle(pledges).marginTop);
+          list.push(at(pledges, above + 24));
+        }
+        part.querySelectorAll("[data-pledge]").forEach((el) => list.push(at(el, 16)));
+      }
+      list.push(max);
+      return [...new Set(list.map((v) => Math.max(0, Math.min(v, max))))].sort((a, b) => a - b);
     };
 
-    const glide = (target: number) => {
-      armed = false;
-      lockUntil = performance.now() + GLIDE_MS + 350;
+    const pageTarget = (dir: 1 | -1, y = window.scrollY) => {
+      const list = stops();
+      const max = maxScroll();
+      const screen = window.innerHeight - lineAt();
+      const overlap = 48;
+      if (dir > 0) {
+        if (y >= max - 1) return null;
+        // The first block that runs past the bottom of the screen.
+        for (let i = 0; i < list.length; i++) {
+          const bottom = list[i + 1] ?? max + screen;
+          if (bottom > y + screen + 2) {
+            return list[i] > y + 2 ? list[i] : Math.min(y + screen - overlap, max);
+          }
+        }
+        return max;
+      }
+      if (y <= 1) return null;
+      // The highest page start from which everything up to here fits.
+      const fits = list.find((v) => v < y - 2 && v >= y - screen);
+      return fits ?? Math.max(0, y - (screen - overlap));
+    };
+
+    const animateTo = (target: number) => {
       const start = window.scrollY;
       const distance = target - start;
       if (Math.abs(distance) < 1) return;
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      if (reduceMotion.matches) {
         window.scrollTo(0, target);
         return;
       }
       animating = true;
       const startedAt = performance.now();
       const step = (now: number) => {
-        const t = Math.min(1, (now - startedAt) / GLIDE_MS);
-        window.scrollTo(0, start + distance * (1 - Math.pow(1 - t, 3)));
+        const t = Math.min(1, (now - startedAt) / PAGE_MS);
+        const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        window.scrollTo(0, start + distance * eased);
         if (t < 1) frame = requestAnimationFrame(step);
         else {
           frame = 0;
           animating = false;
-          lastY = window.scrollY;
         }
       };
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(step);
     };
 
-    // A part coming to rest just short of its place.
-    const settle = () => {
-      if (!armed || animating || !direction || !active()) return;
-      armed = false;
-      const y = window.scrollY;
-      const vh = window.innerHeight;
-      const near = snapPoints().find((p) =>
-        direction > 0 ? p > y + 2 && p - y < vh * 0.25 : p < y - 2 && y - p < vh * 0.25
-      );
-      if (near !== undefined) glide(near);
-    };
-
-    const onScroll = () => {
-      if (animating) return;
-      const y = window.scrollY;
-      if (y !== lastY) direction = Math.sign(y - lastY);
-      if (armed && active() && performance.now() > lockUntil) {
-        const crossed = snapPoints().find((p) =>
-          direction > 0 ? lastY < p - 1 && y >= p - 1 : lastY > p + 1 && y <= p + 1
-        );
-        if (crossed !== undefined) {
-          lastY = y;
-          glide(crossed);
-          return;
-        }
-      }
-      lastY = y;
-      clearTimeout(idle);
-      idle = setTimeout(settle, 160);
-    };
-
     const onWheel = (e: WheelEvent) => {
-      armed = true;
-      // The flick that ran into a part: its momentum is swallowed.
-      if (animating || performance.now() < lockUntil) e.preventDefault();
+      if (off()) return;
+      const newGesture = isNewWheelGesture(e);
+      if (e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      if (animating || (gestureUsed && !newGesture)) {
+        e.preventDefault();
+        return;
+      }
+      const target = pageTarget(e.deltaY > 0 ? 1 : -1);
+      if (target === null) {
+        gestureUsed = false;
+        return;
+      }
+      e.preventDefault();
+      gestureUsed = true;
+      animateTo(target);
     };
-    const arm = () => {
-      armed = true;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (off() || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+      const t = e.target;
+      if (t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+      const onButton = t instanceof HTMLElement && /^(BUTTON|A)$/.test(t.tagName);
+      let dir: 1 | -1 | 0 = 0;
+      if (e.key === "ArrowDown" || e.key === "PageDown" || (e.key === " " && !e.shiftKey && !onButton)) dir = 1;
+      else if (e.key === "ArrowUp" || e.key === "PageUp" || (e.key === " " && e.shiftKey && !onButton)) dir = -1;
+      if (!dir) return;
+      e.preventDefault();
+      if (animating) return;
+      const target = pageTarget(dir);
+      if (target !== null) animateTo(target);
     };
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", arm, { passive: true });
-    window.addEventListener("keydown", arm);
-    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const onTouchStart = (e: TouchEvent) => {
+      const t = e.touches[0];
+      touch = !off() && t && e.touches.length === 1
+        ? { x: t.clientX, y: t.clientY, scrollY: window.scrollY, axis: null }
+        : null;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (!touch || !t) return;
+      const dx = t.clientX - touch.x;
+      const dy = t.clientY - touch.y;
+      if (!touch.axis && Math.max(Math.abs(dx), Math.abs(dy)) > 8) {
+        touch.axis = Math.abs(dy) > Math.abs(dx) ? "y" : "x";
+      }
+      if (touch.axis === "y") e.preventDefault();
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      const t = e.changedTouches[0];
+      const started = touch;
+      touch = null;
+      if (!started || !t || started.axis !== "y" || animating) return;
+      const dy = started.y - t.clientY;
+      if (Math.abs(dy) < 40) return;
+      const target = pageTarget(dy > 0 ? 1 : -1, started.scrollY);
+      if (target !== null) animateTo(target);
+    };
+
+    // Native vertical panning off while the page turns by itself (the
+    // main page's html[data-paged], globals.css).
+    const updatePaged = () => document.documentElement.toggleAttribute("data-paged", !portrait.matches);
+    updatePaged();
+    portrait.addEventListener("change", updatePaged);
+    const active = { passive: false } as const;
+    window.addEventListener("wheel", onWheel, active);
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, active);
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
     return () => {
-      clearTimeout(idle);
       cancelAnimationFrame(frame);
+      document.documentElement.removeAttribute("data-paged");
+      portrait.removeEventListener("change", updatePaged);
       window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", arm);
-      window.removeEventListener("keydown", arm);
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
     };
   }, [items]);
 
