@@ -119,17 +119,21 @@
 }
 
 /* div.swiper: 40px gap, 40px side padding. The 16/44 vertical padding
-   around the 624px cards leaves room for their drop shadow, which
+   around the cards leaves room for their drop shadow, which
    overflow-x: auto would otherwise clip. */
 .track {
   /* Figma px -> screen px for the cards. The carousel scrolls
      sideways, so width isn't the constraint — the cards take the height
-     the carousel has (card + 60 Figma px of padding = 684), capped at
+     the carousel has (card + 60 Figma px of padding), capped at
      Figma's own size and at one card fitting across the screen. */
-  --cu: min(1px, calc(100cqh / 684), calc((100vw - 80px) / 504));
+  --cu: min(1px, calc(100cqh / (var(--card-h) + 60)), calc((100vw - 80px) / var(--card-w)));
+  --card-w: 1160;
+  --card-h: 460;
   height: 100%;
   display: flex;
-  align-items: flex-start;
+  /* The wide cards are shorter than the room the carousel has; centred
+     in it rather than leaving a band of white under them. */
+  align-items: center;
   gap: calc(40 * var(--cu));
   padding: calc(16 * var(--cu)) calc(40 * var(--u)) calc(44 * var(--cu));
   overflow-x: auto;
@@ -160,12 +164,16 @@
    (some browsers re-evaluate snapping against the transformed box, which
    yanked the track flush-left on hover). Visuals + hover live on
    .cardInner. Figma card: 504 x 624 (2026-09-30, was 584; the extra
-   40px is empty space under the list). */
+   40px is empty space under the list). 2026-10-18: the cards took the
+   발전계획서 체계도's longer lists (up to 19 pledges) and are now wide —
+   1160 x 460, 나답게 / 다함께 / 더높게 side by side — at the user's choice
+   over growing only the cards that overflowed. 460 fits the tallest
+   (05, seven pledges in 다함께) with the usual 40 below. */
 .card {
   scroll-snap-align: start;
   flex: 0 0 auto;
-  width: calc(504 * var(--cu));
-  height: calc(624 * var(--cu));
+  width: calc(var(--card-w) * var(--cu));
+  height: calc(var(--card-h) * var(--cu));
 }
 
 .cardInner {
@@ -268,12 +276,13 @@
   height: auto;
 }
 
-/* contents: 25 / 50 / 40 padding, 35px between category groups. */
+/* contents: 25 / 50 / 40 padding; the three categories in three columns,
+   40px apart. */
 .cardCategories {
   flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: calc(35 * var(--cu));
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(40 * var(--cu));
   padding: calc(25 * var(--cu)) calc(50 * var(--cu)) calc(40 * var(--cu));
 }
 
@@ -414,7 +423,9 @@
     width: calc(15.36 * var(--mu));
   }
 
+  /* One column on the phone card, as before. */
   .cardCategories {
+    grid-template-columns: minmax(0, 1fr);
     gap: calc(20 * var(--mu));
     padding: calc(5 * var(--mu)) calc(20 * var(--mu)) calc(20 * var(--mu));
   }
