@@ -287,10 +287,10 @@
   .list {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    /* Even margins either side (2026-10-19: the wider column sat left of
-       centre under the shorter titles). */
-    max-width: max(1000px, calc(1440 * var(--u)));
+    /* As wide as the longest title on one line, centred, so the margins
+       either side are even; on a narrower screen the titles wrap. */
+    width: fit-content;
+    max-width: 100%;
     margin: 0 auto;
     gap: max(calc(150 * var(--u)), 80px);
   }
@@ -300,7 +300,7 @@
     display: grid;
     grid-template-columns: max(calc(250 * var(--u)), 9rem) minmax(0, 1fr);
     align-items: baseline;
-    column-gap: max(calc(50 * var(--u)), 24px);
+    column-gap: max(calc(90 * var(--u)), 32px);
   }
 
   .itemNumber {
