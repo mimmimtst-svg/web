@@ -13,7 +13,12 @@
      SCROLL DOWN cue pinned 24u above the bottom edge (≈ 90u tall). */
   padding: calc(var(--header-height) + 40 * var(--u)) calc(50 * var(--u))
     max(calc(110 * var(--u)), 80px) calc(40 * var(--u));
-  overflow: hidden;
+  /* Sideways only, and clip, not hidden (2026-10-19). Clipping the
+     bottom hid the last promise for good on a tablet held upright: while
+     waiting to rise in it sits 152mu lower, wholly past the section's
+     bottom edge, so its scroll-in trigger never saw it. hidden would also
+     make the section the scroller of the pinned photo (landscape). */
+  overflow-x: clip;
   background-color: #201a1a;
   isolation: isolate;
 }
@@ -274,9 +279,6 @@
     min-height: 100dvh;
     padding: calc(var(--header-height) + 40 * var(--u)) calc(50 * var(--u))
       max(calc(230 * var(--u)), 150px, var(--pair-gap)) calc(40 * var(--u));
-    /* clip, not hidden: hidden would make the section the pin's
-       scroller and the photo would scroll away with the text. */
-    overflow: clip;
     /* Where the text is clear of the pinned heading and its fade (the
        cap's edge, below): the first promise starts there, and every
        page turn brings the next one up to it. */
