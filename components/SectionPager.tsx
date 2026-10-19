@@ -97,11 +97,15 @@ export default function SectionPager() {
       let i = list.findIndex((s) => y >= s.top - 2 && y < s.bottom - 2);
       if (i === -1) i = y < list[0].top ? 0 : list.length - 1;
       const current = list[i];
+      // Inside a section taller than the screen a turn moves by what is
+      // visible under the fixed header, so nothing slides past unseen.
+      const step =
+        vh - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height")) || 0);
       if (dir > 0) {
-        if (y + vh < current.bottom - 2) return Math.min(current.bottom - vh, y + vh);
+        if (y + vh < current.bottom - 2) return Math.min(current.bottom - vh, y + step);
         return list[i + 1]?.top ?? null;
       }
-      if (y > current.top + 2) return Math.max(current.top, y - vh);
+      if (y > current.top + 2) return Math.max(current.top, y - step);
       const prev = list[i - 1];
       return prev ? Math.max(prev.top, prev.bottom - vh) : null;
     };
