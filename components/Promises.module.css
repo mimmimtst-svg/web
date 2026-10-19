@@ -75,19 +75,16 @@
   line-height: 1.4;
 }
 
-/* body: 2 columns, 115px column gap. The three rows are spread over
-   the whole height between the heading and the SCROLL DOWN cue — first
-   row under the heading, last row down at the bottom, equal space in
-   between (2026-10-17, "위아래 양끝 맞춤"; the rows used to bunch up at
-   the top with a 30px gap and an empty band below). 30px stays as the
-   minimum gap. */
+/* One column of six rows (2026-10-18, was two columns of three), spread
+   over the whole height between the heading and the SCROLL DOWN cue —
+   first row under the heading, last row down at the bottom, equal space
+   in between ("위아래 양끝 맞춤"), 16px at the least. */
 .list {
   flex: 1 1 auto;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   align-content: space-between;
-  column-gap: max(calc(115 * var(--u)), 16px);
-  row-gap: max(calc(30 * var(--u)), 12px);
+  row-gap: max(calc(16 * var(--u)), 10px);
 }
 
 /* numN: 98px number column, 25px gap to the text (the longer numbers —
@@ -98,32 +95,34 @@
   gap: max(calc(25 * var(--u)), 10px);
 }
 
-/* 34px / 48px SemiBold — same size as the item title. */
+/* 30px / 42px SemiBold — same size as the item title. */
 .itemNumber {
   flex: 0 0 max(calc(98 * var(--u)), 2.75rem);
   font-family: var(--font-kr);
   font-weight: 600;
-  font-size: max(calc(34 * var(--u)), 0.875rem);
-  line-height: 1.412;
+  font-size: max(calc(30 * var(--u)), 0.875rem);
+  line-height: 1.4;
   color: var(--color-white);
   white-space: nowrap;
 }
 
-/* div.text-18-24: title, 10px gap, bullet points. */
+/* Each row: the title, and the three bullet points beside it (one
+   column of rows fits one screen that way; a title over its points did
+   not). */
 .itemBody {
   flex: 1 1 auto;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: max(calc(10 * var(--u)), 6px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  align-items: start;
+  gap: max(calc(10 * var(--u)), 6px) max(calc(60 * var(--u)), 20px);
 }
 
 .itemTitle {
   font-family: var(--font-kr);
   font-weight: 600;
-  font-size: max(calc(34 * var(--u)), 0.875rem);
-  line-height: 1.412;
+  font-size: max(calc(30 * var(--u)), 0.875rem);
+  line-height: 1.4;
   letter-spacing: -0.03em;
   color: var(--color-white);
   /* Indented 12px from the number column's gap. */
@@ -138,13 +137,15 @@
   text-wrap: pretty;
 }
 
-/* p.text-18r: three bullet points, 22px / 38px Light, each indented 33px
-   with the disc hanging outside (Figma 2026-10-18; was one paragraph). */
+/* Three bullet points, 20px / 32px Light (Figma 22 / 38 in the old two
+   columns), each indented 33px with the disc hanging outside. */
 .itemPoints {
+  /* Sits level with the title's first line. */
+  padding-top: calc(5 * var(--u));
   font-family: var(--font-kr);
   font-weight: 300;
-  font-size: max(calc(22 * var(--u)), 0.8125rem);
-  line-height: 1.727;
+  font-size: max(calc(20 * var(--u)), 0.8125rem);
+  line-height: 1.6;
   color: var(--color-white);
   list-style: disc outside;
   text-align: left;
@@ -212,7 +213,10 @@
     line-height: 1.333;
   }
 
+  /* Mobile keeps the title over its points. */
   .itemBody {
+    display: flex;
+    flex-direction: column;
     gap: calc(12 * var(--mu));
   }
 
@@ -231,6 +235,7 @@
   }
 
   .itemPoints {
+    padding-top: 0;
     font-size: calc(12.5 * var(--mu));
     line-height: 1.6;
   }

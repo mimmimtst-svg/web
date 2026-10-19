@@ -5,28 +5,24 @@ import { PlusIcon } from "./icons";
 import { promises } from "@/lib/policyData";
 import { withBasePath } from "@/lib/basePath";
 import { useSectionSettled } from "@/hooks/useSectionSettled";
-import { useSequentialReveal } from "@/hooks/useSequentialReveal";
 import { useEnterView } from "@/hooks/useEnterView";
 import { PORTRAIT, useMediaQuery } from "@/hooks/useMediaQuery";
 import Reveal from "./Reveal";
 import ScrollDownIndicator from "./ScrollDownIndicator";
 
+/** Desktop: the gap between one promise coming in and the next. */
+const CASCADE_MS = 130;
+
 export default function Promises() {
   const { ref, settled } = useSectionSettled<HTMLElement>();
-  /* The section is fixed to exactly one screen (see .section in the CSS
-     module) with no internal scroll of its own, so a position-based
-     "scrolled into view" trigger has nothing to react to for items 2-6 —
-     they'd stay stuck mid-transition forever. Each discrete scroll while
-     settled instead reveals one more item by count. */
-  // The first promise comes in while the section is still sliding into
-  // view (~25% on screen) rather than after it has fully snapped.
+  // Desktop: all six promises come in together, one after another, as
+  // the section slides into view (~25% on screen) — a cascade, not one
+  // per scroll (2026-10-18; the step-through reveal is gone).
   const entered = useEnterView(ref, 0.25);
-  // Mobile layout (portrait): the page scrolls freely, so there's no
-  // step-through — each item rises in on its own as it scrolls into view
-  // (Figma 672:2228 motion: 152.4px up + fade, easeInOut).
+  // Mobile layout (portrait): the page scrolls freely, and each item
+  // rises in on its own as it scrolls into view (Figma 672:2228 motion:
+  // 152.4px up + fade, easeInOut).
   const mobile = useMediaQuery(PORTRAIT);
-  const revealedCount = useSequentialReveal(promises.length, settled && !mobile, entered);
-  const shownCount = entered ? Math.max(revealedCount, 1) : 0;
 
   return (
     <section className={styles.section} id="promises" ref={ref}>
@@ -44,13 +40,10 @@ export default function Promises() {
               as="li"
               key={item.index}
               className={styles.item}
-              /* Explicitly controlled by the discrete reveal count above —
-                 item N becomes visible once N scroll gestures have
-                 happened since the section settled into view. */
-              visible={mobile ? undefined : index < shownCount}
-              delay={0}
-              distance={mobile ? "calc(152.4 * var(--mu))" : "calc(254 * var(--u))"}
-              duration={mobile ? 1000 : 950}
+              visible={mobile ? undefined : entered}
+              delay={mobile ? 0 : CASCADE_MS * index}
+              distance={mobile ? "calc(152.4 * var(--mu))" : "calc(90 * var(--u))"}
+              duration={mobile ? 1000 : 900}
             >
               <span className={styles.itemNumber}>{item.index}</span>
               <div className={styles.itemBody}>
