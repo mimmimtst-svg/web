@@ -273,15 +273,28 @@
     height: auto;
     min-height: 100dvh;
     padding: calc(var(--header-height) + 40 * var(--u)) calc(50 * var(--u))
-      max(calc(230 * var(--u)), 150px) calc(40 * var(--u));
+      max(calc(230 * var(--u)), 150px, var(--pair-gap)) calc(40 * var(--u));
     /* clip, not hidden: hidden would make the section the pin's
        scroller and the photo would scroll away with the text. */
     overflow: clip;
-    /* The promises scale with the screen's width alone (2026-10-19:
+    /* Where the text is clear of the pinned heading and its fade (the
+       cap's edge, below): the first promise starts there, and every
+       page turn brings the next one up to it. */
+    --cap-edge: calc(
+      var(--header-height) + 40 * var(--u) + var(--fs-section-title-fit) * 1.4 + 106 * var(--u)
+    );
+    /* The promises' unit. It follows the screen's width (2026-10-19:
        --u also follows the height, so the type stayed put while a short
-       window narrowed; the 1920 sizes also came down a step, as the
-       page read larger than the others). */
-    --pu: calc(100vw / 1920);
+       window narrowed; the 1920 sizes also came down a step, as the page
+       read larger than the others) — but never so far that two promises
+       (233 units each, title on one line) and a gap stop fitting between
+       the cap's edge and the bottom of the screen. */
+    --pu: min(calc(100vw / 1920), calc((100dvh - var(--cap-edge) - 40px) / 550));
+    /* Two promises to a screen (2026-10-19, "첫째, 둘째 on one page"): the
+       space under the cap's edge split in two, each half one promise and
+       the gap after it — so the third starts right at the bottom edge,
+       never peeking in, and the next page turn brings it up to the edge. */
+    --pair-gap: calc((100dvh - var(--cap-edge)) / 2 - 233 * var(--pu));
   }
 
   .backdropPin,
@@ -304,18 +317,15 @@
   }
 
   .capPin {
-    --cap-edge: calc(
-      var(--header-height) + 40 * var(--u) + var(--fs-section-title-fit) * 1.4 + 36 * var(--u)
-    );
     -webkit-mask-image: linear-gradient(
       to bottom,
-      #000 var(--cap-edge),
-      transparent calc(var(--cap-edge) + 70 * var(--u))
+      #000 calc(var(--cap-edge) - 70 * var(--u)),
+      transparent var(--cap-edge)
     );
     mask-image: linear-gradient(
       to bottom,
-      #000 var(--cap-edge),
-      transparent calc(var(--cap-edge) + 70 * var(--u))
+      #000 calc(var(--cap-edge) - 70 * var(--u)),
+      transparent var(--cap-edge)
     );
   }
 
@@ -328,7 +338,7 @@
   /* Where the text below is fully clear again. */
   .capEdge {
     position: absolute;
-    top: calc(var(--cap-edge) + 70 * var(--u));
+    top: var(--cap-edge);
     left: 0;
   }
 
@@ -339,7 +349,8 @@
   }
 
   .inner {
-    gap: max(calc(150 * var(--pu)), 56px);
+    /* The heading row plus this lands the list on the cap's edge. */
+    gap: calc(106 * var(--u));
   }
 
   .list {
@@ -350,7 +361,7 @@
     width: fit-content;
     max-width: 100%;
     margin: 0 auto;
-    gap: max(calc(150 * var(--pu)), 64px);
+    gap: var(--pair-gap);
   }
 
   /* Number column wide enough for "여섯째," at this size. */
