@@ -277,6 +277,11 @@
     /* clip, not hidden: hidden would make the section the pin's
        scroller and the photo would scroll away with the text. */
     overflow: clip;
+    /* The promises scale with the screen's width alone (2026-10-19:
+       --u also follows the height, so the type stayed put while a short
+       window narrowed; the 1920 sizes also came down a step, as the
+       page read larger than the others). */
+    --pu: calc(100vw / 1920);
   }
 
   .backdropPin,
@@ -334,7 +339,7 @@
   }
 
   .inner {
-    gap: max(calc(150 * var(--u)), 72px);
+    gap: max(calc(150 * var(--pu)), 56px);
   }
 
   .list {
@@ -345,20 +350,20 @@
     width: fit-content;
     max-width: 100%;
     margin: 0 auto;
-    gap: max(calc(150 * var(--u)), 80px);
+    gap: max(calc(150 * var(--pu)), 64px);
   }
 
   /* Number column wide enough for "여섯째," at this size. */
   .item {
     display: grid;
-    grid-template-columns: max(calc(250 * var(--u)), 9rem) minmax(0, 1fr);
+    grid-template-columns: max(calc(230 * var(--pu)), 7rem) minmax(0, 1fr);
     align-items: baseline;
-    column-gap: max(calc(90 * var(--u)), 32px);
+    column-gap: max(calc(90 * var(--pu)), 24px);
   }
 
   .itemNumber {
     font-weight: 700;
-    font-size: max(calc(64 * var(--u)), 2.125rem);
+    font-size: max(calc(56 * var(--pu)), 1.75rem);
     line-height: 1.3;
     letter-spacing: -0.02em;
     color: var(--color-muted);
@@ -367,13 +372,13 @@
   .itemBody {
     display: flex;
     flex-direction: column;
-    gap: max(calc(26 * var(--u)), 14px);
+    gap: max(calc(22 * var(--pu)), 12px);
   }
 
   .itemTitle {
     padding-left: 0;
     font-weight: 700;
-    font-size: max(calc(46 * var(--u)), 1.625rem);
+    font-size: max(calc(40 * var(--pu)), 1.375rem);
     line-height: 1.4;
     letter-spacing: -0.02em;
     text-wrap: balance;
@@ -383,7 +388,7 @@
   .itemPoints {
     padding-top: 0;
     font-weight: 400;
-    font-size: max(calc(31 * var(--u)), 1.1875rem);
+    font-size: max(calc(27 * var(--pu)), 1rem);
     line-height: 1.75;
     color: rgba(255, 255, 255, 0.92);
     /* A point that runs to two lines splits evenly. */
