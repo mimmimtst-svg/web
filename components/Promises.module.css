@@ -18,6 +18,19 @@
   isolation: isolate;
 }
 
+/* Behind everything, the section's full height. On a wide screen the
+   pin inside it sticks to the screen (see the landscape block). */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.backdropPin {
+  position: relative;
+  height: 100%;
+}
+
 .bgImage {
   position: absolute;
   inset: 0;
@@ -25,7 +38,6 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-  z-index: -2;
 }
 
 /* Figma: rgba(41, 33, 33, 0.75) over the photo. */
@@ -33,7 +45,6 @@
   position: absolute;
   inset: 0;
   background-color: rgba(41, 33, 33, 0.75);
-  z-index: -1;
 }
 
 /* section3_body: heading, then a 50px gap, then the 2x3 grid. No width
@@ -245,59 +256,63 @@
   }
 }
 
-/* ---------- Desktop (landscape), 2026-10-18: one long, centred page ----------
-   The section no longer has to fit one screen: it grows with its
-   content, everything centred, the type a good deal larger (the last
-   one-screen version, rows of number | title | points, read too small).
-   SectionPager pages through a section taller than the screen a screen
-   at a time, then on to the next one. */
+/* ---------- Desktop (landscape), 2026-10-19: a long page over a pinned photo ----------
+   The section grows with its content; the photo stays put, filling the
+   screen, and only the text scrolls over it. The heading keeps its old
+   place (top left); each promise is a big "첫째," with the title beside
+   it and the points under the title, all left-aligned, in a centred
+   column. SectionPager pages through a section taller than the screen a
+   screen at a time, then on to the next one. */
 @media (orientation: landscape) {
   .section {
     height: auto;
     min-height: 100dvh;
-    padding: calc(var(--header-height) + max(calc(110 * var(--u)), 56px))
-      var(--space-page-x) max(calc(230 * var(--u)), 150px);
+    padding: calc(var(--header-height) + 40 * var(--u)) calc(50 * var(--u))
+      max(calc(230 * var(--u)), 150px) calc(40 * var(--u));
+    /* clip, not hidden: hidden would make the section the pin's
+       scroller and the photo would scroll away with the text. */
+    overflow: clip;
+  }
+
+  .backdropPin {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
   }
 
   .inner {
-    max-width: max(1000px, calc(1400 * var(--u)));
-    margin: 0 auto;
-    align-items: center;
-    gap: max(calc(110 * var(--u)), 56px);
-  }
-
-  .heading {
-    justify-content: center;
+    gap: max(calc(150 * var(--u)), 72px);
   }
 
   .list {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: max(calc(120 * var(--u)), 64px);
+    width: 100%;
+    max-width: max(1100px, calc(1640 * var(--u)));
+    margin: 0 auto;
+    gap: max(calc(150 * var(--u)), 80px);
   }
 
+  /* Number column wide enough for "여섯째," at this size. */
   .item {
-    flex-direction: column;
-    align-items: center;
-    gap: max(calc(14 * var(--u)), 8px);
-    text-align: center;
+    display: grid;
+    grid-template-columns: max(calc(200 * var(--u)), 7.5rem) minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: max(calc(30 * var(--u)), 16px);
   }
 
-  /* "첫째," in the muted beige, over the title. */
   .itemNumber {
-    flex: 0 0 auto;
-    font-weight: 500;
-    font-size: max(calc(28 * var(--u)), 1.0625rem);
-    line-height: 1.4;
+    font-weight: 700;
+    font-size: max(calc(52 * var(--u)), 1.75rem);
+    line-height: 1.35;
+    letter-spacing: -0.02em;
     color: var(--color-muted);
   }
 
   .itemBody {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: max(calc(24 * var(--u)), 14px);
+    gap: max(calc(26 * var(--u)), 14px);
   }
 
   .itemTitle {
@@ -306,22 +321,17 @@
     font-size: max(calc(46 * var(--u)), 1.625rem);
     line-height: 1.4;
     letter-spacing: -0.02em;
-    text-align: center;
-    text-wrap: balance;
   }
 
-  /* The points as centred lines, no discs (a centred list with hanging
-     bullets reads ragged). */
+  /* Discs hanging in the gutter, so the lines start flush with the title. */
   .itemPoints {
     padding-top: 0;
-    list-style: none;
     font-size: max(calc(26 * var(--u)), 1.0625rem);
     line-height: 1.8;
-    text-align: center;
     color: rgba(255, 255, 255, 0.88);
   }
 
   .itemPoints li {
-    margin-left: 0;
+    margin-left: 1.1em;
   }
 }

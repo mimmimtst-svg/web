@@ -18,9 +18,15 @@ export default function Promises() {
 
   return (
     <section className={styles.section} id="promises" ref={ref}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} alt="" aria-hidden="true" />
-      <div className={styles.overlay} aria-hidden="true" />
+      {/* The photo and its tint: on a wide screen pinned to the screen
+          while the promises scroll over it (2026-10-19). */}
+      <div className={styles.backdrop} aria-hidden="true">
+        <div className={styles.backdropPin}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} alt="" />
+          <div className={styles.overlay} />
+        </div>
+      </div>
       <div className={styles.inner}>
         <div className={styles.heading}>
           <PlusIcon />
