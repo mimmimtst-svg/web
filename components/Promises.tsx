@@ -32,7 +32,7 @@ export default function Promises() {
           <PlusIcon />
           <h2 className={styles.headingTitle}>유병현의 여섯 가지 약속</h2>
         </div>
-        <ol className={styles.list}>
+        <ol className={styles.list} data-pager-stops="">
           {promises.map((item) => (
             <Reveal
               as="li"
@@ -53,6 +53,23 @@ export default function Promises() {
             </Reveal>
           ))}
         </ol>
+      </div>
+      {/* Wide screens: the heading stays put at the top while the promises
+          scroll by (2026-10-19). A second copy of the pinned photo, cut
+          off just under the heading and fading out, covers the text as it
+          passes beneath, so the photo looks untouched. The marker tells
+          SectionPager how much of the screen top this covers. */}
+      <div className={styles.cap} aria-hidden="true">
+        <div className={styles.capPin}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} alt="" />
+          <div className={styles.overlay} />
+          <div className={`${styles.heading} ${styles.capHeading}`}>
+            <PlusIcon />
+            <span className={styles.headingTitle}>유병현의 여섯 가지 약속</span>
+          </div>
+          <span className={styles.capEdge} data-pager-cover="" />
+        </div>
       </div>
       <ScrollDownIndicator active={settled} />
     </section>

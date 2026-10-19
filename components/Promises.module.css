@@ -47,6 +47,11 @@
   background-color: rgba(41, 33, 33, 0.75);
 }
 
+/* The heading's cover on a wide screen (see the landscape block). */
+.cap {
+  display: none;
+}
+
 /* section3_body: heading, then a 50px gap, then the 2x3 grid. No width
    cap (2026-10-18): on a screen wider than 16:9 --u follows the height,
    and the old 1830u cap left an empty band on the right while titles
@@ -274,10 +279,58 @@
     overflow: clip;
   }
 
-  .backdropPin {
+  .backdropPin,
+  .capPin {
     position: sticky;
     top: 0;
     height: 100dvh;
+  }
+
+  /* The heading pinned at its old place: a copy of the photo layer laid
+     over the text, shown only down to just under the heading and fading
+     out over 70u, so the promises slide away beneath it. Same box as the
+     backdrop, so the two photos always line up. */
+  .cap {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .capPin {
+    --cap-edge: calc(
+      var(--header-height) + 40 * var(--u) + var(--fs-section-title-fit) * 1.4 + 36 * var(--u)
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 var(--cap-edge),
+      transparent calc(var(--cap-edge) + 70 * var(--u))
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 var(--cap-edge),
+      transparent calc(var(--cap-edge) + 70 * var(--u))
+    );
+  }
+
+  .capHeading {
+    position: absolute;
+    top: calc(var(--header-height) + 40 * var(--u));
+    left: calc(40 * var(--u));
+  }
+
+  /* Where the text below is fully clear again. */
+  .capEdge {
+    position: absolute;
+    top: calc(var(--cap-edge) + 70 * var(--u));
+    left: 0;
+  }
+
+  /* The heading in the flow keeps its room and stays readable to screen
+     readers; the copy on the cover is what shows. */
+  .inner > .heading {
+    opacity: 0;
   }
 
   .inner {

@@ -51,7 +51,7 @@ export default function SectionPager() {
     const sections = () =>
       Array.from(document.querySelectorAll<HTMLElement>("main > section")).map((el) => {
         const top = Math.round(el.getBoundingClientRect().top + window.scrollY);
-        return { top, bottom: top + el.offsetHeight };
+        return { el, top, bottom: top + el.offsetHeight };
       });
     const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight;
 
@@ -87,6 +87,43 @@ export default function SectionPager() {
       frame = requestAnimationFrame(step);
     };
 
+    /** How much of the screen top a section's content can't be read
+        under: the fixed header, or whatever else the section keeps
+        pinned there, marked [data-pager-cover] (the Promises heading). */
+    const coverOf = (el: HTMLElement) => {
+      const cover = el.querySelector<HTMLElement>("[data-pager-cover]");
+      if (cover?.offsetParent) return cover.offsetTop;
+      return parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height")) || 0;
+    };
+
+    /** Page top of an element, ignoring transforms (a Reveal still
+        waiting to rise in sits lower than its place). */
+    const layoutTop = (el: HTMLElement) => {
+      let top = 0;
+      for (let e: HTMLElement | null = el; e; e = e.offsetParent as HTMLElement | null) top += e.offsetTop;
+      return top;
+    };
+
+    /** Where a tall section with marked blocks (the children of
+        [data-pager-stops] — the six promises) comes to rest: its top,
+        then each block that wasn't wholly on the last screen brought up
+        to just under the cover — so a turn never leaves a block half
+        under the pinned heading. */
+    const restingPoints = (s: { el: HTMLElement; top: number; bottom: number }) => {
+      const stops = s.el.querySelectorAll<HTMLElement>("[data-pager-stops] > *");
+      if (!stops.length) return null;
+      const vh = window.innerHeight;
+      const cover = coverOf(s.el);
+      const points = [s.top];
+      for (const el of stops) {
+        const top = layoutTop(el);
+        if (top + el.offsetHeight > points[points.length - 1] + vh - 2) {
+          points.push(Math.min(Math.round(top - cover), s.bottom - vh));
+        }
+      }
+      return points;
+    };
+
     /** Where one page turn in `dir` should go, or null at the very
         first/last page. Inside a section taller than the screen it goes
         to that section's other end first (at most a screen away). */
@@ -97,17 +134,26 @@ export default function SectionPager() {
       let i = list.findIndex((s) => y >= s.top - 2 && y < s.bottom - 2);
       if (i === -1) i = y < list[0].top ? 0 : list.length - 1;
       const current = list[i];
-      // Inside a section taller than the screen a turn moves by what is
-      // visible under the fixed header, so nothing slides past unseen.
-      const step =
-        vh - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height")) || 0);
-      if (dir > 0) {
-        if (y + vh < current.bottom - 2) return Math.min(current.bottom - vh, y + step);
-        return list[i + 1]?.top ?? null;
+      const points = restingPoints(current);
+      if (points) {
+        if (dir > 0) return points.find((p) => p > y + 2) ?? list[i + 1]?.top ?? null;
+        const back = points.filter((p) => p < y - 2);
+        if (back.length) return back[back.length - 1];
+      } else {
+        // Inside a section taller than the screen a turn moves by what
+        // is visible under the fixed header, so nothing slides past
+        // unseen.
+        const step = vh - coverOf(current.el);
+        if (dir > 0) {
+          if (y + vh < current.bottom - 2) return Math.min(current.bottom - vh, y + step);
+          return list[i + 1]?.top ?? null;
+        }
+        if (y > current.top + 2) return Math.max(current.top, y - step);
       }
-      if (y > current.top + 2) return Math.max(current.top, y - step);
       const prev = list[i - 1];
-      return prev ? Math.max(prev.top, prev.bottom - vh) : null;
+      if (!prev) return null;
+      const prevPoints = restingPoints(prev);
+      return prevPoints ? prevPoints[prevPoints.length - 1] : Math.max(prev.top, prev.bottom - vh);
     };
 
     const onWheel = (e: WheelEvent) => {
