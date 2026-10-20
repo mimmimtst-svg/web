@@ -53,7 +53,7 @@ export default function ProfilePage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className={styles.photo}
-                src={withBasePath("/images/profile-portrait.webp")}
+                src={withBasePath("/images/profile-portrait-2026-10-20.webp")}
                 alt="유병현 교수"
                 width={1241}
                 height={1835}
