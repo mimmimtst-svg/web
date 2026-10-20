@@ -425,7 +425,8 @@ const revealedCount = useSequentialReveal(promises.length, settled, entered);
 - **미리보기 주소는 저장소에 적지 않는다.** 이 저장소는 공개라서, 주소를 코드·문서·커밋 메시지 어디에 써도 누구나 볼 수 있다(처음 쓴 주소는 그래서 폐기했다). 주소는 저장소 Secret **`PREVIEW_SLUG`**(영소문자·숫자·`-`)에만 있고, 워크플로가 빌드 직전에 `preview-template/` 폴더 전체를 `app/<PREVIEW_SLUG>/`로 복사한다(`page.tsx` → 메인, `plan/` → P2-2 상세 페이지). 새 상세 페이지를 만들면 `app/<경로>/page.tsx`(비공개 모드에선 `ComingSoon`)와 `preview-template/<경로>/page.tsx`를 **둘 다** 추가한다. 빌드 로그에서는 GitHub이 Secret 값을 `***`로 가린다. Secret이 없으면 미리보기 페이지 없이 빌드된다. 로컬에서는 `/`가 그대로 전체 사이트다.
 - **주소 바꾸기**: Secret 값만 새로 바꾸고 배포를 다시 돌린다(코드 수정 없음).
 - **한계**: 저장소가 공개인 동안 사이트의 코드·문구·이미지 자체는 누구나 저장소에서 볼 수 있다 — 이 모드는 "도메인에서 바로 보이지 않게" 가리는 수준이다. 완전히 숨기려면 저장소를 비공개로 해야 하고, 그러려면 GitHub Pages에 유료 플랜(GitHub Pro 등)이 필요하다. 또 배포용 빌드 결과물(Actions의 `github-pages` 아티팩트, 보존 1일)에는 미리보기 폴더가 들어 있어 로그인한 GitHub 사용자가 받아 볼 수 있다.
-- **공개하기**: `.github/workflows/deploy-pages.yml`에서 `NEXT_PUBLIC_SITE_PRIVATE` 줄을 지우고 push. GitHub Pages 설정·커스텀 도메인·DNS는 건드리지 않는다(도메인 연결을 끊으면 다른 사람이 도메인을 가로챌 수 있다).
+- **2026-10-20 공개 전환** (사용자 요청 "임시 주소를 정식 주소로"): 워크플로에서 `NEXT_PUBLIC_SITE_PRIVATE` 줄을 지웠다 — 이제 `byunghyun.kr/`과 각 메뉴 주소(`/plan/`, `/pledges/` …)가 실제 페이지이고 검색 노출도 허용된다. 미리보기 주소는 Secret이 남아 있는 동안 같은 내용으로 계속 열린다(그쪽은 `noindex`). 다시 가리려면 같은 줄을 `"true"`로 되살리고 push.
+- **공개하기**(참고): `.github/workflows/deploy-pages.yml`에서 `NEXT_PUBLIC_SITE_PRIVATE` 줄을 지우고 push. GitHub Pages 설정·커스텀 도메인·DNS는 건드리지 않는다(도메인 연결을 끊으면 다른 사람이 도메인을 가로챌 수 있다).
 - `next.config.ts`의 `trailingSlash: true`는 미리보기 경로 때문 — 정적 export가 `<route>.html`과 같은 이름의 `<route>/` 폴더(RSC 페이로드)를 함께 만들면 GitHub Pages가 폴더로 해석해 404가 난다. `<route>/index.html`로 내보낸다.
 
 ### 4.24 상세 페이지 — P2-2 `나답게 · 다함께 · 더높게` (`app/plan`, `components/PlanDetail.tsx`, 2026-10-17)
