@@ -1,0 +1,549 @@
+/* 단과대별 발전계획 (components/CollegePlans.tsx, CollegeNav.tsx). P4-2's
+   white reading page (max 1200px) and tab bar, without the infographic:
+   fluid clamp() sizes in landscape, --mu in portrait. Long running text,
+   so the body copy is set large and loose for older readers. */
+.page {
+  --tabs-h: 64px;
+  flex: 1 0 auto;
+  padding-top: var(--header-height);
+  background-color: var(--color-white);
+  color: var(--color-charcoal);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Tab bar (P4-2's): sticky under the header ---------- */
+.tabs {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 20;
+  background-color: rgba(255, 255, 255, 0.96);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: top 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tabs::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: min(1200px, 100%);
+  height: 18px;
+  background: radial-gradient(ellipse 50% 100% at 50% 0, rgba(0, 0, 0, 0.13), rgba(0, 0, 0, 0));
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+  transition: opacity 300ms ease;
+}
+
+.tabsStuck::after {
+  opacity: 1;
+}
+
+.tabList {
+  max-width: 1200px;
+  height: var(--tabs-h);
+  margin: 0 auto;
+  padding: 0 var(--space-page-x);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabList::-webkit-scrollbar {
+  display: none;
+}
+
+/* Icon, name, chevron. The current part: the light-gray pill, its icon
+   key red (the others dark gray, like P4-2's numbers). */
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: var(--color-label);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 250ms ease, color 250ms ease;
+}
+
+.tabIcon {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: #555;
+  transition: color 250ms ease;
+}
+
+.tabChevron {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-left: -2px;
+  transition: transform 250ms ease;
+}
+
+.tabActive {
+  background-color: rgba(44, 44, 44, 0.07);
+  color: var(--color-charcoal);
+}
+
+.tabActive .tabIcon {
+  color: var(--color-key);
+}
+
+.tabOpen {
+  color: var(--color-charcoal);
+}
+
+.tabOpen .tabChevron {
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--color-charcoal);
+  }
+}
+
+.tab:focus-visible {
+  outline: 1px solid var(--color-charcoal);
+  outline-offset: -2px;
+}
+
+/* The dropdown: under its tab (CollegeNav sets --menu-left), kept inside
+   the content width. 서울캠퍼스's twenty colleges in two columns. */
+.menu {
+  position: absolute;
+  top: calc(100% - 6px);
+  left: clamp(var(--space-page-x), var(--menu-left), calc(100% - 320px - var(--space-page-x)));
+  width: 320px;
+  max-height: calc(100dvh - var(--header-height) - var(--tabs-h) - 24px);
+  overflow-y: auto;
+  padding: 8px;
+  border-radius: 12px;
+  background-color: var(--color-white);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  animation: menuIn 180ms ease-out;
+}
+
+.menuWide {
+  left: clamp(var(--space-page-x), var(--menu-left), calc(100% - 660px - var(--space-page-x)));
+  width: 660px;
+}
+
+@keyframes menuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.menuList {
+  list-style: none;
+}
+
+.menuWide .menuList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 4px;
+}
+
+.menuItem {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: var(--font-kr);
+  font-weight: 500;
+  font-size: 1.0625rem;
+  line-height: 1.45;
+  color: var(--color-charcoal);
+  word-break: keep-all;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.menuItemActive {
+  color: var(--color-key);
+  font-weight: 700;
+}
+
+@media (hover: hover) {
+  .menuItem:hover {
+    background-color: var(--color-card-bg);
+  }
+}
+
+.menuItem:focus-visible {
+  outline: 1px solid var(--color-charcoal);
+  outline-offset: -2px;
+}
+
+/* ---------- Parts ---------- */
+.part {
+  padding: clamp(40px, 5vh, 72px) 0 clamp(72px, 9vh, 128px);
+  scroll-margin-top: calc(var(--header-height) + var(--tabs-h));
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-page-x);
+}
+
+.partHead {
+  text-align: center;
+}
+
+.headline {
+  font-family: var(--font-kr);
+  font-weight: 800;
+  font-size: clamp(1.625rem, 1.1rem + 1.3vw, 2.25rem);
+  line-height: 1.35;
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+/* ---------- Colleges: name left (stays in view), whole text right ---------- */
+.units {
+  margin-top: clamp(28px, 3vw, 44px);
+  border-top: 2px solid var(--color-light-gray);
+  list-style: none;
+}
+
+.intro {
+  margin-top: clamp(28px, 3vw, 44px);
+  padding: 0 16px;
+}
+
+.intro + .units {
+  margin-top: clamp(48px, 5vw, 72px);
+}
+
+.unit {
+  padding: clamp(36px, 3.6vw, 52px) 16px;
+  border-bottom: 1px solid var(--color-light-gray);
+  scroll-margin-top: calc(var(--header-height) + var(--tabs-h));
+  transition: background-color 700ms ease;
+}
+
+.unit:last-child {
+  border-bottom: 0;
+}
+
+.unit[data-flash] {
+  background-color: var(--color-card-bg);
+  transition-duration: 200ms;
+}
+
+.unitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+  column-gap: clamp(32px, 4vw, 64px);
+}
+
+.intro .unitBody {
+  grid-column: 2;
+}
+
+.unitName {
+  align-self: start;
+  position: sticky;
+  top: calc(var(--header-height) + var(--tabs-h) + 24px);
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5625rem);
+  line-height: 1.45;
+  word-break: keep-all;
+}
+
+.unitBody > * + * {
+  margin-top: 14px;
+}
+
+.para {
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  line-height: 1.85;
+  color: var(--color-line);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* The booklet's "□" headings: bold, a small key-red square before. */
+.blockHeading {
+  position: relative;
+  padding-left: 18px;
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: clamp(1.125rem, 1.04rem + 0.3vw, 1.3125rem);
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+.blockHeading::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 7px;
+  height: 7px;
+  background-color: var(--color-key);
+}
+
+.unitBody > .blockHeading:not(:first-child) {
+  margin-top: clamp(28px, 2.6vw, 36px);
+}
+
+.unitBody > .blockHeading + * {
+  margin-top: 8px;
+}
+
+.dashList {
+  list-style: none;
+}
+
+.dashList li {
+  position: relative;
+  padding-left: 18px;
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  line-height: 1.8;
+  color: var(--color-line);
+  word-break: keep-all;
+}
+
+.dashList li + li {
+  margin-top: 4px;
+}
+
+.dashList li::before {
+  content: "–";
+  position: absolute;
+  left: 0;
+  color: var(--color-label);
+}
+
+/* 의과대학/의료원's "[…]" groups: a beige band with the title and its
+   key-red line, setting off the headings that follow. */
+.group {
+  padding: clamp(16px, 1.6vw, 22px) clamp(18px, 1.8vw, 26px);
+  border-radius: 10px;
+  background-color: var(--color-card-bg);
+}
+
+.unitBody > .group:not(:first-child) {
+  margin-top: clamp(40px, 3.6vw, 52px);
+}
+
+.unitBody > .group + * {
+  margin-top: clamp(20px, 2vw, 28px);
+}
+
+.groupTitle {
+  font-family: var(--font-kr);
+  font-weight: 800;
+  font-size: clamp(1.1875rem, 1.08rem + 0.4vw, 1.4375rem);
+  line-height: 1.45;
+  word-break: keep-all;
+}
+
+.groupTagline,
+.tagline {
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  line-height: 1.6;
+  color: var(--color-key);
+  word-break: keep-all;
+}
+
+.groupTagline {
+  margin-top: 6px;
+}
+
+.unitBody > .tagline {
+  margin-top: clamp(20px, 2vw, 28px);
+}
+
+/* Room on the right for the back-to-top button. */
+footer.footer {
+  padding-right: calc(var(--detail-float-x) + 52px + 16px);
+}
+
+/* ---------- Mobile layout (portrait): one column, --mu sizes ---------- */
+@media (orientation: portrait) {
+  .page {
+    --tabs-h: calc(52 * var(--mu));
+    padding-top: calc(84 * var(--mu));
+  }
+
+  /* Follows the header, which slides away while scrolling down. */
+  .tabs {
+    top: calc(84 * var(--mu));
+  }
+
+  :global(html[data-header-hidden]) .tabs {
+    top: 0;
+  }
+
+  /* All three fit across a phone (no sideways scrolling to find the
+     third): tighter pills, a touch smaller type. */
+  .tabList {
+    justify-content: space-between;
+    gap: 0;
+    padding: 0 calc(8 * var(--mu));
+  }
+
+  .tab {
+    gap: calc(4 * var(--mu));
+    padding: calc(8 * var(--mu)) calc(7 * var(--mu)) calc(8 * var(--mu)) calc(9 * var(--mu));
+    font-size: calc(14 * var(--mu));
+    letter-spacing: -0.02em;
+  }
+
+  .tabIcon {
+    width: calc(16 * var(--mu));
+    height: calc(16 * var(--mu));
+  }
+
+  .tabChevron {
+    width: calc(12 * var(--mu));
+    height: calc(12 * var(--mu));
+    margin-left: calc(-1 * var(--mu));
+  }
+
+  /* Full width under the bar on a phone. */
+  .menu,
+  .menuWide {
+    left: calc(12 * var(--mu));
+    right: calc(12 * var(--mu));
+    width: auto;
+    max-height: calc(100dvh - 84 * var(--mu) - var(--tabs-h) - 24px);
+    padding: calc(6 * var(--mu));
+  }
+
+  .menuItem {
+    padding: calc(11 * var(--mu)) calc(12 * var(--mu));
+    font-size: calc(15.5 * var(--mu));
+  }
+
+  .part {
+    padding: calc(44 * var(--mu)) 0 calc(56 * var(--mu));
+    scroll-margin-top: calc(84 * var(--mu) + var(--tabs-h));
+  }
+
+  .inner {
+    padding: 0 calc(20 * var(--mu));
+  }
+
+  .partHead {
+    text-align: left;
+  }
+
+  .headline {
+    font-size: calc(24 * var(--mu));
+    text-wrap: pretty;
+  }
+
+  .units,
+  .intro {
+    margin-top: calc(20 * var(--mu));
+  }
+
+  .intro {
+    padding: 0 calc(4 * var(--mu));
+  }
+
+  .intro + .units {
+    margin-top: calc(36 * var(--mu));
+  }
+
+  .unit {
+    padding: calc(28 * var(--mu)) calc(4 * var(--mu));
+    scroll-margin-top: calc(84 * var(--mu) + var(--tabs-h));
+  }
+
+  .unitGrid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: calc(14 * var(--mu));
+  }
+
+  .intro .unitBody {
+    grid-column: 1;
+  }
+
+  .unitName {
+    position: static;
+    font-size: calc(21 * var(--mu));
+  }
+
+  .unitBody > * + * {
+    margin-top: calc(12 * var(--mu));
+  }
+
+  .para,
+  .dashList li {
+    font-size: calc(16.5 * var(--mu));
+    line-height: 1.75;
+  }
+
+  .blockHeading {
+    padding-left: calc(15 * var(--mu));
+    font-size: calc(17.5 * var(--mu));
+  }
+
+  .blockHeading::before {
+    width: calc(6 * var(--mu));
+    height: calc(6 * var(--mu));
+  }
+
+  .unitBody > .blockHeading:not(:first-child) {
+    margin-top: calc(26 * var(--mu));
+  }
+
+  .dashList li {
+    padding-left: calc(15 * var(--mu));
+  }
+
+  .group {
+    padding: calc(14 * var(--mu)) calc(16 * var(--mu));
+  }
+
+  .unitBody > .group:not(:first-child) {
+    margin-top: calc(34 * var(--mu));
+  }
+
+  .groupTitle {
+    font-size: calc(18.5 * var(--mu));
+  }
+
+  .groupTagline,
+  .tagline {
+    font-size: calc(16 * var(--mu));
+  }
+
+  footer.footer {
+    padding-right: calc(20 * var(--mu) + 44px + 12px);
+  }
+}

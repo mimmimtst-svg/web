@@ -55,12 +55,19 @@ export default function Reveal({
     const el = ref.current;
     if (!el) return;
 
+    // In view once 15% of it shows — or, for a block taller than the
+    // screen can ever show 15% of (단과대별 발전계획's 의료원 runs to
+    // several screens on a phone), once it fills a quarter of the screen.
+    // Hence the finer thresholds: each is a chance to check.
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) setObservedVisible(true);
-        else if (entry.boundingClientRect.top > 0) setObservedVisible(false);
+        const rootHeight = entry.rootBounds?.height ?? window.innerHeight;
+        const enough =
+          entry.intersectionRatio >= 0.15 || entry.intersectionRect.height >= rootHeight * 0.25;
+        if (entry.isIntersecting && enough) setObservedVisible(true);
+        else if (!entry.isIntersecting && entry.boundingClientRect.top > 0) setObservedVisible(false);
       },
-      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
+      { threshold: [0, 0.01, 0.02, 0.05, 0.1, 0.15], rootMargin: "0px 0px -10% 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
