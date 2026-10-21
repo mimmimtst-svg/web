@@ -35,7 +35,9 @@
 }
 
 .cards {
-  margin-top: clamp(18px, 3vh, 48px);
+  /* 2026-10-21: more air under the title (was 18px / 3vh / 48px) — growing
+     faster than the screen height, so short screens still fit in one. */
+  margin-top: clamp(20px, 10vh - 52px, 72px);
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   /* number · name · keywords · headline · boxes · more */
@@ -217,7 +219,7 @@ footer.footer {
   }
 
   .cards {
-    margin-top: calc(24 * var(--mu));
+    margin-top: calc(32 * var(--mu));
     grid-template-columns: minmax(0, 1fr);
     row-gap: calc(14 * var(--mu));
   }
