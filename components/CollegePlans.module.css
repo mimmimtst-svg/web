@@ -206,13 +206,17 @@
 
 /* The part's name in the colleges' name column, large; 세종's and
    의과대학/의료원's opening text beside it in the text column (2026-10-21:
-   a centred title over the two columns left the name column empty). */
+   a centred title over the two columns left the name column empty). Like
+   a college's name, it stays in view while its long opening text
+   scrolls by. */
 .partHead {
   padding: 0 16px;
 }
 
 .headline {
   align-self: start;
+  position: sticky;
+  top: calc(var(--header-height) + var(--tabs-h) + 24px);
   font-family: var(--font-kr);
   font-weight: 800;
   font-size: clamp(1.625rem, 1.2rem + 1vw, 2.125rem);
@@ -334,16 +338,23 @@
   color: var(--color-label);
 }
 
-/* 의과대학/의료원's "[…]" groups: a beige band with the title and its
-   key-red line, setting off the headings that follow. */
+/* A section within a college's text: 의과대학/의료원's "[…]" groups
+   (title, then its one-line summary) and the hospitals' one-line headers
+   (안암병원 …). One style for both (2026-10-21: a beige box, an 800 title
+   with a key-red line, and a separate key-red line for the hospitals
+   read as three unrelated things, cut off from the headings below): a
+   thin light rule across the text column above it, a bold title, the
+   summary in the body's own colour. The first section of a text has no
+   rule. */
 .group {
-  padding: clamp(16px, 1.6vw, 22px) clamp(18px, 1.8vw, 26px);
-  border-radius: 10px;
-  background-color: var(--color-card-bg);
+  font-family: var(--font-kr);
+  word-break: keep-all;
 }
 
 .unitBody > .group:not(:first-child) {
   margin-top: clamp(40px, 3.6vw, 52px);
+  padding-top: clamp(28px, 2.6vw, 36px);
+  border-top: 1px solid var(--color-light-gray);
 }
 
 .unitBody > .group + * {
@@ -351,29 +362,17 @@
 }
 
 .groupTitle {
-  font-family: var(--font-kr);
-  font-weight: 800;
+  font-weight: 700;
   font-size: clamp(1.1875rem, 1.08rem + 0.4vw, 1.4375rem);
   line-height: 1.45;
-  word-break: keep-all;
-}
-
-.groupTagline,
-.tagline {
-  font-family: var(--font-kr);
-  font-weight: 600;
-  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
-  line-height: 1.6;
-  color: var(--color-key);
-  word-break: keep-all;
 }
 
 .groupTagline {
   margin-top: 6px;
-}
-
-.unitBody > .tagline {
-  margin-top: clamp(20px, 2vw, 28px);
+  font-weight: 500;
+  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  line-height: 1.7;
+  color: var(--color-line);
 }
 
 /* Room on the right for the back-to-top button. */
@@ -446,6 +445,7 @@ footer.footer {
   }
 
   .headline {
+    position: static;
     font-size: calc(26 * var(--mu));
   }
 
@@ -496,21 +496,21 @@ footer.footer {
     padding-left: calc(15 * var(--mu));
   }
 
-  .group {
-    padding: calc(14 * var(--mu)) calc(16 * var(--mu));
-  }
-
   .unitBody > .group:not(:first-child) {
     margin-top: calc(34 * var(--mu));
+    padding-top: calc(24 * var(--mu));
+  }
+
+  .unitBody > .group + * {
+    margin-top: calc(18 * var(--mu));
   }
 
   .groupTitle {
     font-size: calc(18.5 * var(--mu));
   }
 
-  .groupTagline,
-  .tagline {
-    font-size: calc(16 * var(--mu));
+  .groupTagline {
+    font-size: calc(16.5 * var(--mu));
   }
 
   footer.footer {

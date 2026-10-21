@@ -29,7 +29,12 @@ function Block({ block }: { block: CollegeBlock }) {
         </div>
       );
     case "tagline":
-      return <p className={styles.tagline}>{block.text}</p>;
+      // A hospital's one-line header: the same section style as a group.
+      return (
+        <div className={styles.group}>
+          <p className={styles.groupTitle}>{block.text}</p>
+        </div>
+      );
   }
 }
 
