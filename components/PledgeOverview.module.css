@@ -1,7 +1,8 @@
 /* P4-1, 주요 공약 (components/PledgeOverview.tsx). 2026-10-21: no cards
-   any more — five columns on white, ruled apart like 발전 방향, each
+   any more — five columns on white with no rules between them (tried:
+   vertical rules, then a rule on top too — "take the lines out"), each
    column's four keyword items in a box of the card beige (as on the
-   phone). Before: a beige band with five plain white cards across it. No circles, no tiles (2026-10-18: the
+   phone, where the five stack with rules between). Before: a beige band with five plain white cards across it. No circles, no tiles (2026-10-18: the
    first version — beige cards, a red circle each, white tiles — "too
    cramped, use the width"). Each card reads top to bottom: number,
    name, keywords, headline, the four keyword boxes as a list, "자세히
@@ -45,11 +46,6 @@
   grid-template-rows: repeat(6, auto);
   gap: 0;
   list-style: none;
-}
-
-/* Thin light-gray rules between the columns. */
-.item + .item {
-  border-left: 1px solid var(--color-light-gray);
 }
 
 .item {
@@ -193,37 +189,17 @@ footer.footer {
   padding-right: calc(var(--detail-float-x) + 52px + 16px);
 }
 
-/* Narrower landscape screens: rows of three, then two — a rule between
-   neighbours in a row and above each later row, none at a row's start. */
+/* Narrower landscape screens: rows of three, then two. */
 @media (max-width: 1280px) and (orientation: landscape) {
   .cards {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .item:nth-child(3n + 1) {
-    border-left: 0;
-  }
-
-  .item:nth-child(n + 4) {
-    border-top: 1px solid var(--color-light-gray);
+    row-gap: 16px;
   }
 }
 
 @media (max-width: 900px) and (orientation: landscape) {
   .cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .item:nth-child(3n + 1) {
-    border-left: 1px solid var(--color-light-gray);
-  }
-
-  .item:nth-child(2n + 1) {
-    border-left: 0;
-  }
-
-  .item:nth-child(n + 3) {
-    border-top: 1px solid var(--color-light-gray);
   }
 }
 
@@ -254,7 +230,6 @@ footer.footer {
   }
 
   .item + .item {
-    border-left: 0;
     border-top: 1px solid var(--color-light-gray);
   }
 
