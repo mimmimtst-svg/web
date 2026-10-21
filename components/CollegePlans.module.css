@@ -174,14 +174,13 @@
   display: none;
 }
 
+/* Only the bar itself shows, no track behind it (2026-10-21). */
 .menuTrack {
   position: absolute;
   top: 10px;
   right: 4px;
   bottom: 10px;
   width: 4px;
-  border-radius: 2px;
-  background-color: rgba(44, 44, 44, 0.06);
   pointer-events: none;
 }
 
@@ -514,7 +513,14 @@ footer.footer {
      screen); the rest scrolls inside, the bar on the right showing it. */
   .menuScroll {
     max-height: min(calc(6 * 44.5 * var(--mu) + 12 * var(--mu)), calc(100dvh - 84 * var(--mu) - var(--tabs-h) - 24px));
-    padding: calc(6 * var(--mu)) calc(12 * var(--mu)) calc(6 * var(--mu)) calc(6 * var(--mu));
+    padding: calc(6 * var(--mu)) calc(18 * var(--mu)) calc(6 * var(--mu)) calc(6 * var(--mu));
+  }
+
+  /* The second column starts further left, so its longer names
+     ("에너지환경대학원(그린스쿨)") keep clear of the scroll bar. */
+  .menuWide .menuList {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    column-gap: 0;
   }
 
   .menuItem {
