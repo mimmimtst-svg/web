@@ -205,27 +205,39 @@ footer.footer {
 }
 
 /* Portrait: one card per row, the boxes two by two. */
+/* Mobile (portrait), 2026-10-21: no cards — a stack of five on white,
+   ruled apart edge to edge like the 발전 방향 page ("cards one under
+   another didn't look good"). */
 @media (orientation: portrait) {
   .page {
     min-height: 0;
+    background-color: var(--color-white);
   }
 
   .inner {
-    padding: calc(84 * var(--mu) + 36 * var(--mu)) calc(20 * var(--mu)) calc(48 * var(--mu));
+    padding: calc(84 * var(--mu) + 36 * var(--mu)) calc(20 * var(--mu)) calc(8 * var(--mu));
   }
 
   .heading {
     font-size: calc(30 * var(--mu));
+    text-align: left;
   }
 
+  /* Full width, so the rules run edge to edge. */
   .cards {
-    margin-top: calc(32 * var(--mu));
+    margin: calc(20 * var(--mu)) calc(-20 * var(--mu)) 0;
     grid-template-columns: minmax(0, 1fr);
-    row-gap: calc(14 * var(--mu));
+    row-gap: 0;
+  }
+
+  .item + .item {
+    border-top: 1px solid var(--color-light-gray);
   }
 
   .card {
-    padding: calc(26 * var(--mu)) calc(22 * var(--mu)) calc(22 * var(--mu));
+    padding: calc(36 * var(--mu)) calc(20 * var(--mu));
+    border-radius: 0;
+    background-color: transparent;
   }
 
   .number {
