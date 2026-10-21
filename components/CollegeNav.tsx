@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./CollegePlans.module.css";
-import { ChevronDownIcon } from "./icons";
+import { ChevronDownIcon, ChevronRightIcon } from "./icons";
 import type { CollegeCampus } from "@/lib/collegePlans";
 
 /** How long a college stays highlighted after a jump to it. */
@@ -20,6 +20,9 @@ function flash(target: Element) {
   flashTimer = setTimeout(() => target.removeAttribute("data-flash"), FLASH_MS);
 }
 
+const canHover = () =>
+  window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
 function scrollToId(id: string) {
   const target = document.getElementById(id);
   if (!target) return;
@@ -34,12 +37,15 @@ function scrollToId(id: string) {
 
 /**
  * The 단과대별 발전계획 page's tab bar: the three parts, each a dropdown
- * chevron and its name (no numbers, no icons), sticky under the header, the current one marked
- * as you scroll. Each tab drops down the list of its colleges, schools or
- * hospitals (the booklet's "1.1 경영대학" … without the numbers); a pick
- * glides to it and briefly highlights it. Pressing a tab goes to the
- * part's top and opens its list; with a mouse the list also opens on
- * hover. The tab bar's look is P4-2's (PledgeNav).
+ * chevron and its name (no numbers, no icons), sticky under the header,
+ * the current one marked as you scroll. The chevron drops down the list of
+ * the part's colleges, schools or hospitals (the booklet's "1.1 경영대학" …
+ * without the numbers); a pick glides to it and briefly highlights it. The
+ * name only goes to the part's top (2026-10-21: on a phone, a name that
+ * also opened the list covered the very text it had just scrolled to);
+ * with a mouse the list also opens on hover. On a phone an open list
+ * closes once the page scrolls, and the bar scrolls sideways, a fade and
+ * an arrow at the edge showing there is more. The look is P4-2's.
  */
 export default function CollegeNav({
   campuses,
@@ -51,8 +57,29 @@ export default function CollegeNav({
   const [open, setOpen] = useState<CollegeCampus["id"] | null>(null);
   const [menuLeft, setMenuLeft] = useState(0);
   const [stuck, setStuck] = useState(false);
+  const [more, setMore] = useState({ before: false, after: false });
   const navRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+
+  // Whether the sideways-scrolling bar (phone) has more on either side.
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const update = () => {
+      const max = list.scrollWidth - list.clientWidth;
+      setMore({
+        before: list.scrollLeft > 2,
+        after: list.scrollLeft < max - 2,
+      });
+    };
+    update();
+    list.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      list.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
 
   // The current part and college: the last whose top has passed a little
   // below the tab bar.
@@ -109,11 +136,19 @@ export default function CollegeNav({
     const onDown = (e: PointerEvent) => {
       if (!navRef.current?.contains(e.target as Node)) setOpen(null);
     };
+    // On a touch screen it also closes once the page scrolls, so it never
+    // sits over the text being read.
+    const startY = window.scrollY;
+    const onScroll = () => {
+      if (!canHover() && Math.abs(window.scrollY - startY) > 24) setOpen(null);
+    };
     window.addEventListener("keydown", onKey);
     window.addEventListener("pointerdown", onDown);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("scroll", onScroll);
     };
   }, [open]);
 
@@ -134,14 +169,13 @@ export default function CollegeNav({
     setOpen(id);
   };
 
-  const canHover = () =>
-    window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-
   const campus = campuses.find((c) => c.id === open);
 
   return (
     <nav
-      className={`${styles.tabs} ${stuck ? styles.tabsStuck : ""}`}
+      className={`${styles.tabs} ${stuck ? styles.tabsStuck : ""} ${
+        more.before ? styles.moreBefore : ""
+      } ${more.after ? styles.moreAfter : ""}`}
       ref={navRef}
       aria-label="단과대별 발전계획 캠퍼스"
       onMouseLeave={() => {
@@ -153,31 +187,50 @@ export default function CollegeNav({
           const current = c.id === active;
           return (
             <li key={c.id}>
-              <button
-                type="button"
+              <div
                 className={`${styles.tab} ${current ? styles.tabActive : ""} ${
                   open === c.id ? styles.tabOpen : ""
                 }`}
                 data-id={c.id}
-                aria-expanded={open === c.id}
-                aria-controls={`${c.id}-menu`}
-                aria-current={current ? "location" : undefined}
                 onMouseEnter={(e) => {
                   if (canHover()) openFor(c.id, e.currentTarget);
                 }}
-                onClick={(e) => {
-                  scrollToId(c.id);
-                  if (open === c.id && !canHover()) setOpen(null);
-                  else openFor(c.id, e.currentTarget);
-                }}
               >
-                <ChevronDownIcon className={styles.tabChevron} />
-                {c.label}
-              </button>
+                <button
+                  type="button"
+                  className={styles.tabToggle}
+                  aria-label={`${c.label} 목록`}
+                  aria-expanded={open === c.id}
+                  aria-controls={`${c.id}-menu`}
+                  onClick={(e) => {
+                    const tab = e.currentTarget.parentElement as HTMLElement;
+                    if (open === c.id && !canHover()) setOpen(null);
+                    else openFor(c.id, tab);
+                  }}
+                >
+                  <ChevronDownIcon className={styles.tabChevron} />
+                </button>
+                <a
+                  className={styles.tabLabel}
+                  href={`#${c.id}`}
+                  aria-current={current ? "location" : undefined}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (!canHover()) setOpen(null);
+                    scrollToId(c.id);
+                  }}
+                >
+                  {c.label}
+                </a>
+              </div>
             </li>
           );
         })}
       </ul>
+      <span className={styles.edgeBefore} aria-hidden="true" />
+      <span className={styles.edgeAfter} aria-hidden="true">
+        <ChevronRightIcon />
+      </span>
       {campus && (
         <div
           className={`${styles.menu} ${campus.units.length > 8 ? styles.menuWide : ""}`}
@@ -186,7 +239,7 @@ export default function CollegeNav({
         >
           <ul className={styles.menuList}>
             {campus.units.map((u) => (
-              <li key={u.id} className={u.menu ? styles.menuSpan : undefined}>
+              <li key={u.id} className={u.short ? styles.menuSpan : undefined}>
                 <a
                   className={`${styles.menuItem} ${u.id === activeUnit ? styles.menuItemActive : ""}`}
                   href={`#${u.id}`}
@@ -196,10 +249,10 @@ export default function CollegeNav({
                     scrollToId(u.id);
                   }}
                 >
-                  {u.menu ? (
+                  {u.short ? (
                     <>
-                      {u.menu.name}
-                      <span className={styles.menuNote}>{u.menu.note}</span>
+                      {u.short.name}
+                      <span className={styles.menuNote}>{u.short.note}</span>
                     </>
                   ) : (
                     u.name

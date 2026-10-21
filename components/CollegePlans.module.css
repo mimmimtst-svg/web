@@ -71,20 +71,38 @@
    chevron key red (the others dark gray, like P4-2's numbers). */
 .tab {
   display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px 10px 14px;
-  border: 0;
+  align-items: stretch;
   border-radius: 999px;
-  background: none;
   font-family: var(--font-kr);
   font-weight: 600;
   font-size: 1rem;
   line-height: 1.2;
   color: var(--color-label);
   white-space: nowrap;
-  cursor: pointer;
   transition: background-color 250ms ease, color 250ms ease;
+}
+
+/* Two buttons in one pill: the chevron opens the list, the name goes to
+   the part. */
+.tabToggle,
+.tabLabel {
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.tabToggle {
+  padding: 10px 4px 10px 14px;
+  border-radius: 999px 0 0 999px;
+}
+
+.tabLabel {
+  padding: 10px 18px 10px 4px;
+  border-radius: 0 999px 999px 0;
 }
 
 .tabChevron {
@@ -118,9 +136,17 @@
   }
 }
 
-.tab:focus-visible {
+.tabToggle:focus-visible,
+.tabLabel:focus-visible {
   outline: 1px solid var(--color-charcoal);
   outline-offset: -2px;
+}
+
+/* "More to the side" on a phone (shown in the portrait block only): a
+   fade at each edge that has more, an arrow on the right one. */
+.edgeBefore,
+.edgeAfter {
+  display: none;
 }
 
 /* The dropdown: under its tab (CollegeNav sets --menu-left), kept inside
@@ -283,6 +309,16 @@
   word-break: keep-all;
 }
 
+/* The dropdown's grey second line, under a shortened name. */
+.unitNote {
+  display: block;
+  margin-top: 6px;
+  font-weight: 400;
+  font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);
+  line-height: 1.55;
+  color: var(--color-label);
+}
+
 .unitBody > * + * {
   margin-top: 14px;
 }
@@ -413,24 +449,69 @@ footer.footer {
     top: 0;
   }
 
-  /* All three fit across a phone (no sideways scrolling to find the
-     third): tighter pills, a touch smaller type. */
+  /* The tabs at a comfortable size, scrolling sideways (2026-10-21: all
+     three squeezed into the width read cramped): 서울 and 세종 in full,
+     the third cut at the edge, where a fade and an arrow show there is
+     more. */
   .tabList {
-    justify-content: space-between;
-    gap: 0;
-    padding: 0 calc(8 * var(--mu));
+    justify-content: flex-start;
+    gap: calc(4 * var(--mu));
+    padding: 0 calc(12 * var(--mu));
   }
 
   .tab {
-    gap: calc(4 * var(--mu));
-    padding: calc(8 * var(--mu)) calc(12 * var(--mu)) calc(8 * var(--mu)) calc(9 * var(--mu));
-    font-size: calc(15 * var(--mu));
-    letter-spacing: -0.02em;
+    font-size: calc(15.5 * var(--mu));
+  }
+
+  /* Each half a good finger's width. */
+  .tabToggle {
+    padding: calc(9 * var(--mu)) calc(4 * var(--mu)) calc(9 * var(--mu)) calc(14 * var(--mu));
+  }
+
+  .tabLabel {
+    padding: calc(9 * var(--mu)) calc(16 * var(--mu)) calc(9 * var(--mu)) calc(4 * var(--mu));
   }
 
   .tabChevron {
-    width: calc(14 * var(--mu));
-    height: calc(14 * var(--mu));
+    width: calc(15 * var(--mu));
+    height: calc(15 * var(--mu));
+  }
+
+  .edgeBefore,
+  .edgeAfter {
+    position: absolute;
+    top: 0;
+    height: var(--tabs-h);
+    width: calc(56 * var(--mu));
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: calc(6 * var(--mu));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+
+  .edgeBefore {
+    left: 0;
+    width: calc(32 * var(--mu));
+    background: linear-gradient(to right, var(--color-white), rgba(255, 255, 255, 0));
+  }
+
+  .edgeAfter {
+    right: 0;
+    background: linear-gradient(to left, var(--color-white) 45%, rgba(255, 255, 255, 0));
+    color: var(--color-label);
+  }
+
+  .edgeAfter svg {
+    width: calc(18 * var(--mu));
+    height: calc(18 * var(--mu));
+  }
+
+  .moreBefore .edgeBefore,
+  .moreAfter .edgeAfter {
+    opacity: 1;
   }
 
   /* Full width under the bar on a phone. */
@@ -493,6 +574,11 @@ footer.footer {
   .unitName {
     position: static;
     font-size: calc(21 * var(--mu));
+  }
+
+  .unitNote {
+    margin-top: calc(4 * var(--mu));
+    font-size: calc(14 * var(--mu));
   }
 
   .unitBody > * + * {

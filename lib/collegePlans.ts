@@ -18,12 +18,13 @@ export type CollegeBlock =
   | { type: "group"; title: string; tagline: string }
   | { type: "tagline"; text: string };
 
-/** `menu`: a shorter name for the tab bar's dropdown, with what it
-    leaves out as a small grey second line (2026-10-21: "연구소 교수"). */
+/** `short`: a shorter name for a long one, with what it leaves out as a
+    small grey second line — in the dropdown and over the college's text
+    alike (2026-10-21: "연구소 교수"). */
 export type CollegeUnit = {
   id: string;
   name: string;
-  menu?: { name: string; note: string };
+  short?: { name: string; note: string };
   blocks: CollegeBlock[];
 };
 
@@ -810,7 +811,7 @@ export const collegeCampuses: CollegeCampus[] = [
       {
         id: "seoul-19",
         name: "연구소(아세아문제연구원, 민족문화연구원, 글로벌일본문화연구원) 교수",
-        menu: {
+        short: {
           name: "연구소 교수",
           note: "아세아문제연구원, 민족문화연구원, 글로벌일본문화연구원",
         },

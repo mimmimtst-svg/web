@@ -91,7 +91,18 @@ export default function CollegePlans() {
                     key={unit.id}
                   >
                     <Reveal className={styles.unitGrid}>
-                      <h3 className={styles.unitName}>{unit.name}</h3>
+                      <h3 className={styles.unitName}>
+                        {unit.short ? (
+                          <>
+                            {unit.short.name}
+                            <span className={styles.unitNote}>
+                              {unit.short.note}
+                            </span>
+                          </>
+                        ) : (
+                          unit.name
+                        )}
+                      </h3>
                       <div className={styles.unitBody}>
                         {unit.blocks.map((block, i) => (
                           <Block block={block} key={i} />
