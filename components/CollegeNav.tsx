@@ -1,15 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, type ComponentType } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./CollegePlans.module.css";
-import { CampusHallIcon, CampusTreeIcon, ChevronDownIcon, MedicalCrossIcon } from "./icons";
+import { ChevronDownIcon } from "./icons";
 import type { CollegeCampus } from "@/lib/collegePlans";
-
-const ICONS: Record<CollegeCampus["id"], ComponentType<{ className?: string }>> = {
-  seoul: CampusHallIcon,
-  sejong: CampusTreeIcon,
-  medical: MedicalCrossIcon,
-};
 
 /** How long a college stays highlighted after a jump to it. */
 const FLASH_MS = 1800;
@@ -18,7 +12,9 @@ let flashTimer: ReturnType<typeof setTimeout> | undefined;
 
 function flash(target: Element) {
   if (!target.hasAttribute("data-unit")) return;
-  document.querySelectorAll("[data-flash]").forEach((el) => el.removeAttribute("data-flash"));
+  document
+    .querySelectorAll("[data-flash]")
+    .forEach((el) => el.removeAttribute("data-flash"));
   target.setAttribute("data-flash", "");
   clearTimeout(flashTimer);
   flashTimer = setTimeout(() => target.removeAttribute("data-flash"), FLASH_MS);
@@ -28,21 +24,28 @@ function scrollToId(id: string) {
   const target = document.getElementById(id);
   if (!target) return;
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  target.scrollIntoView({
+    behavior: reduce ? "auto" : "smooth",
+    block: "start",
+  });
   history.replaceState(null, "", `#${id}`);
   flash(target);
 }
 
 /**
- * The 단과대별 발전계획 page's tab bar: the three parts, each an icon and
- * its name (no numbers), sticky under the header, the current one marked
+ * The 단과대별 발전계획 page's tab bar: the three parts, each a dropdown
+ * chevron and its name (no numbers, no icons), sticky under the header, the current one marked
  * as you scroll. Each tab drops down the list of its colleges, schools or
  * hospitals (the booklet's "1.1 경영대학" … without the numbers); a pick
  * glides to it and briefly highlights it. Pressing a tab goes to the
  * part's top and opens its list; with a mouse the list also opens on
  * hover. The tab bar's look is P4-2's (PledgeNav).
  */
-export default function CollegeNav({ campuses }: { campuses: CollegeCampus[] }) {
+export default function CollegeNav({
+  campuses,
+}: {
+  campuses: CollegeCampus[];
+}) {
   const [active, setActive] = useState(campuses[0]?.id ?? null);
   const [activeUnit, setActiveUnit] = useState<string | null>(null);
   const [open, setOpen] = useState<CollegeCampus["id"] | null>(null);
@@ -116,7 +119,9 @@ export default function CollegeNav({ campuses }: { campuses: CollegeCampus[] }) 
 
   // Arriving on a college's address: Header has already scrolled to it.
   useEffect(() => {
-    const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    const target =
+      location.hash &&
+      document.getElementById(decodeURIComponent(location.hash.slice(1)));
     if (target) flash(target);
   }, []);
 
@@ -129,7 +134,8 @@ export default function CollegeNav({ campuses }: { campuses: CollegeCampus[] }) 
     setOpen(id);
   };
 
-  const canHover = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const canHover = () =>
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   const campus = campuses.find((c) => c.id === open);
 
@@ -144,7 +150,6 @@ export default function CollegeNav({ campuses }: { campuses: CollegeCampus[] }) 
     >
       <ul className={styles.tabList} ref={listRef}>
         {campuses.map((c) => {
-          const Icon = ICONS[c.id];
           const current = c.id === active;
           return (
             <li key={c.id}>
@@ -166,9 +171,8 @@ export default function CollegeNav({ campuses }: { campuses: CollegeCampus[] }) 
                   else openFor(c.id, e.currentTarget);
                 }}
               >
-                <Icon className={styles.tabIcon} />
-                {c.label}
                 <ChevronDownIcon className={styles.tabChevron} />
+                {c.label}
               </button>
             </li>
           );

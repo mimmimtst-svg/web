@@ -33,6 +33,9 @@ type RevealProps = {
  * (same rule as hooks/useEnterView.ts). Purely visual — it never reads or
  * changes scroll position.
  */
+/** 0, 1%, 2% … 15%. */
+const THRESHOLDS = Array.from({ length: 16 }, (_, i) => i / 100);
+
 export default function Reveal({
   children,
   className = "",
@@ -57,17 +60,17 @@ export default function Reveal({
 
     // In view once 15% of it shows — or, for a block taller than the
     // screen can ever show 15% of (단과대별 발전계획's 의료원 runs to
-    // several screens on a phone), once it fills a quarter of the screen.
-    // Hence the finer thresholds: each is a chance to check.
+    // several screens on a phone), once it fills a fifth of the screen.
+    // Hence the thresholds every 1%: each is a chance to check.
     const observer = new IntersectionObserver(
       ([entry]) => {
         const rootHeight = entry.rootBounds?.height ?? window.innerHeight;
         const enough =
-          entry.intersectionRatio >= 0.15 || entry.intersectionRect.height >= rootHeight * 0.25;
+          entry.intersectionRatio >= 0.15 || entry.intersectionRect.height >= rootHeight * 0.2;
         if (entry.isIntersecting && enough) setObservedVisible(true);
         else if (!entry.isIntersecting && entry.boundingClientRect.top > 0) setObservedVisible(false);
       },
-      { threshold: [0, 0.01, 0.02, 0.05, 0.1, 0.15], rootMargin: "0px 0px -10% 0px" }
+      { threshold: THRESHOLDS, rootMargin: "0px 0px -10% 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();

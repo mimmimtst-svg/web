@@ -37,9 +37,10 @@ function Block({ block }: { block: CollegeBlock }) {
  * 단과대별 발전계획 (menu, 2026-10-21): the booklet's chapter III in full,
  * laid out like P4-2 without its infographic — a sticky tab bar of the
  * three parts with a dropdown of each part's colleges (CollegeNav), then
- * each part: its heading, its opening text (세종, 의과대학/의료원), and
- * every college as a row, its name on the left (staying in view while
- * its text scrolls) and the booklet's whole text on the right.
+ * each part: its name in the left column with its opening text (세종,
+ * 의과대학/의료원) beside it, and every college as a row, its name on the
+ * left (staying in view while its text scrolls) and the booklet's whole
+ * text on the right.
  */
 export default function CollegePlans() {
   return (
@@ -59,27 +60,31 @@ export default function CollegePlans() {
             <div className={styles.inner}>
               <Reveal
                 as="header"
-                className={styles.partHead}
+                className={`${styles.unitGrid} ${styles.partHead}`}
                 visible={campusIndex === 0 ? true : undefined}
               >
                 <h2 className={styles.headline} id={`${campus.id}-title`}>
-                  {campus.title}
+                  {campus.label}
                 </h2>
-              </Reveal>
-
-              {campus.intro.length > 0 && (
-                <Reveal className={`${styles.unitGrid} ${styles.intro}`}>
+                {campus.intro.length > 0 && (
                   <div className={styles.unitBody}>
                     {campus.intro.map((block, i) => (
                       <Block block={block} key={i} />
                     ))}
                   </div>
-                </Reveal>
-              )}
+                )}
+              </Reveal>
 
-              <ol className={styles.units}>
+              <ol
+                className={`${styles.units} ${campus.intro.length > 0 ? styles.unitsRuled : ""}`}
+              >
                 {campus.units.map((unit) => (
-                  <li className={styles.unit} id={unit.id} data-unit="" key={unit.id}>
+                  <li
+                    className={styles.unit}
+                    id={unit.id}
+                    data-unit=""
+                    key={unit.id}
+                  >
                     <Reveal className={styles.unitGrid}>
                       <h3 className={styles.unitName}>{unit.name}</h3>
                       <div className={styles.unitBody}>

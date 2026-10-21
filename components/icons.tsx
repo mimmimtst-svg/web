@@ -271,7 +271,7 @@ export function LineDownloadIcon({ className }: IconProps) {
   );
 }
 
-/** 단과대별 발전계획 tabs: line icons in the download icon's manner. */
+/** A 24px line icon in the download icon's manner. */
 function LineIcon({ className, d }: IconProps & { d: string }) {
   return (
     <svg
@@ -289,36 +289,6 @@ function LineIcon({ className, d }: IconProps & { d: string }) {
         strokeLinejoin="round"
       />
     </svg>
-  );
-}
-
-/** 서울캠퍼스: a columned hall under a pediment. */
-export function CampusHallIcon({ className }: IconProps) {
-  return (
-    <LineIcon
-      className={className}
-      d="M3 9.5L12 4L21 9.5M4.5 9.5H19.5M6 12V17.5M10 12V17.5M14 12V17.5M18 12V17.5M3.5 20H20.5M4.5 17.5H19.5"
-    />
-  );
-}
-
-/** 세종캠퍼스: a building with a tree beside it. */
-export function CampusTreeIcon({ className }: IconProps) {
-  return (
-    <LineIcon
-      className={className}
-      d="M3.5 20V8.5L10 5V20M10 9.5H15.5V20M6 10.5H7.5M6 13.5H7.5M6 16.5H7.5M12.5 13H13M12.5 16H13M18.5 20V15.5M18.5 15.5C20 15.5 21 14.3 21 12.8C21 11.2 19.9 9.5 18.5 9.5C17.1 9.5 16 11.2 16 12.8C16 14.3 17 15.5 18.5 15.5ZM2.5 20H21.5"
-    />
-  );
-}
-
-/** 의과대학/의료원: a cross in a rounded square. */
-export function MedicalCrossIcon({ className }: IconProps) {
-  return (
-    <LineIcon
-      className={className}
-      d="M7 3.5H17C18.9 3.5 20.5 5.1 20.5 7V17C20.5 18.9 18.9 20.5 17 20.5H7C5.1 20.5 3.5 18.9 3.5 17V7C3.5 5.1 5.1 3.5 7 3.5ZM12 8V16M8 12H16"
-    />
   );
 }
 
