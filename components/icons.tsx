@@ -296,8 +296,3 @@ function LineIcon({ className, d }: IconProps & { d: string }) {
 export function ChevronDownIcon({ className }: IconProps) {
   return <LineIcon className={className} d="M6.5 9.5L12 15L17.5 9.5" />;
 }
-
-/** A small right chevron (more to the side). */
-export function ChevronRightIcon({ className }: IconProps) {
-  return <LineIcon className={className} d="M9.5 6.5L15 12L9.5 17.5" />;
-}

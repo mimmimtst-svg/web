@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./CollegePlans.module.css";
-import { ChevronDownIcon, ChevronRightIcon } from "./icons";
+import { ChevronDownIcon } from "./icons";
 import type { CollegeCampus } from "@/lib/collegePlans";
 
 /** How long a college stays highlighted after a jump to it. */
@@ -44,8 +44,9 @@ function scrollToId(id: string) {
  * name only goes to the part's top (2026-10-21: on a phone, a name that
  * also opened the list covered the very text it had just scrolled to);
  * with a mouse the list also opens on hover. On a phone an open list
- * closes once the page scrolls, and the bar scrolls sideways, a fade and
- * an arrow at the edge showing there is more. The look is P4-2's.
+ * closes once the page scrolls, and a long list (서울's twenty) scrolls
+ * inside a panel no taller than 세종's, with a scrollbar of its own that
+ * stays in view. The look is P4-2's.
  */
 export default function CollegeNav({
   campuses,
@@ -57,29 +58,33 @@ export default function CollegeNav({
   const [open, setOpen] = useState<CollegeCampus["id"] | null>(null);
   const [menuLeft, setMenuLeft] = useState(0);
   const [stuck, setStuck] = useState(false);
-  const [more, setMore] = useState({ before: false, after: false });
   const navRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [thumb, setThumb] = useState<{ top: number; height: number } | null>(
+    null,
+  );
 
-  // Whether the sideways-scrolling bar (phone) has more on either side.
-  useEffect(() => {
-    const list = listRef.current;
-    if (!list) return;
-    const update = () => {
-      const max = list.scrollWidth - list.clientWidth;
-      setMore({
-        before: list.scrollLeft > 2,
-        after: list.scrollLeft < max - 2,
-      });
-    };
-    update();
-    list.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => {
-      list.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
-  }, []);
+  // The open list's own scrollbar: a thumb sized and placed from the
+  // list's scroll position, shown only when there is more than fits.
+  const measureThumb = () => {
+    const el = scrollRef.current;
+    if (!el || el.scrollHeight <= el.clientHeight + 1) {
+      setThumb(null);
+      return;
+    }
+    const track = el.clientHeight - 20;
+    const height = Math.max(28, (track * el.clientHeight) / el.scrollHeight);
+    const top =
+      ((track - height) * el.scrollTop) / (el.scrollHeight - el.clientHeight);
+    setThumb({ top, height });
+  };
+  useLayoutEffect(() => {
+    if (!open) return;
+    measureThumb();
+    window.addEventListener("resize", measureThumb);
+    return () => window.removeEventListener("resize", measureThumb);
+  }, [open]);
 
   // The current part and college: the last whose top has passed a little
   // below the tab bar.
@@ -173,9 +178,7 @@ export default function CollegeNav({
 
   return (
     <nav
-      className={`${styles.tabs} ${stuck ? styles.tabsStuck : ""} ${
-        more.before ? styles.moreBefore : ""
-      } ${more.after ? styles.moreAfter : ""}`}
+      className={`${styles.tabs} ${stuck ? styles.tabsStuck : ""}`}
       ref={navRef}
       aria-label="단과대별 발전계획 캠퍼스"
       onMouseLeave={() => {
@@ -227,40 +230,53 @@ export default function CollegeNav({
           );
         })}
       </ul>
-      <span className={styles.edgeBefore} aria-hidden="true" />
-      <span className={styles.edgeAfter} aria-hidden="true">
-        <ChevronRightIcon />
-      </span>
       {campus && (
         <div
           className={`${styles.menu} ${campus.units.length > 8 ? styles.menuWide : ""}`}
           id={`${campus.id}-menu`}
           style={{ ["--menu-left" as string]: `${menuLeft}px` }}
         >
-          <ul className={styles.menuList}>
-            {campus.units.map((u) => (
-              <li key={u.id} className={u.short ? styles.menuSpan : undefined}>
-                <a
-                  className={`${styles.menuItem} ${u.id === activeUnit ? styles.menuItemActive : ""}`}
-                  href={`#${u.id}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setOpen(null);
-                    scrollToId(u.id);
-                  }}
+          <div
+            className={styles.menuScroll}
+            ref={scrollRef}
+            onScroll={measureThumb}
+          >
+            <ul className={styles.menuList}>
+              {campus.units.map((u) => (
+                <li
+                  key={u.id}
+                  className={u.short ? styles.menuSpan : undefined}
                 >
-                  {u.short ? (
-                    <>
-                      {u.short.name}
-                      <span className={styles.menuNote}>{u.short.note}</span>
-                    </>
-                  ) : (
-                    u.name
-                  )}
-                </a>
-              </li>
-            ))}
-          </ul>
+                  <a
+                    className={`${styles.menuItem} ${u.id === activeUnit ? styles.menuItemActive : ""}`}
+                    href={`#${u.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setOpen(null);
+                      scrollToId(u.id);
+                    }}
+                  >
+                    {u.short ? (
+                      <>
+                        {u.short.name}
+                        <span className={styles.menuNote}>{u.short.note}</span>
+                      </>
+                    ) : (
+                      u.name
+                    )}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {thumb && (
+            <div className={styles.menuTrack} aria-hidden="true">
+              <div
+                className={styles.menuThumb}
+                style={{ top: thumb.top, height: thumb.height }}
+              />
+            </div>
+          )}
         </div>
       )}
     </nav>

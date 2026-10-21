@@ -142,13 +142,6 @@
   outline-offset: -2px;
 }
 
-/* "More to the side" on a phone (shown in the portrait block only): a
-   fade at each edge that has more, an arrow on the right one. */
-.edgeBefore,
-.edgeAfter {
-  display: none;
-}
-
 /* The dropdown: under its tab (CollegeNav sets --menu-left), kept inside
    the content width. 서울캠퍼스's twenty colleges in two columns. Above
    the bar's shadow (.tabs::after), which otherwise greyed its top edge. */
@@ -158,13 +151,46 @@
   top: calc(100% - 6px);
   left: clamp(var(--space-page-x), var(--menu-left), calc(100% - 320px - var(--space-page-x)));
   width: 320px;
-  max-height: calc(100dvh - var(--header-height) - var(--tabs-h) - 24px);
-  overflow-y: auto;
-  padding: 8px;
   border-radius: 12px;
   background-color: var(--color-white);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
   animation: menuIn 180ms ease-out;
+}
+
+/* The list scrolls inside the panel when it is longer than the panel may
+   be. The browser's own scrollbar is hidden — iOS shows it only while
+   scrolling — and a thin bar of our own (CollegeNav) stays in view
+   whenever there is more, so the panel reads as scrollable. */
+.menuScroll {
+  max-height: calc(100dvh - var(--header-height) - var(--tabs-h) - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px;
+  scrollbar-width: none;
+}
+
+.menuScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.menuTrack {
+  position: absolute;
+  top: 10px;
+  right: 4px;
+  bottom: 10px;
+  width: 4px;
+  border-radius: 2px;
+  background-color: rgba(44, 44, 44, 0.06);
+  pointer-events: none;
+}
+
+.menuThumb {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border-radius: 2px;
+  background-color: rgba(44, 44, 44, 0.32);
 }
 
 /* 720px: room for "아세아문제연구원, 민족문화연구원, 글로벌일본문화연구원"
@@ -449,69 +475,31 @@ footer.footer {
     top: 0;
   }
 
-  /* The tabs at a comfortable size, scrolling sideways (2026-10-21: all
-     three squeezed into the width read cramped): 서울 and 세종 in full,
-     the third cut at the edge, where a fade and an arrow show there is
-     more. */
+  /* All three across a phone in one line (2026-10-21, kept after a
+     try at a sideways-scrolling bar): tighter pills, a touch smaller
+     type. */
   .tabList {
-    justify-content: flex-start;
-    gap: calc(4 * var(--mu));
-    padding: 0 calc(12 * var(--mu));
+    justify-content: space-between;
+    gap: 0;
+    padding: 0 calc(8 * var(--mu));
   }
 
   .tab {
-    font-size: calc(15.5 * var(--mu));
+    font-size: calc(15 * var(--mu));
+    letter-spacing: -0.02em;
   }
 
-  /* Each half a good finger's width. */
   .tabToggle {
-    padding: calc(9 * var(--mu)) calc(4 * var(--mu)) calc(9 * var(--mu)) calc(14 * var(--mu));
+    padding: calc(8 * var(--mu)) calc(2 * var(--mu)) calc(8 * var(--mu)) calc(9 * var(--mu));
   }
 
   .tabLabel {
-    padding: calc(9 * var(--mu)) calc(16 * var(--mu)) calc(9 * var(--mu)) calc(4 * var(--mu));
+    padding: calc(8 * var(--mu)) calc(12 * var(--mu)) calc(8 * var(--mu)) calc(2 * var(--mu));
   }
 
   .tabChevron {
-    width: calc(15 * var(--mu));
-    height: calc(15 * var(--mu));
-  }
-
-  .edgeBefore,
-  .edgeAfter {
-    position: absolute;
-    top: 0;
-    height: var(--tabs-h);
-    width: calc(56 * var(--mu));
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: calc(6 * var(--mu));
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 200ms ease;
-  }
-
-  .edgeBefore {
-    left: 0;
-    width: calc(32 * var(--mu));
-    background: linear-gradient(to right, var(--color-white), rgba(255, 255, 255, 0));
-  }
-
-  .edgeAfter {
-    right: 0;
-    background: linear-gradient(to left, var(--color-white) 45%, rgba(255, 255, 255, 0));
-    color: var(--color-label);
-  }
-
-  .edgeAfter svg {
-    width: calc(18 * var(--mu));
-    height: calc(18 * var(--mu));
-  }
-
-  .moreBefore .edgeBefore,
-  .moreAfter .edgeAfter {
-    opacity: 1;
+    width: calc(14 * var(--mu));
+    height: calc(14 * var(--mu));
   }
 
   /* Full width under the bar on a phone. */
@@ -520,8 +508,13 @@ footer.footer {
     left: calc(12 * var(--mu));
     right: calc(12 * var(--mu));
     width: auto;
-    max-height: calc(100dvh - 84 * var(--mu) - var(--tabs-h) - 24px);
-    padding: calc(6 * var(--mu));
+  }
+
+  /* No taller than 세종's six (2026-10-21: 서울's twenty filled the whole
+     screen); the rest scrolls inside, the bar on the right showing it. */
+  .menuScroll {
+    max-height: min(calc(6 * 44.5 * var(--mu) + 12 * var(--mu)), calc(100dvh - 84 * var(--mu) - var(--tabs-h) - 24px));
+    padding: calc(6 * var(--mu)) calc(12 * var(--mu)) calc(6 * var(--mu)) calc(6 * var(--mu));
   }
 
   .menuItem {
