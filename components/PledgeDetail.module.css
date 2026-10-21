@@ -349,9 +349,10 @@
   color: var(--color-muted);
 }
 
+/* No rule under the "+ 세부 공약" heading (2026-10-21; it was a 2px
+   light-gray one) — the first pledge's own padding sets it off. */
 .pledges {
-  margin-top: clamp(20px, 2vw, 28px);
-  border-top: 2px solid var(--color-light-gray);
+  margin-top: 8px;
   list-style: none;
 }
 
@@ -580,7 +581,7 @@ footer.footer {
   }
 
   .pledges {
-    margin-top: calc(14 * var(--mu));
+    margin-top: calc(4 * var(--mu));
   }
 
   .pledge {
