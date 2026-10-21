@@ -44,7 +44,7 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
   /* number · name · keywords · headline · boxes · more */
   grid-template-rows: repeat(6, auto);
-  gap: 0;
+  gap: 0 clamp(24px, 2.6vw, 52px);
   list-style: none;
 }
 
@@ -59,7 +59,10 @@
   display: grid;
   grid-template-rows: subgrid;
   align-content: start;
-  padding: clamp(20px, 3.4vh, 44px) clamp(20px, 1.8vw, 36px) clamp(18px, 2.8vh, 32px);
+  /* No side padding (2026-10-21): left over from the white cards, it
+     set the text 35px in from the page margin the header and other pages
+     use. The columns are spaced by the grid's gap instead. */
+  padding: clamp(20px, 3.4vh, 44px) 0 clamp(18px, 2.8vh, 32px);
   color: inherit;
 }
 
