@@ -176,6 +176,17 @@
   transition: background-color 200ms ease, color 200ms ease;
 }
 
+/* A long name's parenthesis, shortened out of the item: small and grey
+   under it ("연구소 교수" / 아세아문제연구원, …). */
+.menuNote {
+  display: block;
+  margin-top: 2px;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--color-label);
+}
+
 .menuItemActive {
   color: var(--color-key);
   font-weight: 700;
@@ -361,10 +372,13 @@
   margin-top: clamp(20px, 2vw, 28px);
 }
 
+/* Key red (2026-10-21: in black the sections lacked weight); the summary
+   under it stays in the body colour. */
 .groupTitle {
   font-weight: 700;
   font-size: clamp(1.1875rem, 1.08rem + 0.4vw, 1.4375rem);
   line-height: 1.45;
+  color: var(--color-key);
 }
 
 .groupTagline {
@@ -429,6 +443,10 @@ footer.footer {
   .menuItem {
     padding: calc(11 * var(--mu)) calc(12 * var(--mu));
     font-size: calc(15.5 * var(--mu));
+  }
+
+  .menuNote {
+    font-size: calc(12.5 * var(--mu));
   }
 
   .part {

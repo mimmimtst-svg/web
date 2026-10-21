@@ -196,7 +196,14 @@ export default function CollegeNav({
                     scrollToId(u.id);
                   }}
                 >
-                  {u.name}
+                  {u.menu ? (
+                    <>
+                      {u.menu.name}
+                      <span className={styles.menuNote}>{u.menu.note}</span>
+                    </>
+                  ) : (
+                    u.name
+                  )}
                 </a>
               </li>
             ))}
