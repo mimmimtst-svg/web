@@ -186,7 +186,7 @@ export default function CollegeNav({
         >
           <ul className={styles.menuList}>
             {campus.units.map((u) => (
-              <li key={u.id}>
+              <li key={u.id} className={u.menu ? styles.menuSpan : undefined}>
                 <a
                   className={`${styles.menuItem} ${u.id === activeUnit ? styles.menuItemActive : ""}`}
                   href={`#${u.id}`}

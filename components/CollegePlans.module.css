@@ -141,9 +141,11 @@
   animation: menuIn 180ms ease-out;
 }
 
+/* 720px: room for "아세아문제연구원, 민족문화연구원, 글로벌일본문화연구원"
+   on one line under "연구소 교수". */
 .menuWide {
-  left: clamp(var(--space-page-x), var(--menu-left), calc(100% - 660px - var(--space-page-x)));
-  width: 660px;
+  left: clamp(var(--space-page-x), var(--menu-left), calc(100% - 720px - var(--space-page-x)));
+  width: 720px;
 }
 
 @keyframes menuIn {
@@ -181,6 +183,7 @@
 .menuNote {
   display: block;
   margin-top: 2px;
+  white-space: nowrap;
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.45;
@@ -447,6 +450,12 @@ footer.footer {
 
   .menuNote {
     font-size: calc(12.5 * var(--mu));
+  }
+
+  /* Two columns are too narrow on a phone for the note on one line: that
+     item takes the full width. */
+  .menuWide .menuSpan {
+    grid-column: 1 / -1;
   }
 
   .part {
