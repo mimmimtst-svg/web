@@ -218,6 +218,24 @@ footer.footer {
     border-top: 1px solid var(--color-light-gray);
   }
 
+  /* Stacked, each panel comes in as it is reached: no panel-to-panel
+     stagger, only the short beat inside a panel. */
+  .panel {
+    transition-delay: 0ms !important;
+  }
+
+  .panel:nth-child(n) .titleBlock {
+    --rise-at: 0ms;
+  }
+
+  .panel:nth-child(n) .text {
+    --rise-at: 60ms;
+  }
+
+  .panel:nth-child(n) .more {
+    --rise-at: 120ms;
+  }
+
   .link {
     gap: calc(24 * var(--mu));
     padding: calc(44 * var(--mu)) calc(20 * var(--mu));

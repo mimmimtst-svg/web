@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode, type ElementType } from "react";
+import { PORTRAIT } from "@/hooks/useMediaQuery";
 
 type RevealProps = {
   children: ReactNode;
@@ -61,16 +62,22 @@ export default function Reveal({
     // In view once 15% of it shows — or, for a block taller than the
     // screen can ever show 15% of (단과대별 발전계획's 의료원 runs to
     // several screens on a phone), once it fills a fifth of the screen.
-    // Hence the thresholds every 1%: each is a chance to check.
+    // Hence the thresholds every 1%: each is a chance to check. On a phone
+    // it starts sooner — 8%, an eighth of the screen, measured nearly to
+    // the bottom edge (2026-10-21: the next block came in "a little
+    // late" while scrolling).
+    const phone = window.matchMedia(PORTRAIT).matches;
+    const share = phone ? 0.08 : 0.15;
+    const screenShare = phone ? 0.12 : 0.2;
     const observer = new IntersectionObserver(
       ([entry]) => {
         const rootHeight = entry.rootBounds?.height ?? window.innerHeight;
         const enough =
-          entry.intersectionRatio >= 0.15 || entry.intersectionRect.height >= rootHeight * 0.2;
+          entry.intersectionRatio >= share || entry.intersectionRect.height >= rootHeight * screenShare;
         if (entry.isIntersecting && enough) setObservedVisible(true);
         else if (!entry.isIntersecting && entry.boundingClientRect.top > 0) setObservedVisible(false);
       },
-      { threshold: THRESHOLDS, rootMargin: "0px 0px -10% 0px" }
+      { threshold: THRESHOLDS, rootMargin: phone ? "0px 0px -3% 0px" : "0px 0px -10% 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
