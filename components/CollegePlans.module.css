@@ -516,11 +516,16 @@ footer.footer {
     padding: calc(6 * var(--mu)) calc(18 * var(--mu)) calc(6 * var(--mu)) calc(6 * var(--mu));
   }
 
-  /* The second column starts further left, so its longer names
-     ("에너지환경대학원(그린스쿨)") keep clear of the scroll bar. */
+  /* The second column a little left of half, so its longest name
+     ("에너지환경대학원(그린스쿨)") ends as far from the scroll bar as the
+     first column starts from the panel's left edge (18mu). */
   .menuWide .menuList {
-    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
     column-gap: 0;
+  }
+
+  .menuWide .menuItem {
+    padding-right: calc(4 * var(--mu));
   }
 
   .menuItem {
@@ -532,10 +537,9 @@ footer.footer {
     font-size: calc(12.5 * var(--mu));
   }
 
-  /* Two columns are too narrow on a phone for the note on one line: that
-     item takes the full width. */
-  .menuWide .menuSpan {
-    grid-column: 1 / -1;
+  /* In a phone's two columns the note can't stay on one line. */
+  .menuNote {
+    white-space: normal;
   }
 
   .part {

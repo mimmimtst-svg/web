@@ -21,12 +21,16 @@ export default function DirectionPage() {
         <h1 className={styles.visuallyHidden}>발전 방향</h1>
         <ul className={styles.panels}>
           {planParts.map((part, index) => (
+            // The panel (its rule and background) only fades in where it
+            // stands; its text rises inside it (DirectionPage.module.css).
+            // Sliding the whole panel up carried its rule and white
+            // background over the footer (2026-10-21).
             <Reveal
               as="li"
               className={styles.panel}
               key={part.id}
               delay={index * 150}
-              distance="calc(80 * var(--u))"
+              distance={0}
               duration={1000}
             >
               <a className={styles.link} href={`../plan/#${part.id}`}>
