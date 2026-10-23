@@ -8,6 +8,7 @@
    section taller than the screen), so the cards get its height. */
 .section {
   width: 100%;
+  min-height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -15,12 +16,21 @@
   background-color: var(--color-white);
 }
 
+/* 2026-10-23: when the cards are at full size with room to spare, the
+   footer comes up under them instead of waiting below a white gap; if
+   it all fits, it sits at the bottom of the screen. */
+.section > footer {
+  margin-top: auto;
+}
+
 /* Everything except <Footer>. This is the last page, so it has no
    ScrollDownIndicator — there's nowhere further to scroll. */
+/* At most one screen; less once the cards reach full size (the track
+   asks for no more than they need), so the footer follows them. */
 .contentWrap {
   position: relative;
   flex: 0 0 auto;
-  height: calc(100dvh - var(--header-height) - 40 * var(--u));
+  max-height: calc(100dvh - var(--header-height) - 40 * var(--u));
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -113,7 +123,16 @@
    It's a size container so the cards can scale to the height left over
    above the footer (the track's own 44cu bottom padding is the gap). */
 .trackOuter {
-  flex: 1 1 auto;
+  /* Card size in Figma px; .track scales it by --cu. */
+  --card-w: 504;
+  /* The longest card (04, 14 pledges since 2026-10-23): its last line
+     + 32 below. */
+  --card-h: 686;
+  flex: 0 1 auto;
+  /* What the cards need at full size (card + 60 of padding), or less
+     where the screen's width caps them; shrinks to fit a shorter
+     screen, the cards scaling down with it. */
+  height: calc((var(--card-h) + 60) * min(1px, (100vw - 80px) / var(--card-w)));
   min-height: 0;
   width: 100%;
   container-type: size;
@@ -128,10 +147,6 @@
      the carousel has (card + 60 Figma px of padding), capped at
      Figma's own size and at one card fitting across the screen. */
   --cu: min(1px, calc(100cqh / (var(--card-h) + 60)), calc((100vw - 80px) / var(--card-w)));
-  --card-w: 504;
-  /* The longest card (04, 14 pledges since 2026-10-23): its last line
-     + 32 below. */
-  --card-h: 686;
   height: 100%;
   display: flex;
   align-items: flex-start;
@@ -385,6 +400,7 @@
    the mobile card isn't a uniform scale of the 504 x 624 one. */
 @media (orientation: portrait) {
   .section {
+    min-height: 0;
     padding-top: calc(20 * var(--mu));
   }
 
@@ -418,6 +434,7 @@
 
   .trackOuter {
     flex: 0 0 auto;
+    height: auto;
     container-type: normal;
   }
 
@@ -456,9 +473,12 @@
     gap: calc(4 * var(--mu)) calc(12 * var(--mu));
   }
 
+  /* One type scale for P2–P4 on a phone (2026-10-23): titles 18 (700),
+     body 15.5 (400), small labels 13.5. */
   .cardNumber,
   .cardTitle {
-    font-size: calc(20 * var(--mu));
+    font-weight: 700;
+    font-size: calc(18 * var(--mu));
   }
 
   .cardHeadLink svg {
@@ -476,7 +496,7 @@
   }
 
   .categoryLabel {
-    font-size: calc(13 * var(--mu));
+    font-size: calc(13.5 * var(--mu));
     line-height: 1.5;
   }
 
@@ -495,6 +515,7 @@
   }
 
   .categoryItem > span {
+    font-weight: 400;
     font-size: calc(15.5 * var(--mu));
     line-height: 1.55;
   }

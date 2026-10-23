@@ -228,10 +228,13 @@
     --reveal-ease: cubic-bezier(0.42, 0, 0.58, 1);
   }
 
+  /* 2026-10-23: one type scale for P2–P4 on a phone — titles 18 (700),
+     body 15.5 (400), small labels 13.5. */
   .itemNumber {
     flex-basis: calc(58 * var(--mu));
+    font-weight: 700;
     font-size: calc(18 * var(--mu));
-    line-height: 1.333;
+    line-height: 1.444;
   }
 
   /* Mobile keeps the title over its points. */
@@ -242,9 +245,10 @@
   }
 
   .itemTitle {
+    font-weight: 700;
     font-size: calc(18 * var(--mu));
     line-height: 1.444;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.02em;
     text-align: left;
     /* No justify here, so break between words again (Figma: "학교
        행정을 / 원점에서부터"), not mid-word. */
@@ -257,8 +261,9 @@
 
   .itemPoints {
     padding-top: 0;
-    font-size: calc(12.5 * var(--mu));
-    line-height: 1.6;
+    font-weight: 400;
+    font-size: calc(15.5 * var(--mu));
+    line-height: 1.55;
   }
 
   .itemPoints li {

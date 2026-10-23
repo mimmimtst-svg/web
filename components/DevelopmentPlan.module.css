@@ -283,12 +283,14 @@
     font-size: calc(48 * var(--mu));
   }
 
+  /* One type scale for P2–P4 on a phone (2026-10-23): titles 18, body
+     15.5, small labels 13.5. */
   .cardSubtitle {
-    font-size: calc(20 * var(--mu));
+    font-size: calc(18 * var(--mu));
   }
 
   .cardDesc {
-    font-size: calc(16 * var(--mu));
+    font-size: calc(15.5 * var(--mu));
     line-height: 1.375;
   }
 
