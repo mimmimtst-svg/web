@@ -8,7 +8,9 @@ import CandidateTabs from "./CandidateTabs";
 import PressTabs from "./PressTabs";
 import PressList from "./PressList";
 import { ProfileCv, ProfileIntro } from "./ProfilePage";
+import QnaDots from "./QnaDots";
 import { pressColumns, pressReports } from "@/lib/pressData";
+import { pledgeParts } from "@/lib/pledgeDetail";
 import { withBasePath } from "@/lib/basePath";
 import {
   greeting,
@@ -16,6 +18,7 @@ import {
   qna,
   recommendationNote,
   recommendations,
+  type RelatedPledge,
   type Rich,
   type TextBlock,
 } from "@/lib/candidateData";
@@ -133,24 +136,54 @@ function Motivation() {
   );
 }
 
-/** IV. Q&A: the seven questions as a list to jump from, then each answer
-    — opening, numbered parts with their points, closing — and the
-    related pledges, each opening its page. */
+/** Q&A's related pledges grouped under their policy area — the booklet's
+    code ("1-1") starts with the area's number (01 선도적 연구 …) — in the
+    areas' order; the college plans, which have no code, last. */
+function RelatedPledges({ items }: { items: RelatedPledge[] }) {
+  const groups = new Map<string, RelatedPledge[]>();
+  for (const item of items) {
+    const key = item.code ? item.code.split("-")[0].padStart(2, "0") : "";
+    groups.set(key, [...(groups.get(key) ?? []), item]);
+  }
+  const keys = [...groups.keys()].sort((a, b) => (a && b ? a.localeCompare(b) : a ? -1 : 1));
+  return (
+    <div className={styles.related}>
+      <p className={styles.relatedLabel}>관련 공약</p>
+      {keys.map((key) => {
+        const part = pledgeParts.find((p) => p.number === key);
+        return (
+          <div className={styles.relatedGroup} key={key}>
+            <p className={styles.relatedArea}>
+              {part ? (
+                <>
+                  <span className={styles.relatedAreaNum}>{part.number}</span>
+                  {part.title}
+                </>
+              ) : (
+                "단과대별 발전계획"
+              )}
+            </p>
+            <ul className={styles.relatedList}>
+              {groups.get(key)!.map((item) => (
+                <li key={item.text}>
+                  {item.href ? <a href={item.href}>{item.text}</a> : <span>{item.text}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** IV. Q&A: each question — opening, numbered parts with their points,
+    closing — and its related pledges by policy area, each opening its
+    page; dots at the right edge go from question to question. */
 function QnaList() {
   return (
     <div className={styles.text}>
-      <nav className={styles.qIndex} aria-label="질문 목록">
-        <ol>
-          {qna.map((q, i) => (
-            <li key={q.id}>
-              <a href={`#${q.id}`}>
-                <span className={styles.qNum}>Q{i + 1}</span>
-                {q.question}
-              </a>
-            </li>
-          ))}
-        </ol>
-      </nav>
+      <QnaDots items={qna.map(({ id, question }) => ({ id, question }))} />
       {qna.map((q, i) => (
         <article className={styles.qa} id={q.id} key={q.id} aria-labelledby={`${q.id}-title`}>
           <h2 className={styles.question} id={`${q.id}-title`}>
@@ -168,16 +201,7 @@ function QnaList() {
             </section>
           ))}
           <Blocks blocks={q.outro} />
-          <div className={styles.related}>
-            <p className={styles.relatedLabel}>관련 공약</p>
-            <ul className={styles.relatedList}>
-              {q.related.map((item) => (
-                <li key={item.text}>
-                  {item.href ? <a href={item.href}>{item.text}</a> : <span>{item.text}</span>}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <RelatedPledges items={q.related} />
         </article>
       ))}
     </div>
