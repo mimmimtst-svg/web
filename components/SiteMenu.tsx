@@ -11,18 +11,17 @@ import { MENU_OPEN_ATTR } from "@/lib/menuState";
     relative to the main page (e.g. "direction/"). */
 type MenuItem = { label: string; target?: string; page?: string };
 
-// Figma hamburger (697:6208); labels final as of 2026-10-17 (the
-// parentheses were placeholders). 유 병 현 opens the profile page,
-// 발전 방향 the P2-1 page, 주요 공약 the P4-1 overview (which leads on to
-// P4-2), 단과대별 발전계획 the colleges page (2026-10-21), 발전계획서
-// the download page, 언론 보도 자료 the press page.
+// Figma hamburger (697:6208). Labels renamed 2026-10-23 (same pages):
+// 후보자 소개 opens the profile page, 여섯 가지 약속 the P2-1 page
+// (direction/), 주요 공약 the P4-1 overview (which leads on to P4-2),
+// 단과대별 발전계획 the colleges page, 공약집 다운로드 the download page.
+// 언론 보도 자료 is off the menu for now; its page (press/) stays.
 const MENU_ITEMS: MenuItem[] = [
-  { label: "유 병 현", page: "profile/" },
-  { label: "발전 방향", page: "direction/" },
+  { label: "후보자 소개", page: "profile/" },
+  { label: "여섯 가지 약속", page: "direction/" },
   { label: "주요 공약", page: "pledges/" },
   { label: "단과대별 발전계획", page: "colleges/" },
-  { label: "발전계획서", page: "development-plan/" },
-  { label: "언론 보도 자료", page: "press/" },
+  { label: "공약집 다운로드", page: "development-plan/" },
 ];
 
 // Keys that would scroll the page behind the open menu.
