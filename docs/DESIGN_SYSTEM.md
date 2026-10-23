@@ -151,14 +151,14 @@ intercept = min - slope * 390
 - 제목 폰트 크기: `--fs-section-title`, weight 400, `text-transform: uppercase`(국문에는 영향 없음, 영문 대비용으로 유지)
 
 ### 4.2 카드
-- **풀블리드 포토 카드** (`DevelopmentPlan`): Figma 2026-09-28 동기화로 "상단 텍스트 + 하단 이미지" 구조에서 바뀐 새 기본형. 카드 전체를 사진 한 장이 채우고(`position:absolute;inset:0;object-fit:cover`) 그 위에 `rgba(0,0,0,0.5)` 오버레이, 그 위에 중앙 정렬된 흰 텍스트(제목 굵고 아주 크게 + 부제 + 설명 + 링크)가 얹힌다. radius 20px(카드형 콘텐츠 중 가장 큰 radius — 예전 `--radius-card` 10px보다 두 배 크다). 구조:
+- **풀블리드 포토 카드** (`DevelopmentPlan`): Figma 2026-09-28 동기화로 "상단 텍스트 + 하단 이미지" 구조에서 바뀐 새 기본형. 카드 전체를 사진 한 장이 채우고(`position:absolute;inset:0;object-fit:cover`) 그 위에 `rgba(0,0,0,0.58)` 오버레이(2026-10-23 밝은 캠퍼스 사진으로 바꾸며 0.5 → 0.58), 그 위에 중앙 정렬된 흰 텍스트(제목 굵고 아주 크게 + 부제 + 설명 + 링크)가 얹힌다. radius 20px(카드형 콘텐츠 중 가장 큰 radius — 예전 `--radius-card` 10px보다 두 배 크다). 구조:
   ```
   .card { position: relative; aspect-ratio: <w>/<h>; border-radius: 20px; overflow: hidden; isolation: isolate; }
   .cardBg      { position: absolute; inset: 0; object-fit: cover; z-index: -2; }
-  .cardOverlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: -1; }
+  .cardOverlay { position: absolute; inset: 0; background: rgba(0,0,0,0.58); z-index: -1; }
   .cardContent { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
   ```
-  여러 카드가 같은 배경 사진을 공유할 수 있다(Figma가 실제로 그렇게 되어 있으면 억지로 카드마다 다른 사진을 배정하지 않는다 — `lib/policyData.ts`의 `planCards`가 셋 다 `plan-card-bg.png`를 쓰는 게 그 예).
+  여러 카드가 같은 배경 사진을 공유할 수 있다(Figma가 실제로 그렇게 되어 있으면 억지로 카드마다 다른 사진을 배정하지 않는다). P2 `planCards`는 2026-10-23 사용자 요청으로 카드마다 다른 사진 — 다함께 = 서울캠퍼스(`plan-card-seoul-2026-10-23.webp`), 나답게 = 세종캠퍼스(`plan-card-sejong-…`), 더높게 = 의료원(`plan-card-medical-…`). 받은 원본이 가로 500~616px라 카드(세로형)에 맞춰 잘리고 조금 확대된다 — 더 큰 원본이 오면 같은 이름 규칙(새 날짜)으로 교체.
 - **데이터 카드** (`PolicyCarousel`): 흰 배경, radius 14px(모던화 허용 범위), 상단 넘버+제목(key 컬러), 카테고리별 체크리스트, 하단 링크. **텍스트/구조는 Figma 그대로, 비주얼만 모던화된 예시**이므로 향후 카드형 콘텐츠 추가 시 이 패턴을 기본값으로 쓴다.
 
 ### 4.3 버튼 / 링크

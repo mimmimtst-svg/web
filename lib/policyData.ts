@@ -267,7 +267,8 @@ export type PlanCard = {
 // 나답게 → 앞으로 and gave all three the same full-bleed background photo
 // (previously campus-tiger/campus-aerial alternated per card). 앞으로 was
 // renamed 더높게 on 2026-10-17. Each card opens its part of the P2-2
-// detail page (app/plan).
+// detail page (app/plan). 2026-10-23: one photo per card instead — 서울
+// campus, 세종 campus, 의료원 (in card order), under the same dark overlay.
 export const planCards: PlanCard[] = [
   {
     detailId: "together",
@@ -275,7 +276,7 @@ export const planCards: PlanCard[] = [
     subtitle: "조화로운 다양성",
     description:
       "서로 다르기 때문에 더 강하고, 함께하기 때문에 더 멀리 나아가는 고려대학교를 만들겠습니다",
-    image: "/images/plan-card-bg.png",
+    image: "/images/plan-card-seoul-2026-10-23.webp",
   },
   {
     detailId: "essence",
@@ -283,7 +284,7 @@ export const planCards: PlanCard[] = [
     subtitle: "대학의 본질 회복",
     description:
       "내적 충실함을 바탕으로 고려대학교가 더욱 고려대학교답게 발전하도록 하겠습니다",
-    image: "/images/plan-card-bg.png",
+    image: "/images/plan-card-sejong-2026-10-23.webp",
   },
   {
     detailId: "higher",
@@ -291,6 +292,6 @@ export const planCards: PlanCard[] = [
     subtitle: "한계를 넘는 도약",
     description:
       "우리 스스로 키운 실력과 함께 모은 힘으로 한계를 넘어 도약하는 고려대학교를 만들겠습니다",
-    image: "/images/plan-card-bg.png",
+    image: "/images/plan-card-medical-2026-10-23.webp",
   },
 ];
