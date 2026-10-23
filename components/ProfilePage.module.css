@@ -16,6 +16,11 @@
   background-color: var(--color-card-bg);
 }
 
+/* Under the 후보자 소개 tab bar: the bar already clears the header. */
+.introUnderBar {
+  padding-top: clamp(32px, 5vh, 64px);
+}
+
 .introInner {
   max-width: var(--profile-max);
   margin: 0 auto;
@@ -282,6 +287,10 @@ footer.footer {
 @media (orientation: portrait) {
   .intro {
     padding: calc(84 * var(--mu) + 32 * var(--mu)) calc(20 * var(--mu)) 0;
+  }
+
+  .introUnderBar {
+    padding-top: calc(32 * var(--mu));
   }
 
   /* Name and contacts first, the portrait standing at the bottom. */

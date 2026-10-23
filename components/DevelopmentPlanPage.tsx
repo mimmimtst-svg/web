@@ -14,7 +14,7 @@ const PLAN_PDF_NAME = "유병현_고려대학교_발전계획서.pdf";
 const hasPlanPdf = existsSync(join(process.cwd(), "public", PLAN_PDF));
 
 /**
- * 발전계획서 (menu): the press page's frame — centred title on a white
+ * 공약집 다운로드 (menu; 발전계획서 until 2026-10-23): the press page's frame — centred title on a white
  * page — over one box: the booklet's slogan and a PDF download button.
  */
 export default function DevelopmentPlanPage() {
@@ -23,7 +23,7 @@ export default function DevelopmentPlanPage() {
       <Header homeHref="../" solid />
       <main className={styles.page}>
         <div className={styles.inner}>
-          <h1 className={styles.heading}>발전계획서</h1>
+          <h1 className={styles.heading}>공약집 다운로드</h1>
           <div className={styles.cardWrap}>
             <section className={styles.card}>
               <LineDownloadIcon className={styles.icon} />

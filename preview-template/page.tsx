@@ -5,7 +5,8 @@ import SiteHome from "@/components/SiteHome";
  * Unlisted preview of the full site while "/" shows the coming-soon page
  * (lib/siteMode.ts). This folder is a template, not a route: the GitHub
  * Pages workflow copies it to app/<secret path>/ at build time (this
- * file → the main page, profile/ → the profile, direction/ → P2-1,
+ * file → the main page, profile/ → 후보자 소개 in progress (the public
+ * /profile/ keeps the current page), direction/ → P2-1,
  * plan/ → P2-2, press/ → the press page, development-plan/ → the
  * 발전계획서 download page, pledges/ → P4-1, pledges/detail/ →
  * P4-2),

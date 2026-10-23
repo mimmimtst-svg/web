@@ -8,7 +8,7 @@ import { SITE_PRIVATE } from "@/lib/siteMode";
 // (preview-template/development-plan/page.tsx).
 export const metadata: Metadata = SITE_PRIVATE
   ? { robots: { index: false, follow: false } }
-  : { title: "발전계획서 | 유병현" };
+  : { title: "공약집 다운로드 | 유병현" };
 
 export default function Page() {
   return SITE_PRIVATE ? <ComingSoon /> : <DevelopmentPlanPage />;

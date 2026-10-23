@@ -1,0 +1,156 @@
+/* 후보자 소개, work in progress (components/CandidatePage.tsx): the profile
+   page with a menu bar on top. The bar is P4-2's (sticky under the header,
+   light-gray pill for the current tab, a soft shadow once the page scrolls
+   under it); the panels reuse the profile and press pages' own styles. */
+/* Grows to fill the screen, so a short tab keeps the footer at the
+   bottom. */
+.page {
+  --tabs-h: 64px;
+  flex: 1 0 auto;
+  padding-top: var(--header-height);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Menu bar ---------- */
+.tabs {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 20;
+  background-color: rgba(255, 255, 255, 0.96);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: top 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tabs::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: min(1200px, 100%);
+  height: 18px;
+  background: radial-gradient(ellipse 50% 100% at 50% 0, rgba(0, 0, 0, 0.13), rgba(0, 0, 0, 0));
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+  transition: opacity 300ms ease;
+}
+
+.tabsStuck::after {
+  opacity: 1;
+}
+
+.tabList {
+  max-width: 1200px;
+  height: var(--tabs-h);
+  margin: 0 auto;
+  padding: 0 var(--space-page-x);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabList::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex: 0 0 auto;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: var(--color-label);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 250ms ease, color 250ms ease;
+}
+
+.tabActive {
+  background-color: rgba(44, 44, 44, 0.07);
+  color: var(--color-charcoal);
+}
+
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--color-charcoal);
+  }
+}
+
+.tab:focus-visible {
+  outline: 1px solid var(--color-charcoal);
+  outline-offset: -2px;
+}
+
+/* ---------- Panels ---------- */
+/* 언론 기고: the press page's list in the profile's width. */
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(40px, 6vh, 88px) var(--space-page-x) clamp(72px, 10vh, 140px);
+}
+
+/* A tab still waiting for its text. */
+.pending {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px var(--space-page-x);
+  font-family: var(--font-kr);
+  font-size: 1.0625rem;
+  color: var(--color-label);
+}
+
+/* ---------- Mobile layout (portrait) ---------- */
+@media (orientation: portrait) {
+  .page {
+    --tabs-h: calc(52 * var(--mu));
+    padding-top: calc(84 * var(--mu));
+  }
+
+  /* Follows the header, which slides away while scrolling down. */
+  .tabs {
+    top: calc(84 * var(--mu));
+  }
+
+  :global(html[data-header-hidden]) .tabs {
+    top: 0;
+  }
+
+  /* Six don't fit across a phone: the bar scrolls sideways. */
+  .tabList {
+    justify-content: flex-start;
+    gap: calc(2 * var(--mu));
+    padding: 0 calc(12 * var(--mu));
+  }
+
+  .tab {
+    padding: calc(8 * var(--mu)) calc(14 * var(--mu));
+    font-size: calc(15 * var(--mu));
+  }
+
+  .inner {
+    padding: calc(32 * var(--mu)) calc(20 * var(--mu)) calc(56 * var(--mu));
+  }
+
+  .pending {
+    min-height: 40vh;
+    font-size: calc(15.5 * var(--mu));
+  }
+}
