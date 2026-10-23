@@ -127,12 +127,20 @@ export default function PledgeDetail() {
                       <div className={styles.pledgeBody}>
                         <p className={styles.pledgeLead}>{pledge.lead}</p>
                         <ul className={styles.pledgePoints}>
-                          {pledge.points.map((point) => (
-                            <li key={point}>
-                              <CheckIcon />
-                              <span>{point}</span>
-                            </li>
-                          ))}
+                          {pledge.points.map((point) =>
+                            // "■ …" heads a group of the points below it
+                            // (the booklet's own subheadings, 3-9 and 5-7).
+                            point.startsWith("■ ") ? (
+                              <li className={styles.pointGroup} key={point}>
+                                {point.slice(2)}
+                              </li>
+                            ) : (
+                              <li key={point}>
+                                <CheckIcon />
+                                <span>{point}</span>
+                              </li>
+                            ),
+                          )}
                         </ul>
                       </div>
                     </Reveal>

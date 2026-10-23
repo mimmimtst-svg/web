@@ -426,6 +426,17 @@
   color: var(--color-key);
 }
 
+/* A subheading among the points ("■ 예비창업자 지원"): bold, no check,
+   a little air above when it follows points. */
+.pledgePoints .pointGroup {
+  font-weight: 700;
+  color: var(--color-charcoal);
+}
+
+.pledgePoints li + .pointGroup {
+  margin-top: 10px;
+}
+
 /* Room on the right for the back-to-top button. */
 footer.footer {
   padding-right: calc(var(--detail-float-x) + 52px + 16px);
@@ -615,6 +626,10 @@ footer.footer {
 
   .pledgePoints svg {
     width: calc(11 * var(--mu));
+  }
+
+  .pledgePoints li + .pointGroup {
+    margin-top: calc(8 * var(--mu));
   }
 
   footer.footer {
