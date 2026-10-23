@@ -8,7 +8,7 @@ import CandidateTabs from "./CandidateTabs";
 import PressTabs from "./PressTabs";
 import PressList from "./PressList";
 import { ProfileCv, ProfileIntro } from "./ProfilePage";
-import QnaDots from "./QnaDots";
+import QnaNav from "./QnaNav";
 import { pressColumns, pressReports } from "@/lib/pressData";
 import { pledgeAnchor, pledgeParts } from "@/lib/pledgeDetail";
 import { withBasePath } from "@/lib/basePath";
@@ -186,11 +186,12 @@ function RelatedPledges({ items }: { items: RelatedPledge[] }) {
 
 /** IV. Q&A: each question — opening, numbered parts with their points,
     closing — and its related pledges by policy area, each opening its
-    page; dots at the right edge go from question to question. */
+    page; QnaNav goes from question to question (dots on a wide screen,
+    a drop-down bar on a phone). */
 function QnaList() {
   return (
     <div className={styles.text}>
-      <QnaDots items={qna.map(({ id, question }) => ({ id, question }))} />
+      <QnaNav items={qna.map(({ id, question }) => ({ id, question }))} />
       {qna.map((q, i) => (
         <article className={styles.qa} id={q.id} key={q.id} aria-labelledby={`${q.id}-title`}>
           <h2 className={styles.question} id={`${q.id}-title`}>

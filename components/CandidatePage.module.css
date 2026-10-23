@@ -359,6 +359,11 @@
   transform: translate(0, -50%);
 }
 
+/* The phone's question bar (QnaNav); wide screens use the dots. */
+.qBar {
+  display: none;
+}
+
 .qNum {
   flex: 0 0 auto;
   min-width: 2.2em;
@@ -711,27 +716,94 @@
     order: 0;
   }
 
-  /* The dots in the page's right margin, smaller; no labels (no hover). */
+  /* No dots on a phone (2026-10-23: they meant nothing there) — a bar
+     stuck under the tab bar names the question being read and drops
+     down the seven to pick from. */
   .qDots {
-    right: calc(1 * var(--mu));
-  }
-
-  .qDot {
-    width: calc(18 * var(--mu));
-    height: calc(22 * var(--mu));
-  }
-
-  .qDot::before {
-    width: calc(6 * var(--mu));
-    height: calc(6 * var(--mu));
-  }
-
-  .qDotActive::before {
-    height: calc(16 * var(--mu));
-  }
-
-  .qDotLabel {
     display: none;
+  }
+
+  .qBar {
+    display: block;
+    position: sticky;
+    top: calc(84 * var(--mu) + var(--tabs-h));
+    z-index: 15;
+    margin: calc(-36 * var(--mu)) calc(-20 * var(--mu)) calc(28 * var(--mu));
+    background-color: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 calc(8 * var(--mu)) calc(14 * var(--mu)) calc(-10 * var(--mu)) rgba(0, 0, 0, 0.18);
+    transition: top 350ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  :global(html[data-header-hidden]) .qBar {
+    top: var(--tabs-h);
+  }
+
+  .qBarButton {
+    display: flex;
+    align-items: center;
+    gap: calc(10 * var(--mu));
+    width: 100%;
+    padding: calc(12 * var(--mu)) calc(20 * var(--mu));
+    border: 0;
+    background: none;
+    font-family: var(--font-kr);
+    font-weight: 600;
+    font-size: calc(15.5 * var(--mu));
+    line-height: 1.4;
+    color: var(--color-charcoal);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .qBarText {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .qBarChevron {
+    flex: 0 0 auto;
+    width: calc(18 * var(--mu));
+    height: calc(18 * var(--mu));
+    color: var(--color-label);
+    transition: transform 250ms ease;
+  }
+
+  .qBarChevronOpen {
+    transform: rotate(180deg);
+  }
+
+  .qBarList {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    max-height: 65vh;
+    overflow-y: auto;
+    padding: calc(6 * var(--mu)) 0 calc(10 * var(--mu));
+    list-style: none;
+    background-color: var(--color-white);
+    border-radius: 0 0 calc(14 * var(--mu)) calc(14 * var(--mu));
+    box-shadow: 0 calc(12 * var(--mu)) calc(24 * var(--mu)) rgba(0, 0, 0, 0.16);
+  }
+
+  .qBarList a {
+    display: flex;
+    gap: calc(10 * var(--mu));
+    padding: calc(10 * var(--mu)) calc(20 * var(--mu));
+    font-family: var(--font-kr);
+    font-size: calc(15.5 * var(--mu));
+    line-height: 1.5;
+    color: var(--color-line);
+    word-break: keep-all;
+  }
+
+  .qBarList .qBarItemActive {
+    font-weight: 700;
+    color: var(--color-charcoal);
+    background-color: var(--color-card-bg);
   }
 
   .qa + .qa {
@@ -739,7 +811,8 @@
   }
 
   .qa {
-    scroll-margin-top: calc(84 * var(--mu) + var(--tabs-h) + 16 * var(--mu));
+    /* Clear of the header, the tab bar and the question bar. */
+    scroll-margin-top: calc(84 * var(--mu) + var(--tabs-h) + 66 * var(--mu));
   }
 
   .question {
