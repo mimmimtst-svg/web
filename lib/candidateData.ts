@@ -13,9 +13,9 @@ export type TextBlock =
   | { type: "list"; items: string[] };
 
 /** A related pledge: the booklet's code ("1-1": its first number is the
-    policy area, 01 선도적 연구 …), its title, and `href` to open it on
-    the site — P4-2's pledge of that title (the numbers within an area
-    differ from P4-2's), or the college plans for the one without a code. */
+    policy area, 01 선도적 연구 …) — the same codes as the 주요 공약 page,
+    whose entry it opens — and its title; `href` only for the one without a
+    code (the college plans). */
 export type RelatedPledge = { code?: string; text: string; href?: string };
 
 export type Qna = {
@@ -165,47 +165,38 @@ export const qna: Qna[] = [
       {
         code: "1-1",
         text: "단과대별 연구기금 조성 및 기본연구비 신설",
-        href: "../pledges/detail/#pledge-1-1",
       },
       {
         code: "1-2",
         text: "연구동 신축 추진 및 안정적 연구 공간 확보",
-        href: "../pledges/detail/#pledge-1-2",
       },
       {
         code: "1-3",
         text: "연구활동 및 성과 지원",
-        href: "../pledges/detail/#pledge-1-3",
       },
       {
         code: "1-5",
         text: "학문후속세대 지원체계 구축",
-        href: "../pledges/detail/#pledge-1-5",
       },
       {
         code: "1-6",
         text: "KU Grand Challenge 융합연구 프로그램 신설",
-        href: "../pledges/detail/#pledge-1-6",
       },
       {
         code: "1-9",
         text: "World Class 석학 특별채용 프로그램 도입",
-        href: "../pledges/detail/#pledge-1-9",
       },
       {
         code: "1-11",
         text: "국제 공동연구 Seed Fund를 글로벌 대형연구로 연결",
-        href: "../pledges/detail/#pledge-1-11",
       },
       {
         code: "1-12",
         text: "AI 기반 연구 인프라 구축 및 KU AI-RG 도입",
-        href: "../pledges/detail/#pledge-1-12",
       },
       {
         code: "4-3",
         text: "산학협력단 행정 혁신",
-        href: "../pledges/detail/#pledge-4-2",
       },
     ],
   },
@@ -325,22 +316,18 @@ export const qna: Qna[] = [
       {
         code: "1-12",
         text: "AI 기반 연구 인프라 구축 및 KU AI-RG 도입",
-        href: "../pledges/detail/#pledge-1-12",
       },
       {
         code: "2-4",
         text: "AI 교육혁신센터",
-        href: "../pledges/detail/#pledge-2-4",
       },
       {
         code: "4-6",
         text: "AI·디지털 기반 미래형 행정체계 구축",
-        href: "../pledges/detail/#pledge-4-8",
       },
       {
         code: "4-14",
         text: "‘AI 혁신 전략위원회’ 설치",
-        href: "../pledges/detail/#pledge-5-19",
       },
       {
         text: "공과대학·정보대학·정보보호대학원·의료원·세종캠퍼스 등 발전계획",
@@ -456,32 +443,26 @@ export const qna: Qna[] = [
       {
         code: "2-3",
         text: "스스로 설계하는 전공과 학업",
-        href: "../pledges/detail/#pledge-2-3",
       },
       {
         code: "2-4",
         text: "AI 교육혁신센터",
-        href: "../pledges/detail/#pledge-2-4",
       },
       {
         code: "2-5",
         text: "한 사람도 놓치지 않는 교육",
-        href: "../pledges/detail/#pledge-2-5",
       },
       {
         code: "2-9",
         text: "학생 생활 안정 지원 등",
-        href: "../pledges/detail/#pledge-5-5",
       },
       {
         code: "3-9",
         text: "Idea to Venture - 아이디어가 글로벌 기업이 되는 고려대학교",
-        href: "../pledges/detail/#pledge-3-9",
       },
       {
         code: "5-8",
         text: "모교와 하나되는 교우",
-        href: "../pledges/detail/#pledge-5-6",
       },
     ],
   },
@@ -608,17 +589,14 @@ export const qna: Qna[] = [
       {
         code: "4-1",
         text: "행정역량TF 출범",
-        href: "../pledges/detail/#pledge-4-1",
       },
       {
         code: "4-4",
         text: "구성원이 참여하는 행정결정",
-        href: "../pledges/detail/#pledge-4-5",
       },
       {
         code: "4-6",
         text: "AI·디지털 기반 미래형 행정체계 구축",
-        href: "../pledges/detail/#pledge-4-8",
       },
       {
         code: "4-5",
@@ -627,32 +605,26 @@ export const qna: Qna[] = [
       {
         code: "4-7",
         text: "일과 삶의 균형을 이루는 근무환경",
-        href: "../pledges/detail/#pledge-4-6",
       },
       {
         code: "4-8",
         text: "직원 경력 사다리와 전문직무 트랙 구축",
-        href: "../pledges/detail/#pledge-4-9",
       },
       {
         code: "4-9",
         text: "공정하고 예측 가능한 직원 인사",
-        href: "../pledges/detail/#pledge-4-3",
       },
       {
         code: "4-10",
         text: "전문성 기반 보직 운영 확대",
-        href: "../pledges/detail/#pledge-4-10",
       },
       {
         code: "4-13",
         text: "준법지원실 설치",
-        href: "../pledges/detail/#pledge-5-18",
       },
       {
         code: "5-1",
         text: "헌신을 인정받는 보상체계",
-        href: "../pledges/detail/#pledge-5-2",
       },
     ],
   },
@@ -762,22 +734,18 @@ export const qna: Qna[] = [
       {
         code: "3-3",
         text: "단과대학·학과 모금 지원 체계화",
-        href: "../pledges/detail/#pledge-3-3",
       },
       {
         code: "3-4",
         text: "해외 교우 네트워크를 통한 모금 확대",
-        href: "../pledges/detail/#pledge-3-4",
       },
       {
         code: "3-5",
         text: "모금 패러다임 전환",
-        href: "../pledges/detail/#pledge-3-5",
       },
       {
         code: "5-8",
         text: "모교와 하나 되는 교우",
-        href: "../pledges/detail/#pledge-5-6",
       },
     ],
   },
@@ -876,12 +844,10 @@ export const qna: Qna[] = [
       {
         code: "2-5",
         text: "한 사람도 놓치지 않는 교육",
-        href: "../pledges/detail/#pledge-2-5",
       },
       {
         code: "5-4",
         text: "총장 타운홀 미팅 정례화",
-        href: "../pledges/detail/#pledge-5-11",
       },
       {
         code: "5-5",
@@ -890,7 +856,6 @@ export const qna: Qna[] = [
       {
         code: "5-6",
         text: "다문화 수용능력 제고",
-        href: "../pledges/detail/#pledge-5-9",
       },
     ],
   },
@@ -943,27 +908,22 @@ export const qna: Qna[] = [
       {
         code: "1-4",
         text: "학과 자율 기반으로 우수 교원을 확보하는 채용제도 확립",
-        href: "../pledges/detail/#pledge-1-4",
       },
       {
         code: "1-8",
         text: "우수 석학 제도 개선",
-        href: "../pledges/detail/#pledge-1-8",
       },
       {
         code: "1-9",
         text: "World Class 석학 특별채용 프로그램 도입",
-        href: "../pledges/detail/#pledge-1-9",
       },
       {
         code: "1-10",
         text: "산업체 Chaired Professor 제도 활성화",
-        href: "../pledges/detail/#pledge-1-10",
       },
       {
         code: "1-13",
         text: "석탑기금교수",
-        href: "../pledges/detail/#pledge-1-13",
       },
     ],
   },

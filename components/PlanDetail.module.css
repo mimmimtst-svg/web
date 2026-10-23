@@ -282,7 +282,7 @@
 }
 
 @media (hover: hover) {
-  .pledge:hover {
+  a.pledge:hover {
     color: var(--color-key);
   }
 }

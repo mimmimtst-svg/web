@@ -1,6 +1,10 @@
+/** A pledge in the table: its code ("2-9") and title. The code opens
+    the pledge on the 주요 공약 page (lib/pledgeDetail.ts, same codes). */
+export type PolicyItem = { code: string; text: string };
+
 export type PolicyCategory = {
   label: string;
-  items: string[];
+  items: PolicyItem[];
 };
 
 export type PolicyCard = {
@@ -9,41 +13,55 @@ export type PolicyCard = {
   categories: PolicyCategory[];
 };
 
-// The 발전계획서 체계도 table (2026-10-18), pledge codes ([1-1] …) left
-// off as before; the five areas are its rows, 나답게 / 다함께 / 더높게 its
-// columns.
+const items = (list: string): PolicyItem[] =>
+  list
+    .trim()
+    .split("\n")
+    .map((line) => {
+      const [code, ...text] = line.trim().split(" ");
+      return { code, text: text.join(" ") };
+    });
+
+const 나답게 = "나답게  |  대학의 본질 회복";
+const 다함께 = "다함께  |  조화로운 다양성";
+const 더높게 = "더높게  |  한계를 넘는 도약";
+
+// The 발전계획서 체계도 table (revised 2026-10-23: 2-9 학생 생활 안정 지원
+// 등 and the 4-x / 5-x renumbering, new 4-5, 4-12 and 5-9, eight pledges
+// dropped); the five areas are its rows, 나답게 / 다함께 / 더높게 its
+// columns, in the table's order. Codes aren't shown on screen.
 export const policyCards: PolicyCard[] = [
   {
     number: "01",
     title: "선도적 연구",
     categories: [
       {
-        label: "나답게  |  대학의 본질 회복",
-        items: [
-          "단과대별 연구기금 조성 및 기본연구비 신설",
-          "연구동 신축 추진 및 안정적 연구 공간 확보",
-          "연구활동 및 성과 지원",
-        ],
+        label: 나답게,
+        items: items(`
+          1-1 단과대별 연구기금 조성 및 기본연구비 신설
+          1-2 연구동 신축 추진 및 안정적 연구 공간 확보
+          1-3 연구활동 및 성과 지원
+        `),
       },
       {
-        label: "다함께  |  조화로운 다양성",
-        items: [
-          "학과 자율 기반 우수 교원 채용제도 확립",
-          "학문후속세대 지원체계 구축",
-          "KU Grand Challenge 융합연구 프로그램 신설",
-          "인문사회분야 연구 컨트롤타워 구축 등",
-        ],
+        label: 다함께,
+        items: items(`
+          1-4 학과 자율 기반 우수 교원 채용제도 확립
+          1-5 학문후속세대 지원체계 구축
+          1-6 KU Grand Challenge 융합연구 프로그램 신설
+          1-7 인문사회분야 연구 컨트롤타워 구축 등
+        `),
       },
       {
-        label: "더높게  |  한계를 넘는 도약",
-        items: [
-          "우수 석학 제도 개선",
-          "World Class 석학 특별채용 프로그램 도입",
-          "산업체 Chaired Professor 제도 활성화",
-          "국제 공동연구 Seed Fund의 글로벌 대형연구 연계",
-          "AI 기반 연구 인프라 구축",
-          "석탑기금교수",
-        ],
+        label: 더높게,
+        items: items(`
+          1-8 우수 석학 제도 개선
+          1-9 World Class 석학 특별채용 프로그램 도입
+          1-10 산업체 Chaired Professor 제도 활성화
+          1-11 국제 공동연구 Seed Fund의 글로벌 대형연구 연계
+          1-12 AI 기반 연구 인프라 구축 및 KU AI-RG 도입
+          1-13 석탑기금교수
+        `),
       },
     ],
   },
@@ -52,29 +70,30 @@ export const policyCards: PolicyCard[] = [
     title: "열린 교육",
     categories: [
       {
-        label: "나답게  |  대학의 본질 회복",
-        items: [
-          "인문학적 성찰과 과학기술의 이해",
-          "전공은 더 깊게, 교양은 더 넓게",
-          "스스로 설계하는 전공과 학업",
-          "AI 교육혁신센터",
-        ],
+        label: 나답게,
+        items: items(`
+          2-1 인문학적 성찰과 과학기술의 이해
+          2-2 전공은 더 깊게, 교양은 더 넓게
+          2-3 스스로 설계하는 전공과 학업
+          2-4 AI 교육혁신센터
+          2-9 학생 생활 안정 지원 등
+        `),
       },
       {
-        label: "다함께  |  조화로운 다양성",
-        items: [
-          "한 사람도 놓치지 않는 교육",
-          "교수와 학생이 함께 만드는 배움",
-          "잘 가르치는 교수가 인정받는 대학",
-        ],
+        label: 다함께,
+        items: items(`
+          2-5 한 사람도 놓치지 않는 교육
+          2-6 교수와 학생이 함께 만드는 배움
+          2-7 잘 가르치는 교수가 인정받는 대학
+        `),
       },
       {
-        label: "더높게  |  한계를 넘는 도약",
-        items: [
-          "학생들의 ‘위대한 도전’을 지원하는 대학",
-          "대학의 지식이 사회의 힘이 되는 교육",
-          "캠퍼스와 국경을 뛰어 넘는 대학",
-        ],
+        label: 더높게,
+        items: items(`
+          2-8 학생들의 ‘위대한 도전’을 지원하는 대학
+          2-10 캠퍼스와 국경을 뛰어 넘는 대학
+          2-11 대학의 지식이 사회의 힘이 되는 교육
+        `),
       },
     ],
   },
@@ -83,28 +102,28 @@ export const policyCards: PolicyCard[] = [
     title: "건전 재정",
     categories: [
       {
-        label: "나답게  |  대학의 본질 회복",
-        items: [
-          "예산 효율성 강화",
-          "스마트 리소스 캠퍼스",
-        ],
+        label: 나답게,
+        items: items(`
+          3-1 예산 효율성 강화
+          3-2 스마트 리소스 캠퍼스
+        `),
       },
       {
-        label: "다함께  |  조화로운 다양성",
-        items: [
-          "단과대학·학과 모금 지원 체계화",
-          "해외 교우 네트워크를 통한 모금 확대",
-        ],
+        label: 다함께,
+        items: items(`
+          3-3 단과대학·학과 모금 지원 체계화
+          3-4 해외 교우 네트워크를 통한 모금 확대
+        `),
       },
       {
-        label: "더높게  |  한계를 넘는 도약",
-        items: [
-          "모금 패러다임 전환",
-          "장기발전기금 (엔다우먼트) 조성",
-          "기업 연계 모금 확대",
-          "등록금 외 수입 다변화 및 자구노력 확대",
-          "Idea to Venture - 아이디어가 글로벌 기업이 되는 고려대학교",
-        ],
+        label: 더높게,
+        items: items(`
+          3-5 모금 패러다임 전환
+          3-6 장기발전기금 (엔다우먼트) 조성
+          3-7 기업 연계 모금 확대
+          3-8 등록금 외 수입 다변화 및 자구노력 확대
+          3-9 Idea to Venture - 아이디어가 글로벌 기업이 되는 고려대학교
+        `),
       },
     ],
   },
@@ -113,30 +132,33 @@ export const policyCards: PolicyCard[] = [
     title: "전문적 행정과 인사경영",
     categories: [
       {
-        label: "나답게  |  대학의 본질 회복",
-        items: [
-          "행정역량TF 출범",
-          "산학협력단 행정 혁신",
-          "공정하고 예측 가능한 직원 인사",
-        ],
+        label: 나답게,
+        items: items(`
+          4-1 행정역량TF 출범
+          4-3 산학협력단 행정 혁신
+          4-5 직원이 행정주체가 되는 재량행정, 창의행정 문화 조성
+          4-9 공정하고 예측 가능한 직원 인사
+        `),
       },
       {
-        label: "다함께  |  조화로운 다양성",
-        items: [
-          "학과 중심의 행정체계 수립",
-          "구성원이 참여하는 행정결정",
-          "일과 삶의 균형을 이루는 근무환경",
-          "건강하고 발전적인 노사관계 구축",
-        ],
+        label: 다함께,
+        items: items(`
+          4-2 학과 중심의 행정체계 수립
+          4-4 구성원이 참여하는 행정결정
+          4-7 일과 삶의 균형을 이루는 근무환경
+          4-12 고대병원 혜택 확대 등
+        `),
       },
       {
-        label: "더높게  |  한계를 넘는 도약",
-        items: [
-          "AI·디지털 기반 미래형 행정체계 구축",
-          "직원 경력 사다리와 전문직무 트랙 구축",
-          "전문성 기반 보직 운영 확대",
-          "행정 혁신 펀드 신설",
-        ],
+        label: 더높게,
+        items: items(`
+          4-6 AI·디지털 기반 미래형 행정체계 구축
+          4-8 직원 경력 사다리와 전문직무 트랙 구축
+          4-10 전문성 기반 보직 운영 확대
+          4-11 행정 혁신 펀드 신설
+          4-13 준법지원실 설치
+          4-14 ‘AI 혁신 전략위원회’ 설치
+        `),
       },
     ],
   },
@@ -145,38 +167,29 @@ export const policyCards: PolicyCard[] = [
     title: "헌신과 존중의 리더십",
     categories: [
       {
-        label: "나답게  |  대학의 본질 회복",
-        items: [
-          "교원과 직원의 상호존중 문화",
-          "헌신을 인정받는 보상체계",
-          "자긍심이 넘치는 대학 평가 체계 구축",
-          "캠퍼스·병원 특성화 및 통합 발전 전략 추진",
-          "학생 생활 안정",
-          "모교와 하나 되는 교우",
-        ],
+        label: 나답게,
+        items: items(`
+          5-1 헌신을 인정받는 보상체계
+          5-2 자긍심이 넘치는 대학 평가 체계 구축
+          5-3 캠퍼스·병원 특성화 및 통합 발전 전략 추진
+          5-8 모교와 하나 되는 교우
+        `),
       },
       {
-        label: "다함께  |  조화로운 다양성",
-        items: [
-          "한마음의 날 신설",
-          "학내 소통 정례화",
-          "다문화 수용능력 제고",
-          "리더십 아카데미 신설",
-          "총장 타운홀 미팅 정례화",
-          "교수 연구 및 교류 커뮤니티 활동 지원",
-          "고대병원 교직원/학생 전용창구 및 상담사 설치",
-        ],
+        label: 다함께,
+        items: items(`
+          5-4 총장 타운홀 미팅 정례화
+          5-5 대표조직과의 소통 정례화
+          5-6 다문화 수용능력 제고
+        `),
       },
       {
-        label: "더높게  |  한계를 넘는 도약",
-        items: [
-          "FINE KU Award·The Class KU 명예의 전당 신설",
-          "국내 최고 수준의 대학행정",
-          "글로벌 표준에 맞는 대학행정",
-          "미래형 친환경 캠퍼스 구축",
-          "준법지원실 설치",
-          "‘AI 혁신 전략위원회’ 설치",
-        ],
+        label: 더높게,
+        items: items(`
+          5-7 친환경 스마트 캠퍼스 구축
+          5-9 고등교육을 선도하며 교육과 연구로 사회에 공헌하는 고려대학교
+          5-10 리더십 아카데미 신설
+        `),
       },
     ],
   },

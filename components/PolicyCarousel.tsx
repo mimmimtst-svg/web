@@ -10,22 +10,22 @@ import CarouselDots from "./CarouselDots";
 import Footer from "./Footer";
 
 // A card with more pledges than this keeps the tight spacing between its
-// 나답게 / 다함께 / 더높게 groups so it still fits (05, with 19); the
-// others get more air between them.
+// 나답게 / 다함께 / 더높게 groups so it still fits (05 had 19 until the
+// 2026-10-23 table; now the most is 04's 14); the others get more air
+// between them.
 const DENSE_ITEMS = 15;
 
 // Each card opens its part of the 주요 공약 page (P4-2), and each pledge
-// on it opens that pledge there. The cards list the pledges in the same
-// order as the page (the booklet's 1-1, 1-2 …), so the n-th item of card
-// k is the n-th pledge of part k. Relative path: the main page sits at
-// the site root or under the unlisted preview address.
+// on it opens that pledge there, by its code — or the part's top while a
+// new pledge has no entry on the page yet. Relative path: the main page
+// sits at the site root or under the unlisted preview address.
 const PLEDGE_PAGE = "pledges/detail/";
 
-/** Where the n-th pledge on card `cardIndex` opens. */
-const pledgeHref = (cardIndex: number, n: number) => {
+/** Where pledge `code` on card `cardIndex` opens. */
+const pledgeHref = (cardIndex: number, code: string) => {
   const part = pledgeParts[cardIndex];
-  const code = part?.pledges[n]?.code;
-  return `${PLEDGE_PAGE}#${code ? pledgeAnchor(code) : (part?.id ?? "")}`;
+  const listed = part?.pledges.some((pledge) => pledge.code === code);
+  return `${PLEDGE_PAGE}#${listed ? pledgeAnchor(code) : (part?.id ?? "")}`;
 };
 
 // A Latin parenthetical inside an item, e.g. "(Chaired Professor)", is set
@@ -129,25 +129,20 @@ export default function PolicyCarousel() {
                       : ""
                   }`}
                 >
-                  {card.categories.map((category, categoryIndex) => (
+                  {card.categories.map((category) => (
                     <div className={styles.category} key={category.label}>
                       <p className={styles.categoryLabel}>{category.label}</p>
                       <ul className={styles.categoryItems}>
-                        {category.items.map((item, itemIndex) => (
-                          <li key={item}>
+                        {category.items.map((item) => (
+                          <li key={item.code}>
                             <a
                               className={styles.categoryItem}
-                              href={pledgeHref(
-                                cardIndex,
-                                card.categories
-                                  .slice(0, categoryIndex)
-                                  .reduce((n, c) => n + c.items.length, itemIndex)
-                              )}
+                              href={pledgeHref(cardIndex, item.code)}
                               draggable={false}
                             >
                               <CheckIcon />
                               <span>
-                                <ItemText text={item} />
+                                <ItemText text={item.text} />
                               </span>
                             </a>
                           </li>

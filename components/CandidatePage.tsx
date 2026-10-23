@@ -10,7 +10,7 @@ import PressList from "./PressList";
 import { ProfileCv, ProfileIntro } from "./ProfilePage";
 import QnaDots from "./QnaDots";
 import { pressColumns, pressReports } from "@/lib/pressData";
-import { pledgeParts } from "@/lib/pledgeDetail";
+import { pledgeAnchor, pledgeParts } from "@/lib/pledgeDetail";
 import { withBasePath } from "@/lib/basePath";
 import {
   greeting,
@@ -136,6 +136,13 @@ function Motivation() {
   );
 }
 
+/** Where a related pledge opens: its entry on the 주요 공약 page (same
+    codes as the booklet), or nothing while it has none yet. */
+const LISTED = new Set(pledgeParts.flatMap((part) => part.pledges.map((p) => p.code)));
+const hrefOf = (item: RelatedPledge) =>
+  item.href ??
+  (item.code && LISTED.has(item.code) ? `../pledges/detail/#${pledgeAnchor(item.code)}` : undefined);
+
 /** Q&A's related pledges grouped under their policy area — the booklet's
     code ("1-1") starts with the area's number (01 선도적 연구 …) — in the
     areas' order; the college plans, which have no code, last. */
@@ -166,7 +173,7 @@ function RelatedPledges({ items }: { items: RelatedPledge[] }) {
             <ul className={styles.relatedList}>
               {groups.get(key)!.map((item) => (
                 <li key={item.text}>
-                  {item.href ? <a href={item.href}>{item.text}</a> : <span>{item.text}</span>}
+                  {hrefOf(item) ? <a href={hrefOf(item)}>{item.text}</a> : <span>{item.text}</span>}
                 </li>
               ))}
             </ul>

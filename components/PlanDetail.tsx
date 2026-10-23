@@ -6,7 +6,10 @@ import DetailNav from "./DetailNav";
 import ScrollTopButton from "./ScrollTopButton";
 import { CheckIcon, PlusIcon } from "./icons";
 import { groupPledges, planParts } from "@/lib/planDetail";
-import { pledgeAnchor } from "@/lib/pledgeDetail";
+import { pledgeAnchor, pledgeParts } from "@/lib/pledgeDetail";
+
+/** Pledges with an entry on the 주요 공약 page. */
+const LISTED = new Set(pledgeParts.flatMap((part) => part.pledges.map((p) => p.code)));
 
 const NAV_ITEMS = planParts.map(({ id, title }) => ({ id, label: title }));
 
@@ -114,14 +117,22 @@ export default function PlanDetail() {
                                 {group.pledges.map((pledge) => (
                                   <li key={pledge.code}>
                                     {/* The same pledge, in full, on the
-                                        주요 공약 page (P4-2). */}
-                                    <a
-                                      className={styles.pledge}
-                                      href={`../pledges/detail/#${pledgeAnchor(pledge.code)}`}
-                                    >
-                                      <CheckIcon />
-                                      <span>{pledge.label}</span>
-                                    </a>
+                                        주요 공약 page (P4-2) — plain text
+                                        while it has no entry there yet. */}
+                                    {LISTED.has(pledge.code) ? (
+                                      <a
+                                        className={styles.pledge}
+                                        href={`../pledges/detail/#${pledgeAnchor(pledge.code)}`}
+                                      >
+                                        <CheckIcon />
+                                        <span>{pledge.label}</span>
+                                      </a>
+                                    ) : (
+                                      <span className={styles.pledge}>
+                                        <CheckIcon />
+                                        <span>{pledge.label}</span>
+                                      </span>
+                                    )}
                                   </li>
                                 ))}
                               </ul>
