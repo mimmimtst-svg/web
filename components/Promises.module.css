@@ -253,6 +253,9 @@
     /* No justify here, so break between words again (Figma: "학교
        행정을 / 원점에서부터"), not mid-word. */
     word-break: keep-all;
+    /* Fill each line, breaking at the last word that fits (2026-10-23:
+       "pretty" moved words down early, leaving the right side empty). */
+    text-wrap: wrap;
   }
 
   .itemTitle {

@@ -404,8 +404,12 @@
     padding-top: calc(20 * var(--mu));
   }
 
+  /* No one-screen cap on a phone: the cards and the footer follow
+     each other down the page (2026-10-23: the cap let the card spill
+     over the footer). */
   .contentWrap {
     height: auto;
+    max-height: none;
   }
 
   .headerWrap {
