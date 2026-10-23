@@ -259,9 +259,11 @@
     padding-left: 0;
   }
 
+  /* Light, like the P4 pledges: white on the dark photo reads heavier
+     than the same weight on white (2026-10-23, "too bold"). */
   .itemPoints {
     padding-top: 0;
-    font-weight: 400;
+    font-weight: 300;
     font-size: calc(15.5 * var(--mu));
     line-height: 1.55;
   }
@@ -405,7 +407,7 @@
   /* Discs hanging in the gutter, so the lines start flush with the title. */
   .itemPoints {
     padding-top: 0;
-    font-weight: 400;
+    font-weight: 300;
     font-size: max(calc(27 * var(--pu)), 1rem);
     line-height: 1.75;
     color: rgba(255, 255, 255, 0.92);
