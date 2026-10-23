@@ -17,11 +17,21 @@ export default function CandidateTabs({ tabs }: { tabs: CandidateTab[] }) {
   const [stuck, setStuck] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
-  // Open the tab named in the address, now and on back/forward.
+  // Open the tab named in the address, now and on back/forward. An
+  // address naming something inside a tab (a Q&A question, #q3) opens
+  // that tab and goes to it.
   useEffect(() => {
     const fromHash = () => {
       const id = decodeURIComponent(location.hash.slice(1));
-      if (tabs.some((tab) => tab.id === id)) setActive(id);
+      if (tabs.some((tab) => tab.id === id)) {
+        setActive(id);
+        return;
+      }
+      const target = id ? document.getElementById(id) : null;
+      const tabId = target?.closest<HTMLElement>("[role=tabpanel]")?.dataset.tab;
+      if (!target || !tabId) return;
+      setActive(tabId);
+      requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
     };
     fromHash();
     window.addEventListener("hashchange", fromHash);
@@ -80,6 +90,7 @@ export default function CandidateTabs({ tabs }: { tabs: CandidateTab[] }) {
           role="tabpanel"
           id={`candidate-panel-${tab.id}`}
           aria-labelledby={`candidate-tab-${tab.id}`}
+          data-tab={tab.id}
           hidden={tab.id !== active}
         >
           {tab.content}

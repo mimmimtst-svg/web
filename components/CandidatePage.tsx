@@ -1,25 +1,248 @@
 import styles from "./CandidatePage.module.css";
 import profileStyles from "./ProfilePage.module.css";
+import pressStyles from "./PressPage.module.css";
 import Header from "./Header";
 import Footer from "./Footer";
 import ScrollTopButton from "./ScrollTopButton";
 import CandidateTabs from "./CandidateTabs";
+import PressTabs from "./PressTabs";
 import PressList from "./PressList";
 import { ProfileCv, ProfileIntro } from "./ProfilePage";
-import { pressColumns } from "@/lib/pressData";
+import { pressColumns, pressReports } from "@/lib/pressData";
+import { withBasePath } from "@/lib/basePath";
+import {
+  greeting,
+  motivation,
+  qna,
+  recommendationNote,
+  recommendations,
+  type Rich,
+  type TextBlock,
+} from "@/lib/candidateData";
 
-/** A tab whose text hasn't come yet. */
-function Pending() {
-  return <p className={styles.pending}>내용을 준비하고 있습니다.</p>;
+/**
+ * A place kept for a photo still to come: a beige box of the photo's
+ * shape, its number in the middle so it can be named ("인사말 사진 2").
+ */
+function PhotoSlot({
+  label,
+  ratio,
+  className = "",
+}: {
+  label: string;
+  ratio: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`${styles.photoSlot} ${className}`}
+      style={{ aspectRatio: ratio }}
+      role="img"
+      aria-label={`${label} (준비 중)`}
+    >
+      <span className={styles.photoSlotLabel}>{label}</span>
+    </div>
+  );
+}
+
+function RichText({ text }: { text: Rich }) {
+  if (typeof text === "string") return text;
+  return text.map((part, i) =>
+    typeof part === "string" ? part : <strong key={i}>{part.b}</strong>,
+  );
+}
+
+function Blocks({ blocks }: { blocks: TextBlock[] }) {
+  return blocks.map((block, i) =>
+    block.type === "p" ? (
+      <p className={styles.para} key={i}>
+        <RichText text={block.text} />
+      </p>
+    ) : (
+      <ul className={styles.dashList} key={i}>
+        {block.items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    ),
+  );
+}
+
+/** Where 인사말's wide photos go, after these paragraphs (the booklet's
+    pages 4 and 5 end on a campus photo). */
+const GREETING_PHOTOS_AFTER = [7, 11];
+
+/** I. 후보자 인사말: the portrait beside the slogan, the letter, wide
+    photos where the booklet has them, the sign-off on the right. */
+function Greeting() {
+  return (
+    <div className={styles.text}>
+      <header className={styles.greetingHead}>
+        <PhotoSlot label="인사말 사진 1" ratio="4 / 5" className={styles.portraitSlot} />
+        <div className={styles.slogan}>
+          <p className={styles.sloganKr}>{greeting.slogan[0]}</p>
+          <p className={styles.sloganEn}>{greeting.slogan[1]}</p>
+          <p className={styles.sloganEnSub}>{greeting.slogan[2]}</p>
+        </div>
+      </header>
+      <p className={styles.salutation}>
+        {greeting.salutation.map((line) => (
+          <span key={line}>{line}</span>
+        ))}
+      </p>
+      {greeting.body.map((para, i) => (
+        <div key={i}>
+          <p className={styles.para}>{para}</p>
+          {GREETING_PHOTOS_AFTER.includes(i) && (
+            <PhotoSlot
+              label={`인사말 사진 ${GREETING_PHOTOS_AFTER.indexOf(i) + 2}`}
+              ratio="3 / 2"
+              className={styles.wideSlot}
+            />
+          )}
+        </div>
+      ))}
+      <p className={styles.para}>{greeting.closing}</p>
+      <p className={styles.signoff}>
+        {greeting.signoff.map((line) => (
+          <span key={line}>{line}</span>
+        ))}
+      </p>
+      <PhotoSlot label="인사말 사진 4" ratio="3 / 2" className={styles.wideSlot} />
+    </div>
+  );
+}
+
+/** II. 자기소개 및 동기: each paragraph beside a photo, left and right in
+    turn as in the booklet, and a wide photo to close. */
+function Motivation() {
+  return (
+    <div className={styles.textWide}>
+      {motivation.map((para, i) => (
+        <div className={`${styles.photoRow} ${i % 2 ? styles.photoRowFlip : ""}`} key={i}>
+          <PhotoSlot label={`자기소개 사진 ${i + 1}`} ratio="4 / 3" />
+          <p className={styles.para}>{para}</p>
+        </div>
+      ))}
+      <PhotoSlot
+        label={`자기소개 사진 ${motivation.length + 1}`}
+        ratio="3 / 2"
+        className={styles.wideSlot}
+      />
+    </div>
+  );
+}
+
+/** IV. Q&A: the seven questions as a list to jump from, then each answer
+    — opening, numbered parts with their points, closing — and the
+    related pledges, each opening its page. */
+function QnaList() {
+  return (
+    <div className={styles.text}>
+      <nav className={styles.qIndex} aria-label="질문 목록">
+        <ol>
+          {qna.map((q, i) => (
+            <li key={q.id}>
+              <a href={`#${q.id}`}>
+                <span className={styles.qNum}>Q{i + 1}</span>
+                {q.question}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+      {qna.map((q, i) => (
+        <article className={styles.qa} id={q.id} key={q.id} aria-labelledby={`${q.id}-title`}>
+          <h2 className={styles.question} id={`${q.id}-title`}>
+            <span className={styles.qNum}>Q{i + 1}</span>
+            {q.question}
+          </h2>
+          <Blocks blocks={q.intro} />
+          {q.sections.map((section, n) => (
+            <section className={styles.qSection} key={section.title}>
+              <h3 className={styles.qSectionTitle}>
+                <span className={styles.qSectionNum}>{n + 1}.</span>
+                {section.title}
+              </h3>
+              <Blocks blocks={section.blocks} />
+            </section>
+          ))}
+          <Blocks blocks={q.outro} />
+          <div className={styles.related}>
+            <p className={styles.relatedLabel}>관련 공약</p>
+            <ul className={styles.relatedList}>
+              {q.related.map((item) => (
+                <li key={item.text}>
+                  {item.href ? <a href={item.href}>{item.text}</a> : <span>{item.text}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+/** VI. 미주 교우님들의 추천사: the booklet's footnote, then every letter in
+    a rounded beige box, no lines — the two the booklet shows as pictures
+    (a handwritten card, a letterhead) in the same box. */
+function Recommendations() {
+  return (
+    <div className={styles.text}>
+      <p className={styles.recNote}>{recommendationNote}</p>
+      <div className={styles.recList}>
+        {recommendations.map((rec) => (
+          <article className={styles.rec} key={rec.name} aria-label={`${rec.name} 추천사`}>
+            {rec.type === "letter" ? (
+              <>
+                {rec.title && <h2 className={styles.recTitle}>{rec.title}</h2>}
+                {rec.body.map((block, i) =>
+                  typeof block === "string" ? (
+                    <p className={styles.recPara} key={i}>
+                      {block}
+                    </p>
+                  ) : (
+                    <ol className={styles.recOl} key={i}>
+                      {block.ol.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ol>
+                  ),
+                )}
+              </>
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                className={styles.recImage}
+                src={withBasePath(`/images/${rec.src}`)}
+                width={rec.width}
+                height={rec.height}
+                alt={rec.alt}
+                loading="lazy"
+                decoding="async"
+              />
+            )}
+            <p className={styles.recSign}>
+              <span className={styles.recName}>{rec.name}</span>
+              {rec.role && <span className={styles.recRole}>{rec.role}</span>}
+              {rec.place && <span className={styles.recRole}>{rec.place}</span>}
+            </p>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /**
  * 후보자 소개, the work-in-progress version (2026-10-23): only at the
  * unlisted preview address (preview-template/profile/), while the public
  * /profile/ keeps the current page. A menu of six under the header —
- * 인사말 · 자기소개 및 동기 · Q&A · 약력 · 언론 기고 · 미주 교우님 추천사.
- * 약력 is the current profile (photo band and CV), 언론 기고 the press
- * page's columns list; the rest wait for their text.
+ * 인사말 · 자기소개 및 동기 · Q&A · 약력 · 언론 기고 · 미주 교우님 추천사 —
+ * filled from the candidate booklet (lib/candidateData.ts); 약력 is the
+ * current profile, 언론 기고 the press page's two lists. The photos of
+ * 인사말 and 자기소개 are numbered places until they come.
  */
 export default function CandidatePage() {
   return (
@@ -29,13 +252,9 @@ export default function CandidatePage() {
         <h1 className={styles.visuallyHidden}>후보자 소개</h1>
         <CandidateTabs
           tabs={[
-            { id: "greeting", label: "인사말", content: <Pending /> },
-            {
-              id: "motivation",
-              label: "자기소개 및 동기",
-              content: <Pending />,
-            },
-            { id: "qna", label: "Q&A", content: <Pending /> },
+            { id: "greeting", label: "인사말", content: <Greeting /> },
+            { id: "motivation", label: "자기소개 및 동기", content: <Motivation /> },
+            { id: "qna", label: "Q&A", content: <QnaList /> },
             {
               id: "career",
               label: "약력",
@@ -51,14 +270,34 @@ export default function CandidatePage() {
               label: "언론 기고",
               content: (
                 <div className={styles.inner}>
-                  <PressList items={pressColumns} />
+                  <PressTabs
+                    tabs={[
+                      {
+                        id: "columns",
+                        label: "언론기고",
+                        content: <PressList items={pressColumns} />,
+                      },
+                      {
+                        id: "reports",
+                        label: "언론보도",
+                        content: pressReports.map((group, index) => (
+                          <section className={pressStyles.group} key={group.title ?? index}>
+                            {group.title && (
+                              <h2 className={pressStyles.groupTitle}>{group.title}</h2>
+                            )}
+                            <PressList items={group.items} />
+                          </section>
+                        )),
+                      },
+                    ]}
+                  />
                 </div>
               ),
             },
             {
               id: "recommendations",
               label: "미주 교우님 추천사",
-              content: <Pending />,
+              content: <Recommendations />,
             },
           ]}
         />

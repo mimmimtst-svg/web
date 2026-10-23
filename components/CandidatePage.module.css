@@ -1,7 +1,8 @@
 /* 후보자 소개, work in progress (components/CandidatePage.tsx): the profile
    page with a menu bar on top. The bar is P4-2's (sticky under the header,
    light-gray pill for the current tab, a soft shadow once the page scrolls
-   under it); the panels reuse the profile and press pages' own styles. */
+   under it); 약력 and 언론 기고 reuse the profile and press pages' own
+   styles, the booklet's text has its own below. */
 /* Grows to fill the screen, so a short tab keeps the footer at the
    bottom. */
 .page {
@@ -98,23 +99,420 @@
 }
 
 /* ---------- Panels ---------- */
-/* 언론 기고: the press page's list in the profile's width. */
 .inner {
   max-width: 1200px;
   margin: 0 auto;
   padding: clamp(40px, 6vh, 88px) var(--space-page-x) clamp(72px, 10vh, 140px);
 }
 
-/* A tab still waiting for its text. */
-.pending {
-  min-height: 50vh;
+/* 언론 기고: the press page's two lists (언론기고 / 언론보도 pills) in the
+   profile's width; the pills start the panel. */
+.inner > [role="tablist"]:first-child {
+  margin-top: 0;
+}
+
+/* ---------- The booklet's text (인사말, 자기소개, Q&A, 추천사) ---------- */
+/* One reading column, large type for older readers. */
+.text,
+.textWide {
+  max-width: calc(880px + 2 * var(--space-page-x));
+  margin: 0 auto;
+  padding: clamp(48px, 7vh, 96px) var(--space-page-x) clamp(80px, 11vh, 150px);
+}
+
+.textWide {
+  max-width: calc(1080px + 2 * var(--space-page-x));
+}
+
+.para {
+  font-family: var(--font-kr);
+  font-weight: 400;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.9;
+  color: var(--color-line);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.para + .para,
+.text > div + div > .para:first-child,
+.text > div + .para {
+  margin-top: 1.1em;
+}
+
+.para strong {
+  font-weight: 700;
+  color: var(--color-charcoal);
+}
+
+/* A photo still to come: a beige box of its shape, its number inside. */
+.photoSlot {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 64px var(--space-page-x);
+  width: 100%;
+  border-radius: var(--radius-card);
+  background-color: var(--color-card-bg);
+}
+
+.photoSlotLabel {
   font-family: var(--font-kr);
-  font-size: 1.0625rem;
+  font-weight: 600;
+  font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);
+  color: var(--color-muted);
+}
+
+.wideSlot {
+  margin: clamp(40px, 5vw, 64px) 0;
+}
+
+/* 인사말: the portrait beside the slogan. */
+.greetingHead {
+  display: grid;
+  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(28px, 4vw, 56px);
+}
+
+.slogan {
+  text-align: right;
+}
+
+.sloganKr {
+  font-family: var(--font-kr);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.625rem);
+  line-height: 1.3;
+  color: var(--color-charcoal);
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+.sloganEn {
+  margin-top: 14px;
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.625rem);
+  letter-spacing: 0.04em;
+  color: var(--color-key);
+}
+
+.sloganEnSub {
+  margin-top: 4px;
+  font-family: var(--font-en);
+  font-style: italic;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.1875rem);
   color: var(--color-label);
+}
+
+.salutation {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: clamp(48px, 6vw, 80px) 0 clamp(28px, 3vw, 40px);
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: clamp(1.1875rem, 1.1rem + 0.4vw, 1.4375rem);
+  line-height: 1.6;
+  color: var(--color-charcoal);
+  word-break: keep-all;
+}
+
+.signoff {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  margin-top: clamp(36px, 4vw, 56px);
+  font-family: var(--font-kr);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--color-line);
+}
+
+.signoff span:last-child {
+  margin-top: 6px;
+  font-weight: 700;
+  font-size: 1.15em;
+  color: var(--color-charcoal);
+}
+
+/* 자기소개: each paragraph beside a photo, sides taking turns. */
+.photoRow {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: start;
+  gap: clamp(28px, 4vw, 64px);
+}
+
+.photoRow + .photoRow {
+  margin-top: clamp(48px, 6vw, 80px);
+}
+
+.photoRowFlip {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+}
+
+.photoRowFlip > :first-child {
+  order: 2;
+}
+
+.textWide > .wideSlot:last-child {
+  margin-bottom: 0;
+}
+
+/* Q&A: the questions to jump from, in a beige box. */
+.qIndex {
+  padding: clamp(24px, 3vw, 36px) clamp(24px, 3.4vw, 44px);
+  border-radius: 16px;
+  background-color: var(--color-card-bg);
+}
+
+.qIndex ol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+}
+
+.qIndex a {
+  display: flex;
+  gap: 14px;
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.55;
+  color: var(--color-charcoal);
+  word-break: keep-all;
+}
+
+@media (hover: hover) {
+  .qIndex a:hover {
+    color: var(--color-key);
+  }
+}
+
+.qNum {
+  flex: 0 0 auto;
+  min-width: 2.2em;
+  font-family: var(--font-en);
+  font-weight: 800;
+  color: var(--color-key);
+}
+
+.qa {
+  margin-top: clamp(72px, 9vw, 120px);
+  scroll-margin-top: calc(var(--header-height) + var(--tabs-h) + 24px);
+}
+
+.question {
+  display: flex;
+  gap: 14px;
+  margin-bottom: clamp(24px, 3vw, 36px);
+  font-family: var(--font-kr);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.125rem);
+  line-height: 1.4;
+  color: var(--color-charcoal);
+  word-break: keep-all;
+}
+
+.qa > .para + .para {
+  margin-top: 1.1em;
+}
+
+.qSection {
+  margin-top: clamp(32px, 3.6vw, 48px);
+}
+
+.qSectionTitle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: clamp(1.1875rem, 1.1rem + 0.4vw, 1.4375rem);
+  line-height: 1.5;
+  color: var(--color-charcoal);
+  word-break: keep-all;
+}
+
+.qSectionNum {
+  flex: 0 0 auto;
+  color: var(--color-key);
+}
+
+.qSection > * + * {
+  margin-top: 14px;
+}
+
+.qSection + .para {
+  margin-top: clamp(32px, 3.6vw, 48px);
+}
+
+.dashList {
+  list-style: none;
+}
+
+.dashList li {
+  position: relative;
+  padding-left: 20px;
+  font-family: var(--font-kr);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.8;
+  color: var(--color-line);
+  word-break: keep-all;
+}
+
+.dashList li + li {
+  margin-top: 4px;
+}
+
+.dashList li::before {
+  content: "–";
+  position: absolute;
+  left: 0;
+  color: var(--color-label);
+}
+
+/* The related pledges: a beige box, each a link to its pledge. */
+.related {
+  margin-top: clamp(32px, 3.6vw, 48px);
+  padding: clamp(20px, 2.4vw, 28px) clamp(22px, 2.8vw, 36px);
+  border-radius: var(--radius-card);
+  background-color: var(--color-card-bg);
+}
+
+.relatedLabel {
+  margin-bottom: 10px;
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);
+  color: var(--color-key);
+}
+
+.relatedList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  list-style: none;
+}
+
+.relatedList li {
+  font-family: var(--font-kr);
+  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--color-line);
+  word-break: keep-all;
+}
+
+.relatedList a {
+  text-decoration: underline;
+  text-decoration-color: var(--color-charcoal-30);
+  text-underline-offset: 4px;
+}
+
+@media (hover: hover) {
+  .relatedList a:hover {
+    color: var(--color-key);
+    text-decoration-color: currentColor;
+  }
+}
+
+/* 추천사: the booklet's footnote, then each letter in a rounded beige box
+   with no lines; the two pictured letters sit in the same box. */
+.recNote {
+  font-family: var(--font-kr);
+  font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);
+  line-height: 1.7;
+  color: var(--color-label);
+  word-break: keep-all;
+}
+
+.recList {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 3vw, 36px);
+  margin-top: clamp(28px, 3.4vw, 44px);
+}
+
+.rec {
+  padding: clamp(28px, 4vw, 56px) clamp(24px, 4.4vw, 64px);
+  border-radius: 20px;
+  background-color: var(--color-card-bg);
+}
+
+.recTitle {
+  margin-bottom: clamp(20px, 2.4vw, 28px);
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5625rem);
+  line-height: 1.45;
+  color: var(--color-charcoal);
+  word-break: keep-all;
+}
+
+.recPara,
+.recOl li {
+  font-family: var(--font-kr);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.9;
+  color: var(--color-line);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.rec > * + .recPara,
+.rec > * + .recOl {
+  margin-top: 1em;
+}
+
+.recOl {
+  padding-left: 1.4em;
+  list-style: decimal;
+}
+
+.recOl li::marker {
+  font-family: var(--font-en);
+  font-weight: 600;
+  color: var(--color-key);
+}
+
+.recOl li + li {
+  margin-top: 6px;
+}
+
+.recImage {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: var(--radius-card);
+}
+
+.recSign {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  margin-top: clamp(24px, 3vw, 36px);
+  text-align: right;
+}
+
+.recName {
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  color: var(--color-charcoal);
+}
+
+.recRole {
+  font-family: var(--font-kr);
+  font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);
+  line-height: 1.6;
+  color: var(--color-label);
+  word-break: keep-all;
 }
 
 /* ---------- Mobile layout (portrait) ---------- */
@@ -149,8 +547,166 @@
     padding: calc(32 * var(--mu)) calc(20 * var(--mu)) calc(56 * var(--mu));
   }
 
-  .pending {
-    min-height: 40vh;
+  .text,
+  .textWide {
+    padding: calc(36 * var(--mu)) calc(20 * var(--mu)) calc(64 * var(--mu));
+  }
+
+  .para,
+  .dashList li,
+  .recPara,
+  .recOl li,
+  .signoff {
+    font-size: calc(16.5 * var(--mu));
+    line-height: 1.85;
+  }
+
+  .photoSlotLabel {
+    font-size: calc(14 * var(--mu));
+  }
+
+  .wideSlot {
+    margin: calc(32 * var(--mu)) 0;
+  }
+
+  .greetingHead {
+    grid-template-columns: calc(120 * var(--mu)) minmax(0, 1fr);
+    gap: calc(18 * var(--mu));
+  }
+
+  .sloganKr {
+    font-size: calc(21 * var(--mu));
+  }
+
+  .sloganEn {
+    margin-top: calc(8 * var(--mu));
+    font-size: calc(16 * var(--mu));
+  }
+
+  .sloganEnSub {
+    font-size: calc(13 * var(--mu));
+  }
+
+  .salutation {
+    margin: calc(36 * var(--mu)) 0 calc(22 * var(--mu));
+    font-size: calc(18 * var(--mu));
+  }
+
+  .signoff {
+    margin-top: calc(30 * var(--mu));
+  }
+
+  /* 자기소개: the photo above its paragraph. */
+  .photoRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(18 * var(--mu));
+  }
+
+  .photoRow + .photoRow {
+    margin-top: calc(40 * var(--mu));
+  }
+
+  .photoRowFlip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .photoRowFlip > :first-child {
+    order: 0;
+  }
+
+  .qIndex {
+    padding: calc(20 * var(--mu)) calc(18 * var(--mu));
+    border-radius: calc(14 * var(--mu));
+  }
+
+  .qIndex ol {
+    gap: calc(10 * var(--mu));
+  }
+
+  .qIndex a {
+    gap: calc(10 * var(--mu));
+    font-size: calc(16 * var(--mu));
+  }
+
+  .qa {
+    margin-top: calc(56 * var(--mu));
+    scroll-margin-top: calc(84 * var(--mu) + var(--tabs-h) + 16 * var(--mu));
+  }
+
+  .question {
+    gap: calc(10 * var(--mu));
+    margin-bottom: calc(20 * var(--mu));
+    font-size: calc(22 * var(--mu));
+  }
+
+  .qSection {
+    margin-top: calc(28 * var(--mu));
+  }
+
+  .qSectionTitle {
+    gap: calc(8 * var(--mu));
+    margin-bottom: calc(10 * var(--mu));
+    font-size: calc(18 * var(--mu));
+  }
+
+  .qSection > * + * {
+    margin-top: calc(10 * var(--mu));
+  }
+
+  .qSection + .para {
+    margin-top: calc(28 * var(--mu));
+  }
+
+  .dashList li {
+    padding-left: calc(18 * var(--mu));
+  }
+
+  .related {
+    margin-top: calc(28 * var(--mu));
+    padding: calc(18 * var(--mu)) calc(18 * var(--mu));
+  }
+
+  .relatedLabel {
+    font-size: calc(14 * var(--mu));
+  }
+
+  .relatedList {
+    flex-direction: column;
+    gap: calc(6 * var(--mu));
+  }
+
+  .relatedList li {
     font-size: calc(15.5 * var(--mu));
+  }
+
+  .recNote {
+    font-size: calc(14 * var(--mu));
+  }
+
+  .recList {
+    gap: calc(20 * var(--mu));
+    margin-top: calc(24 * var(--mu));
+  }
+
+  .rec {
+    padding: calc(26 * var(--mu)) calc(22 * var(--mu));
+    border-radius: calc(16 * var(--mu));
+  }
+
+  .recTitle {
+    margin-bottom: calc(18 * var(--mu));
+    font-size: calc(18.5 * var(--mu));
+  }
+
+  .recSign {
+    margin-top: calc(22 * var(--mu));
+  }
+
+  .recName {
+    font-size: calc(16.5 * var(--mu));
+  }
+
+  .recRole {
+    font-size: calc(14 * var(--mu));
   }
 }
