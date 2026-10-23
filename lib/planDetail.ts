@@ -237,6 +237,7 @@ export const planParts: PlanPart[] = [
         pledges: pledges(`
           5-7 친환경 스마트 캠퍼스 구축
           5-9 고등교육을 선도하며 교육과 연구로 사회에 공헌하는 고려대학교
+          5-10 리더십 아카데미 신설
         `),
       },
     ],
