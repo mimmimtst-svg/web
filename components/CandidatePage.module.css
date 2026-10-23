@@ -449,76 +449,17 @@
   color: var(--color-label);
 }
 
-/* The related pledges: a beige box; under its label, a row per policy
-   area — the area (number in key red, name bold) on the left, its pledges
-   (each a link) on the right. */
+/* The related pledges: a small key-red label, then P2-2's pledge box
+   (PlanDetail.module.css: areas in key red, checked pledges as links). */
 .related {
   margin-top: clamp(32px, 3.6vw, 48px);
-  padding: clamp(20px, 2.4vw, 28px) clamp(22px, 2.8vw, 36px);
-  border-radius: var(--radius-card);
-  background-color: var(--color-card-bg);
 }
 
 .relatedLabel {
-  margin-bottom: 14px;
   font-family: var(--font-kr);
   font-weight: 700;
   font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);
   color: var(--color-key);
-}
-
-.relatedGroup {
-  display: grid;
-  grid-template-columns: 13.5em minmax(0, 1fr);
-  gap: 4px 20px;
-}
-
-.relatedGroup + .relatedGroup {
-  margin-top: 12px;
-}
-
-.relatedArea {
-  font-family: var(--font-kr);
-  font-weight: 700;
-  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
-  line-height: 1.6;
-  color: var(--color-charcoal);
-  word-break: keep-all;
-}
-
-.relatedAreaNum {
-  margin-right: 8px;
-  font-family: var(--font-en);
-  font-weight: 800;
-  color: var(--color-key);
-}
-
-.relatedList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 22px;
-  list-style: none;
-}
-
-.relatedList li {
-  font-family: var(--font-kr);
-  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
-  line-height: 1.6;
-  color: var(--color-line);
-  word-break: keep-all;
-}
-
-.relatedList a {
-  text-decoration: underline;
-  text-decoration-color: var(--color-charcoal-30);
-  text-underline-offset: 4px;
-}
-
-@media (hover: hover) {
-  .relatedList a:hover {
-    color: var(--color-key);
-    text-decoration-color: currentColor;
-  }
 }
 
 /* 추천사: the booklet's footnote, then each letter in a rounded beige box
@@ -845,34 +786,10 @@
 
   .related {
     margin-top: calc(28 * var(--mu));
-    padding: calc(18 * var(--mu)) calc(18 * var(--mu));
   }
 
   .relatedLabel {
-    margin-bottom: calc(10 * var(--mu));
     font-size: calc(14 * var(--mu));
-  }
-
-  .relatedGroup {
-    grid-template-columns: minmax(0, 1fr);
-    gap: calc(4 * var(--mu));
-  }
-
-  .relatedGroup + .relatedGroup {
-    margin-top: calc(14 * var(--mu));
-  }
-
-  .relatedArea {
-    font-size: calc(15 * var(--mu));
-  }
-
-  .relatedList {
-    flex-direction: column;
-    gap: calc(6 * var(--mu));
-  }
-
-  .relatedList li {
-    font-size: calc(15.5 * var(--mu));
   }
 
   .recNote {

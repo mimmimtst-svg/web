@@ -1,6 +1,7 @@
 import styles from "./CandidatePage.module.css";
 import profileStyles from "./ProfilePage.module.css";
 import pressStyles from "./PressPage.module.css";
+import planStyles from "./PlanDetail.module.css";
 import Header from "./Header";
 import Footer from "./Footer";
 import ScrollTopButton from "./ScrollTopButton";
@@ -9,6 +10,7 @@ import PressTabs from "./PressTabs";
 import PressList from "./PressList";
 import { ProfileCv, ProfileIntro } from "./ProfilePage";
 import QnaNav from "./QnaNav";
+import { CheckIcon } from "./icons";
 import { pressColumns, pressReports } from "@/lib/pressData";
 import { pledgeAnchor, pledgeParts } from "@/lib/pledgeDetail";
 import { withBasePath } from "@/lib/basePath";
@@ -153,33 +155,41 @@ function RelatedPledges({ items }: { items: RelatedPledge[] }) {
     groups.set(key, [...(groups.get(key) ?? []), item]);
   }
   const keys = [...groups.keys()].sort((a, b) => (a && b ? a.localeCompare(b) : a ? -1 : 1));
+  // The P2-2 pledge box (2026-10-23, "make it like that one"): each area's
+  // name in key red over its pledges with the check, two areas side by
+  // side, one area's list in two columns.
   return (
     <div className={styles.related}>
       <p className={styles.relatedLabel}>관련 공약</p>
-      {keys.map((key) => {
-        const part = pledgeParts.find((p) => p.number === key);
-        return (
-          <div className={styles.relatedGroup} key={key}>
-            <p className={styles.relatedArea}>
-              {part ? (
-                <>
-                  <span className={styles.relatedAreaNum}>{part.number}</span>
-                  {part.title}
-                </>
-              ) : (
-                "단과대별 발전계획"
-              )}
+      <div className={`${planStyles.pledges} ${keys.length > 1 ? planStyles.pledgesSplit : ""}`}>
+        {keys.map((key) => (
+          <div className={planStyles.pledgeGroup} key={key}>
+            <p className={planStyles.pledgeArea}>
+              {pledgeParts.find((p) => p.number === key)?.title ?? "단과대별 발전계획"}
             </p>
-            <ul className={styles.relatedList}>
-              {groups.get(key)!.map((item) => (
-                <li key={item.text}>
-                  {hrefOf(item) ? <a href={hrefOf(item)}>{item.text}</a> : <span>{item.text}</span>}
-                </li>
-              ))}
+            <ul className={planStyles.pledgeList}>
+              {groups.get(key)!.map((item) => {
+                const href = hrefOf(item);
+                return (
+                  <li key={item.text}>
+                    {href ? (
+                      <a className={planStyles.pledge} href={href}>
+                        <CheckIcon />
+                        <span>{item.text}</span>
+                      </a>
+                    ) : (
+                      <span className={planStyles.pledge}>
+                        <CheckIcon />
+                        <span>{item.text}</span>
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
-        );
-      })}
+        ))}
+      </div>
     </div>
   );
 }
