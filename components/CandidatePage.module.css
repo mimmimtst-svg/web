@@ -113,15 +113,10 @@
 
 /* ---------- The booklet's text (인사말, 자기소개, Q&A, 추천사) ---------- */
 /* One reading column, large type for older readers. */
-.text,
-.textWide {
+.text {
   max-width: calc(880px + 2 * var(--space-page-x));
   margin: 0 auto;
   padding: clamp(48px, 7vh, 96px) var(--space-page-x) clamp(80px, 11vh, 150px);
-}
-
-.textWide {
-  max-width: calc(1080px + 2 * var(--space-page-x));
 }
 
 .para {
@@ -294,28 +289,149 @@
   color: var(--color-charcoal);
 }
 
-/* 자기소개: each paragraph beside a photo, sides taking turns. */
-.photoRow {
+/* ---------- 자기소개 (2026-10-24 redesign) ---------- */
+.motivation {
+  max-width: calc(1120px + 2 * var(--space-page-x));
+  margin: 0 auto;
+  padding: clamp(56px, 8vh, 104px) var(--space-page-x) clamp(72px, 10vh, 128px);
+}
+
+/* The opening paragraph large, a portrait beside it. */
+.moLead {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+}
+
+.moEyebrow {
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.125rem);
+  letter-spacing: 0.02em;
+  color: var(--color-key);
+}
+
+.moLeadText {
+  margin-top: clamp(16px, 2vw, 28px);
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: clamp(1.375rem, 1.05rem + 1vw, 2rem);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: var(--color-charcoal);
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+/* Four key figures, beige tiles, the number in key red. */
+.moFigures {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 20px);
+  margin-top: clamp(56px, 7vw, 96px);
+  list-style: none;
+}
+
+.moFigures li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(22px, 2.4vw, 32px) clamp(18px, 2vw, 28px);
+  border-radius: 16px;
+  background-color: var(--color-card-bg);
+}
+
+.moFigureValue {
+  font-family: var(--font-kr);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.625rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-key);
+}
+
+.moFigureLabel {
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  line-height: 1.5;
+  color: var(--color-charcoal);
+  word-break: keep-all;
+}
+
+.moFigureNote {
+  margin-top: auto;
+  font-family: var(--font-kr);
+  font-size: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
+  color: var(--color-label);
+}
+
+/* The career, a chapter per paragraph: year | text | photo. */
+.moChapters {
+  margin-top: clamp(80px, 10vw, 140px);
+  list-style: none;
+}
+
+.moChapter {
+  display: grid;
+  grid-template-columns: clamp(140px, 14vw, 200px) minmax(0, 1fr) minmax(0, 0.62fr);
   align-items: start;
-  gap: clamp(28px, 4vw, 64px);
+  gap: clamp(24px, 3.4vw, 56px);
 }
 
-.photoRow + .photoRow {
-  margin-top: clamp(48px, 6vw, 80px);
+.moChapter + .moChapter {
+  margin-top: clamp(64px, 8vw, 112px);
 }
 
-.photoRowFlip {
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+.moMark {
+  font-family: var(--font-kr);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--color-key);
+  word-break: keep-all;
 }
 
-.photoRowFlip > :first-child {
-  order: 2;
+.moHead {
+  margin-bottom: 14px;
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: clamp(1.1875rem, 1.05rem + 0.5vw, 1.5rem);
+  line-height: 1.55;
+  color: var(--color-charcoal);
+  word-break: keep-all;
 }
 
-.textWide > .wideSlot:last-child {
-  margin-bottom: 0;
+/* The closing paragraph on a rounded crimson card (the hero's crimson),
+   clear of the footer's. */
+.moClosing {
+  margin-top: clamp(80px, 10vw, 140px);
+  padding: clamp(40px, 5vw, 72px) clamp(28px, 5vw, 72px);
+  border-radius: 20px;
+  background-color: #791c25;
+  color: var(--color-white);
+}
+
+.moClosingHead {
+  font-family: var(--font-kr);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 1.05rem + 1.4vw, 2.5rem);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+.moClosingText {
+  max-width: 880px;
+  margin-top: clamp(18px, 2vw, 28px);
+  font-family: var(--font-kr);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.88);
+  word-break: keep-all;
 }
 
 /* Q&A: dots at the right edge, one per question, fixed in the middle of
@@ -653,8 +769,7 @@
     padding: calc(32 * var(--mu)) calc(20 * var(--mu)) calc(56 * var(--mu));
   }
 
-  .text,
-  .textWide {
+  .text {
     padding: calc(36 * var(--mu)) calc(20 * var(--mu)) calc(64 * var(--mu));
   }
 
@@ -725,22 +840,84 @@
     margin-top: calc(30 * var(--mu));
   }
 
-  /* 자기소개: the photo above its paragraph. */
-  .photoRow {
-    grid-template-columns: minmax(0, 1fr);
-    gap: calc(18 * var(--mu));
+  /* 자기소개 on a phone: everything in one column. */
+  .motivation {
+    padding: calc(36 * var(--mu)) calc(20 * var(--mu)) calc(56 * var(--mu));
   }
 
-  .photoRow + .photoRow {
+  .moLead {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(24 * var(--mu));
+  }
+
+  .moEyebrow {
+    font-size: calc(14 * var(--mu));
+  }
+
+  .moLeadText {
+    margin-top: calc(12 * var(--mu));
+    font-size: calc(20 * var(--mu));
+  }
+
+  .moFigures {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: calc(10 * var(--mu));
     margin-top: calc(40 * var(--mu));
   }
 
-  .photoRowFlip {
-    grid-template-columns: minmax(0, 1fr);
+  .moFigures li {
+    gap: calc(6 * var(--mu));
+    padding: calc(18 * var(--mu)) calc(14 * var(--mu));
+    border-radius: calc(14 * var(--mu));
   }
 
-  .photoRowFlip > :first-child {
-    order: 0;
+  .moFigureValue {
+    font-size: calc(24 * var(--mu));
+  }
+
+  .moFigureLabel {
+    font-size: calc(14.5 * var(--mu));
+  }
+
+  .moFigureNote {
+    font-size: calc(12.5 * var(--mu));
+  }
+
+  .moChapters {
+    margin-top: calc(56 * var(--mu));
+  }
+
+  .moChapter {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(12 * var(--mu));
+  }
+
+  .moChapter + .moChapter {
+    margin-top: calc(48 * var(--mu));
+  }
+
+  .moMark {
+    font-size: calc(22 * var(--mu));
+  }
+
+  .moHead {
+    margin-bottom: calc(10 * var(--mu));
+    font-size: calc(18 * var(--mu));
+  }
+
+  .moClosing {
+    margin-top: calc(56 * var(--mu));
+    padding: calc(30 * var(--mu)) calc(22 * var(--mu));
+    border-radius: calc(16 * var(--mu));
+  }
+
+  .moClosingHead {
+    font-size: calc(22 * var(--mu));
+  }
+
+  .moClosingText {
+    margin-top: calc(14 * var(--mu));
+    font-size: calc(16.5 * var(--mu));
   }
 
   /* No dots on a phone (2026-10-23: they meant nothing there) — a bar

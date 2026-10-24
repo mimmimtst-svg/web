@@ -76,8 +76,14 @@ function Blocks({ blocks }: { blocks: TextBlock[] }) {
 /** 인사말's photos in the letter (the user's, 2026-10-24), after these
     paragraphs, where the booklet has its photos. */
 const GREETING_PHOTOS: Record<number, { src: string; alt: string }> = {
-  7: { src: "greeting-photo-2-2026-10-24.webp", alt: "행사장에서 인사를 나누는 유병현 후보" },
-  11: { src: "greeting-photo-3-2026-10-24.webp", alt: "고려대학교 캠퍼스의 맞잡은 손 조형물" },
+  7: {
+    src: "greeting-photo-2-2026-10-24.webp",
+    alt: "행사장에서 인사를 나누는 유병현 후보",
+  },
+  11: {
+    src: "greeting-photo-3-2026-10-24.webp",
+    alt: "고려대학교 캠퍼스의 맞잡은 손 조형물",
+  },
 };
 
 /** A photo in the reading column, 3:2 with rounded corners. */
@@ -157,27 +163,110 @@ function Greeting() {
   );
 }
 
-/** II. 자기소개 및 동기: each paragraph beside a photo, left and right in
-    turn as in the booklet (2026-10-24: no closing wide photo). */
+/** 자기소개's chapters, one per paragraph from the second to the
+    seventh: the year (or name) each turns on, from its own text. */
+const MOTIVATION_MARKS = [
+  "1994",
+  "2009",
+  "2011",
+  "2012 · 2015",
+  "KU PRIDE CLUB",
+  "이제",
+];
+
+/** 자기소개's key figures, each in the booklet's words. */
+const MOTIVATION_FIGURES = [
+  {
+    value: "제1호",
+    label: "고려대학교 민사소송법 분야 법학박사",
+    note: "1994",
+  },
+  {
+    value: "1,100억 원",
+    label: "한 해 모금액 돌파, 고려대학교 역사상 최초",
+    note: "2017",
+  },
+  {
+    value: "약 5,000명",
+    label: "KU PRIDE CLUB에 참여한 교우",
+    note: "2019년 2월 기준",
+  },
+  {
+    value: "약 162억 원",
+    label: "KU PRIDE CLUB으로 모인 기금",
+    note: "2026년 6월 기준",
+  },
+];
+
+/** A paragraph's first sentence, and the rest. */
+function splitFirst(text: string): [string, string] {
+  const at = text.indexOf("다. ");
+  return at < 0 ? [text, ""] : [text.slice(0, at + 2), text.slice(at + 3)];
+}
+
+/** II. 자기소개 및 동기 (2026-10-24, "more readable, more refined" than
+    the booklet's alternating photos): the opening paragraph large beside
+    a portrait; four key figures from the text; the career as chapters —
+    the year in key red, the paragraph's first sentence bold, the rest,
+    a photo beside it; the closing paragraph on a rounded crimson card. */
 function Motivation() {
+  const [lead, ...rest] = motivation;
+  const chapters = rest.slice(0, MOTIVATION_MARKS.length);
+  const [closingHead, closingRest] = splitFirst(rest[rest.length - 1]);
   return (
-    <div className={styles.textWide}>
-      {motivation.map((para, i) => (
-        <div className={`${styles.photoRow} ${i % 2 ? styles.photoRowFlip : ""}`} key={i}>
-          <PhotoSlot label={`자기소개 사진 ${i + 1}`} ratio="4 / 3" />
-          <p className={styles.para}>{para}</p>
+    <div className={styles.motivation}>
+      <header className={styles.moLead}>
+        <div>
+          <p className={styles.moEyebrow}>자기소개 및 총장 입후보 동기</p>
+          <p className={styles.moLeadText}>{lead}</p>
         </div>
-      ))}
+        <PhotoSlot label="자기소개 사진 1" ratio="4 / 5" />
+      </header>
+
+      <ul className={styles.moFigures}>
+        {MOTIVATION_FIGURES.map((f) => (
+          <li key={f.value}>
+            <span className={styles.moFigureValue}>{f.value}</span>
+            <span className={styles.moFigureLabel}>{f.label}</span>
+            <span className={styles.moFigureNote}>{f.note}</span>
+          </li>
+        ))}
+      </ul>
+
+      <ol className={styles.moChapters}>
+        {chapters.map((para, i) => {
+          const [head, body] = splitFirst(para);
+          return (
+            <li className={styles.moChapter} key={i}>
+              <p className={styles.moMark}>{MOTIVATION_MARKS[i]}</p>
+              <div className={styles.moBody}>
+                <p className={styles.moHead}>{head}</p>
+                {body && <p className={styles.para}>{body}</p>}
+              </div>
+              <PhotoSlot label={`자기소개 사진 ${i + 2}`} ratio="4 / 3" />
+            </li>
+          );
+        })}
+      </ol>
+
+      <section className={styles.moClosing}>
+        <p className={styles.moClosingHead}>{closingHead}</p>
+        {closingRest && <p className={styles.moClosingText}>{closingRest}</p>}
+      </section>
     </div>
   );
 }
 
 /** Where a related pledge opens: its entry on the 주요 공약 page (same
     codes as the booklet), or nothing while it has none yet. */
-const LISTED = new Set(pledgeParts.flatMap((part) => part.pledges.map((p) => p.code)));
+const LISTED = new Set(
+  pledgeParts.flatMap((part) => part.pledges.map((p) => p.code)),
+);
 const hrefOf = (item: RelatedPledge) =>
   item.href ??
-  (item.code && LISTED.has(item.code) ? `../pledges/detail/#${pledgeAnchor(item.code)}` : undefined);
+  (item.code && LISTED.has(item.code)
+    ? `../pledges/detail/#${pledgeAnchor(item.code)}`
+    : undefined);
 
 /** Q&A's related pledges grouped under their policy area — the booklet's
     code ("1-1") starts with the area's number (01 선도적 연구 …) — in the
@@ -188,18 +277,23 @@ function RelatedPledges({ items }: { items: RelatedPledge[] }) {
     const key = item.code ? item.code.split("-")[0].padStart(2, "0") : "";
     groups.set(key, [...(groups.get(key) ?? []), item]);
   }
-  const keys = [...groups.keys()].sort((a, b) => (a && b ? a.localeCompare(b) : a ? -1 : 1));
+  const keys = [...groups.keys()].sort((a, b) =>
+    a && b ? a.localeCompare(b) : a ? -1 : 1,
+  );
   // The P2-2 pledge box (2026-10-23, "make it like that one"): each area's
   // name in key red over its pledges with the check, two areas side by
   // side, one area's list in two columns.
   return (
     <div className={styles.related}>
       <p className={styles.relatedLabel}>관련 공약</p>
-      <div className={`${planStyles.pledges} ${keys.length > 1 ? planStyles.pledgesSplit : ""}`}>
+      <div
+        className={`${planStyles.pledges} ${keys.length > 1 ? planStyles.pledgesSplit : ""}`}
+      >
         {keys.map((key) => (
           <div className={planStyles.pledgeGroup} key={key}>
             <p className={planStyles.pledgeArea}>
-              {pledgeParts.find((p) => p.number === key)?.title ?? "단과대별 발전계획"}
+              {pledgeParts.find((p) => p.number === key)?.title ??
+                "단과대별 발전계획"}
             </p>
             <ul className={planStyles.pledgeList}>
               {groups.get(key)!.map((item) => {
@@ -237,7 +331,12 @@ function QnaList() {
     <div className={styles.text}>
       <QnaNav items={qna.map(({ id, question }) => ({ id, question }))} />
       {qna.map((q, i) => (
-        <article className={styles.qa} id={q.id} key={q.id} aria-labelledby={`${q.id}-title`}>
+        <article
+          className={styles.qa}
+          id={q.id}
+          key={q.id}
+          aria-labelledby={`${q.id}-title`}
+        >
           <h2 className={styles.question} id={`${q.id}-title`}>
             <span className={styles.qNum}>Q{i + 1}</span>
             {q.question}
@@ -269,7 +368,11 @@ function Recommendations() {
       <p className={styles.recNote}>{recommendationNote}</p>
       <div className={styles.recList}>
         {recommendations.map((rec) => (
-          <article className={styles.rec} key={rec.name} aria-label={`${rec.name} 추천사`}>
+          <article
+            className={styles.rec}
+            key={rec.name}
+            aria-label={`${rec.name} 추천사`}
+          >
             {rec.type === "letter" ? (
               <>
                 {rec.title && <h2 className={styles.recTitle}>{rec.title}</h2>}
@@ -329,7 +432,11 @@ export default function CandidatePage() {
         <CandidateTabs
           tabs={[
             { id: "greeting", label: "인사말", content: <Greeting /> },
-            { id: "motivation", label: "자기소개 및 동기", content: <Motivation /> },
+            {
+              id: "motivation",
+              label: "자기소개 및 동기",
+              content: <Motivation />,
+            },
             { id: "qna", label: "Q&A", content: <QnaList /> },
             {
               id: "career",
@@ -357,9 +464,14 @@ export default function CandidatePage() {
                         id: "reports",
                         label: "언론보도",
                         content: pressReports.map((group, index) => (
-                          <section className={pressStyles.group} key={group.title ?? index}>
+                          <section
+                            className={pressStyles.group}
+                            key={group.title ?? index}
+                          >
                             {group.title && (
-                              <h2 className={pressStyles.groupTitle}>{group.title}</h2>
+                              <h2 className={pressStyles.groupTitle}>
+                                {group.title}
+                              </h2>
                             )}
                             <PressList items={group.items} />
                           </section>
