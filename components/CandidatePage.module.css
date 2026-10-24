@@ -166,50 +166,122 @@
   margin: clamp(40px, 5vw, 64px) 0;
 }
 
-/* 인사말: the portrait beside the slogan. */
-.greetingHead {
-  display: grid;
-  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
-  align-items: end;
-  gap: clamp(28px, 4vw, 56px);
+/* A photo in the reading column (인사말's campus photos). */
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--radius-card);
 }
 
-.slogan {
-  text-align: right;
+/* 인사말's opening band (2026-10-24): full width under the tab bar — the
+   campus from the air under a crimson wash (solid on the left, where the
+   text is, opening up to the right), the slogan large in white, the
+   portrait standing on the band's foot on the right. */
+.greetingHero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: var(--color-key);
 }
 
-.sloganKr {
-  font-family: var(--font-kr);
-  font-weight: 800;
-  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.625rem);
-  line-height: 1.3;
-  color: var(--color-charcoal);
-  word-break: keep-all;
-  text-wrap: balance;
+.greetingHeroBg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 45%;
 }
 
-.sloganEn {
-  margin-top: 14px;
+.greetingHero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    90deg,
+    rgba(111, 1, 33, 0.97) 0%,
+    rgba(139, 0, 41, 0.9) 40%,
+    rgba(139, 0, 41, 0.55) 72%,
+    rgba(139, 0, 41, 0.3) 100%
+  );
+}
+
+.greetingHeroInner {
+  max-width: 1200px;
+  min-height: clamp(440px, 60vh, 640px);
+  margin: 0 auto;
+  padding: 0 var(--space-page-x);
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: clamp(24px, 4vw, 64px);
+}
+
+.greetingHeroText {
+  align-self: center;
+  padding: clamp(56px, 8vh, 96px) 0;
+  color: var(--color-white);
+}
+
+.heroKu {
   font-family: var(--font-en);
   font-weight: 700;
-  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.625rem);
-  letter-spacing: 0.04em;
-  color: var(--color-key);
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.85);
 }
 
-.sloganEnSub {
-  margin-top: 4px;
+.heroSlogan {
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(14px, 1.6vw, 22px);
+  font-family: var(--font-kr);
+  font-weight: 800;
+  font-size: clamp(2.25rem, 1.2rem + 2.8vw, 4.25rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Two lines, each kept whole: "자유로운 지성," / "시대를 여는 고대". */
+.heroSlogan span {
+  white-space: nowrap;
+}
+
+/* A short white rule, then the English line. */
+.heroEn {
+  margin-top: clamp(22px, 2.6vw, 34px);
+  padding-top: clamp(18px, 2vw, 26px);
+  border-top: 2px solid rgba(255, 255, 255, 0.55);
+  width: fit-content;
   font-family: var(--font-en);
   font-style: italic;
-  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.1875rem);
-  color: var(--color-label);
+  font-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.5rem);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.greetingPortrait {
+  flex: 0 0 auto;
+  align-self: flex-end;
+  width: auto;
+  height: clamp(360px, 54vh, 580px);
+  margin-top: clamp(32px, 5vh, 60px);
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.25));
+}
+
+.greetingText {
+  padding-top: clamp(48px, 7vh, 88px);
 }
 
 .salutation {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin: clamp(48px, 6vw, 80px) 0 clamp(28px, 3vw, 40px);
+  margin: 0 0 clamp(28px, 3vw, 40px);
   font-family: var(--font-kr);
   font-weight: 700;
   font-size: clamp(1.1875rem, 1.1rem + 0.4vw, 1.4375rem);
@@ -618,26 +690,55 @@
     margin: calc(32 * var(--mu)) 0;
   }
 
-  .greetingHead {
-    grid-template-columns: calc(120 * var(--mu)) minmax(0, 1fr);
-    gap: calc(18 * var(--mu));
+  /* The band on a phone: the slogan on top, the portrait below it on
+     the right, the wash running top to bottom. */
+  .greetingHero::before {
+    background: linear-gradient(
+      180deg,
+      rgba(111, 1, 33, 0.96) 0%,
+      rgba(139, 0, 41, 0.88) 50%,
+      rgba(139, 0, 41, 0.55) 100%
+    );
   }
 
-  .sloganKr {
-    font-size: calc(21 * var(--mu));
+  .greetingHeroInner {
+    min-height: 0;
+    padding: 0 calc(20 * var(--mu));
+    flex-direction: column;
+    gap: 0;
   }
 
-  .sloganEn {
-    margin-top: calc(8 * var(--mu));
-    font-size: calc(16 * var(--mu));
+  .greetingHeroText {
+    align-self: stretch;
+    padding: calc(40 * var(--mu)) 0 0;
   }
 
-  .sloganEnSub {
-    font-size: calc(13 * var(--mu));
+  .heroKu {
+    font-size: calc(15 * var(--mu));
+  }
+
+  .heroSlogan {
+    margin-top: calc(10 * var(--mu));
+    font-size: calc(34 * var(--mu));
+  }
+
+  .heroEn {
+    margin-top: calc(18 * var(--mu));
+    padding-top: calc(14 * var(--mu));
+    font-size: calc(15 * var(--mu));
+  }
+
+  .greetingPortrait {
+    height: calc(250 * var(--mu));
+    margin-top: calc(-16 * var(--mu));
+  }
+
+  .greetingText {
+    padding-top: calc(36 * var(--mu));
   }
 
   .salutation {
-    margin: calc(36 * var(--mu)) 0 calc(22 * var(--mu));
+    margin: 0 0 calc(22 * var(--mu));
     font-size: calc(18 * var(--mu));
   }
 

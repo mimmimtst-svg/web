@@ -73,47 +73,91 @@ function Blocks({ blocks }: { blocks: TextBlock[] }) {
   );
 }
 
-/** Where 인사말's wide photos go, after these paragraphs (the booklet's
-    pages 4 and 5 end on a campus photo). */
-const GREETING_PHOTOS_AFTER = [7, 11];
+/** 인사말's photos in the letter, after these paragraphs (the booklet's
+    pages 4 and 5 end on a campus photo; its aerial view opens the page
+    instead, in the band at the top). */
+const GREETING_PHOTOS: Record<number, { src: string; alt: string }> = {
+  7: { src: "greeting-campus-night-2026-10-24.webp", alt: "고려대학교 캠퍼스 야경" },
+  11: { src: "greeting-campus-gate-2026-10-24.webp", alt: "고려대학교 캠퍼스 정문" },
+};
 
-/** I. 후보자 인사말: the portrait beside the slogan, the letter, wide
-    photos where the booklet has them, the sign-off on the right. */
+/** A photo in the reading column, 3:2 with rounded corners. */
+function Photo({ src, alt }: { src: string; alt: string }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      className={styles.photo}
+      src={withBasePath(`/images/${src}`)}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+    />
+  );
+}
+
+/** I. 후보자 인사말 (2026-10-24, "the opening should have impact"): a
+    full-width band — the campus from the air under a crimson wash, the
+    slogan large in white, the candidate's portrait standing at its foot
+    — then the letter with the booklet's photos, the sign-off on the
+    right. */
 function Greeting() {
   return (
-    <div className={styles.text}>
-      <header className={styles.greetingHead}>
-        <PhotoSlot label="인사말 사진 1" ratio="4 / 5" className={styles.portraitSlot} />
-        <div className={styles.slogan}>
-          <p className={styles.sloganKr}>{greeting.slogan[0]}</p>
-          <p className={styles.sloganEn}>{greeting.slogan[1]}</p>
-          <p className={styles.sloganEnSub}>{greeting.slogan[2]}</p>
+    <>
+      <header className={styles.greetingHero}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className={styles.greetingHeroBg}
+          src={withBasePath("/images/greeting-campus-aerial-2026-10-24.webp")}
+          alt=""
+          aria-hidden="true"
+        />
+        <div className={styles.greetingHeroInner}>
+          <div className={styles.greetingHeroText}>
+            <p className={styles.heroKu}>{greeting.slogan[1]}</p>
+            <p className={styles.heroSlogan}>
+              {greeting.slogan[0].split(", ").map((part, i, all) => (
+                <span key={part}>
+                  {part}
+                  {i < all.length - 1 ? "," : ""}
+                </span>
+              ))}
+            </p>
+            <p className={styles.heroEn}>{greeting.slogan[2]}</p>
+          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className={styles.greetingPortrait}
+            src={withBasePath("/images/greeting-portrait-2026-10-24.webp")}
+            alt="유병현 후보"
+            width={837}
+            height={837}
+          />
         </div>
       </header>
-      <p className={styles.salutation}>
-        {greeting.salutation.map((line) => (
-          <span key={line}>{line}</span>
+      <div className={`${styles.text} ${styles.greetingText}`}>
+        <p className={styles.salutation}>
+          {greeting.salutation.map((line) => (
+            <span key={line}>{line}</span>
+          ))}
+        </p>
+        {greeting.body.map((para, i) => (
+          <div key={i}>
+            <p className={styles.para}>{para}</p>
+            {GREETING_PHOTOS[i] && (
+              <div className={styles.wideSlot}>
+                <Photo {...GREETING_PHOTOS[i]} />
+              </div>
+            )}
+          </div>
         ))}
-      </p>
-      {greeting.body.map((para, i) => (
-        <div key={i}>
-          <p className={styles.para}>{para}</p>
-          {GREETING_PHOTOS_AFTER.includes(i) && (
-            <PhotoSlot
-              label={`인사말 사진 ${GREETING_PHOTOS_AFTER.indexOf(i) + 2}`}
-              ratio="3 / 2"
-              className={styles.wideSlot}
-            />
-          )}
-        </div>
-      ))}
-      <p className={styles.para}>{greeting.closing}</p>
-      <p className={styles.signoff}>
-        {greeting.signoff.map((line) => (
-          <span key={line}>{line}</span>
-        ))}
-      </p>
-    </div>
+        <p className={styles.para}>{greeting.closing}</p>
+        <p className={styles.signoff}>
+          {greeting.signoff.map((line) => (
+            <span key={line}>{line}</span>
+          ))}
+        </p>
+      </div>
+    </>
   );
 }
 
