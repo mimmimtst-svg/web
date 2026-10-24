@@ -242,12 +242,12 @@
   font-family: var(--font-kr);
   font-weight: 700;
   font-size: clamp(3rem, 0.5rem + 5vw, 8.5rem);
-  line-height: 1.15;
+  line-height: 1.05;
   white-space: nowrap;
 }
 
 .heroKr {
-  margin-top: clamp(12px, 2.2vw, 44px);
+  margin-top: clamp(4px, 0.7vw, 16px);
   font-family: var(--font-kr);
   font-weight: 800;
   font-size: clamp(1.25rem, 0.2rem + 2.1vw, 3.5rem);
@@ -704,11 +704,11 @@
 
   .heroBrand {
     font-size: calc(45 * var(--mu));
-    line-height: 1.1;
+    line-height: 1.05;
   }
 
   .heroKr {
-    margin-top: calc(18 * var(--mu));
+    margin-top: calc(4 * var(--mu));
     font-size: calc(17.5 * var(--mu));
   }
 
