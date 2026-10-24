@@ -53,6 +53,12 @@
   color: var(--color-key);
 }
 
+/* Before the sliding pill has been measured, the chosen tab is a white
+   pill of its own. */
+.tabActiveSolid {
+  background-color: var(--color-white);
+}
+
 /* The white pill behind the chosen tab, sliding between them. */
 .tabThumb {
   position: absolute;

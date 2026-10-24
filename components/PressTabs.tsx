@@ -11,26 +11,42 @@ type Tab = { id: string; label: string; content: ReactNode };
 export default function PressTabs({ tabs }: { tabs: Tab[] }) {
   const [active, setActive] = useState(tabs[0].id);
   const barRef = useRef<HTMLDivElement>(null);
-  const [thumb, setThumb] = useState<{ left: number; width: number } | null>(null);
+  const [thumb, setThumb] = useState<{ left: number; width: number } | null>(
+    null,
+  );
 
-  // The pill under the chosen tab: measured, so it fits either label.
+  // The pill under the chosen tab: measured, so it fits either label —
+  // again whenever the bar's size changes, which includes the bar first
+  // being shown (2026-10-24: inside 후보자 소개's hidden 언론 기고 tab it
+  // measured 0 wide, leaving the chosen label red on red).
   useLayoutEffect(() => {
+    const bar = barRef.current;
     const measure = () => {
-      const tab = barRef.current?.querySelector<HTMLElement>(`[data-id="${active}"]`);
-      if (tab) setThumb({ left: tab.offsetLeft, width: tab.offsetWidth });
+      const tab = bar?.querySelector<HTMLElement>(`[data-id="${active}"]`);
+      if (tab && tab.offsetWidth > 0)
+        setThumb({ left: tab.offsetLeft, width: tab.offsetWidth });
     };
     measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    const observer = new ResizeObserver(measure);
+    if (bar) observer.observe(bar);
+    return () => observer.disconnect();
   }, [active]);
 
   return (
     <>
-      <div className={styles.tabs} role="tablist" aria-label="언론 보도 자료 분류" ref={barRef}>
+      <div
+        className={styles.tabs}
+        role="tablist"
+        aria-label="언론 보도 자료 분류"
+        ref={barRef}
+      >
         {thumb && (
           <span
             className={styles.tabThumb}
-            style={{ transform: `translateX(${thumb.left}px)`, width: thumb.width }}
+            style={{
+              transform: `translateX(${thumb.left}px)`,
+              width: thumb.width,
+            }}
             aria-hidden="true"
           />
         )}
@@ -43,7 +59,9 @@ export default function PressTabs({ tabs }: { tabs: Tab[] }) {
             id={`press-tab-${tab.id}`}
             aria-selected={tab.id === active}
             aria-controls={`press-panel-${tab.id}`}
-            className={`${styles.tab} ${tab.id === active ? styles.tabActive : ""}`}
+            className={`${styles.tab} ${tab.id === active ? styles.tabActive : ""} ${
+              tab.id === active && !thumb ? styles.tabActiveSolid : ""
+            }`}
             onClick={() => setActive(tab.id)}
           >
             {tab.label}
