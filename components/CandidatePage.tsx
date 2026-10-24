@@ -103,23 +103,24 @@ function Greeting() {
   return (
     <>
       <header className={styles.greetingHero}>
-        {/* The same photo, blurred, fills the band behind it where the
-            sharp one doesn't reach (the left of a wide screen). */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className={styles.greetingHeroBlur}
-          src={withBasePath("/images/greeting-hero-2026-10-24.webp")}
-          alt=""
-          aria-hidden="true"
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className={styles.greetingHeroBg}
-          src={withBasePath("/images/greeting-hero-2026-10-24.webp")}
-          alt="연단에서 인사하는 유병현 후보"
-          width={1600}
-          height={1066}
-        />
+        {/* Wide screens: the user's widened stage photo (2000×700), the
+            candidate on the left, the crimson screen on the right. A phone
+            keeps the original 3:2 photo, placed by CSS. */}
+        <picture>
+          <source
+            media="(orientation: portrait)"
+            srcSet={withBasePath("/images/greeting-hero-2026-10-24.webp")}
+            width={1600}
+            height={1066}
+          />
+          <img
+            className={styles.greetingHeroBg}
+            src={withBasePath("/images/greeting-hero-wide-2026-10-24.webp")}
+            alt="연단에서 인사하는 유병현 후보"
+            width={2000}
+            height={700}
+          />
+        </picture>
         <div className={styles.greetingHeroInner}>
           {/* The main page's hero title, right-aligned. */}
           <div className={styles.greetingHeroText}>

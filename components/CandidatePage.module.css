@@ -177,50 +177,31 @@
 }
 
 /* 인사말's opening band (2026-10-24, the user's photo): the candidate on
-   stage; the photo's right side is the event's crimson screen, and the
-   band carries that crimson on to the right edge, where the main page's
-   hero title sits right-aligned. The photo stands at the band's height
-   with the candidate about a quarter of the way across (not pinned to the
-   screen's left edge), over the text's crimson; where it doesn't reach,
-   the same photo blurred fills in. */
+   stage, a widened photo (2000×700) covering the band — the candidate a
+   third of the way across, the event's crimson screen on the right, where
+   the main page's hero title sits right-aligned, in a wider column than
+   the text below so it clears him. */
 .greetingHero {
   --hero-h: clamp(480px, 66vh, 720px);
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  /* The crimson of the photo's right edge, top to bottom. */
-  background: linear-gradient(180deg, #6a1220 0%, #6e1a22 50%, #77272d 100%);
+  /* The crimson of the photo's right edge. */
+  background-color: #7c1620;
 }
 
-.greetingHeroBlur {
+.greetingHeroBg {
   position: absolute;
   inset: 0;
-  z-index: -2;
+  z-index: -1;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: left center;
-  filter: blur(36px) brightness(0.75);
-  transform: scale(1.15);
-  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 35%, transparent 65%);
-  mask-image: linear-gradient(90deg, #000 0%, #000 35%, transparent 65%);
-}
-
-/* The candidate (35% across the photo) at 25% of the band. */
-.greetingHeroBg {
-  position: absolute;
-  top: 0;
-  left: max(0px, calc(25% - 0.525 * var(--hero-h)));
-  z-index: -1;
-  height: 100%;
-  width: auto;
-  max-width: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 78%, transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 78%, transparent 100%);
+  object-position: 30% 25%;
 }
 
 .greetingHeroInner {
-  max-width: 1200px;
+  max-width: 1600px;
   min-height: var(--hero-h);
   margin: 0 auto;
   padding: 0 var(--space-page-x);
@@ -232,7 +213,10 @@
 /* The main hero's three lines (Hero.module.css: 40 / 135 / 90 at its
    scale), smaller: the English line light, "FINE - KU" large, the slogan
    in one line where it fits. */
+/* At most half the band, so the slogan goes to two lines rather than
+   reaching over him on a narrower screen. */
 .greetingHeroText {
+  max-width: 50%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -697,12 +681,13 @@
     --hero-h: calc(300 * var(--mu));
   }
 
-  .greetingHeroBlur {
-    display: none;
-  }
-
   .greetingHeroBg {
+    inset: auto;
+    top: 0;
     left: calc(20 * var(--mu) - 0.1725 * var(--hero-h));
+    width: auto;
+    height: 100%;
+    object-fit: fill;
     -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent 100%);
     mask-image: linear-gradient(90deg, #000 85%, transparent 100%);
   }
@@ -725,6 +710,7 @@
   }
 
   .greetingHeroText {
+    max-width: none;
     padding: 0;
   }
 
