@@ -844,6 +844,26 @@
     order: 0;
   }
 
+  /* Photo 2 under "학교가 어려움에…", photo 4 above "법학자의 균형…":
+     the paragraphs become the grid's own items so the photo can sit
+     between them. */
+  .moSideMid > div {
+    display: contents;
+  }
+
+  .moSideMid > div > .para:first-child {
+    order: 0;
+  }
+
+  .moSideMid > .moPhoto {
+    order: 1;
+  }
+
+  .moSideMid > div > .para:last-child {
+    order: 2;
+    margin-top: 0;
+  }
+
 
 
 

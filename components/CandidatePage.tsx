@@ -176,6 +176,8 @@ type MoBlock =
       photo: MoPhoto;
       side: "left" | "right";
       shape: string;
+      /** On a phone, the photo between the two paragraphs, not after. */
+      phoneMid?: boolean;
     }
   | { kind: "text"; paras: number[] }
   | { kind: "wide"; photo: MoPhoto };
@@ -198,6 +200,7 @@ const MOTIVATION_LAYOUT: MoBlock[] = [
     paras: [3, 4],
     side: "left",
     shape: "moSideTall",
+    phoneMid: true,
     photo: {
       src: "motivation-photo-2-2026-10-24.webp",
       alt: "회의 자료를 살피는 유병현 후보",
@@ -218,6 +221,7 @@ const MOTIVATION_LAYOUT: MoBlock[] = [
     paras: [6, 7],
     side: "right",
     shape: "moSideSquare",
+    phoneMid: true,
     photo: {
       src: "motivation-photo-4-2026-10-24.webp",
       alt: "KU PRIDE CLUB 안내판 앞의 유병현 후보",
@@ -267,7 +271,7 @@ function Motivation() {
             <div
               className={`${styles.moBlock} ${styles.moSide} ${styles[block.shape]} ${
                 block.side === "left" ? styles.moSideLeft : ""
-              }`}
+              } ${block.phoneMid ? styles.moSideMid : ""}`}
               key={i}
             >
               <div>
