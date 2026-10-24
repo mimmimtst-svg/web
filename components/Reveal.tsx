@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode, type ElementType } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type ElementType,
+  type HTMLAttributes,
+} from "react";
 import { PORTRAIT } from "@/hooks/useMediaQuery";
 
 type RevealProps = {
@@ -24,7 +31,7 @@ type RevealProps = {
    * than each one reacting to its own individual visibility.
    */
   visible?: boolean;
-};
+} & Omit<HTMLAttributes<HTMLElement>, "children" | "className" | "style">;
 
 /**
  * Fades + slides an element in when it scrolls into view from below, and
@@ -47,6 +54,7 @@ export default function Reveal({
   duration = 700,
   axis = "y",
   visible: controlledVisible,
+  ...rest
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
   const [observedVisible, setObservedVisible] = useState(false);
@@ -85,6 +93,7 @@ export default function Reveal({
 
   return (
     <Tag
+      {...rest}
       ref={ref}
       className={`reveal ${className} ${visible ? "revealVisible" : "revealHidden"}`}
       style={{

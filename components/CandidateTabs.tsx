@@ -91,6 +91,7 @@ export default function CandidateTabs({ tabs }: { tabs: CandidateTab[] }) {
           id={`candidate-panel-${tab.id}`}
           aria-labelledby={`candidate-tab-${tab.id}`}
           data-tab={tab.id}
+          className={styles.tabPanel}
           hidden={tab.id !== active}
         >
           {tab.content}

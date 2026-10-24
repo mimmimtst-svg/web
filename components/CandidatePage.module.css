@@ -99,6 +99,66 @@
 }
 
 /* ---------- Panels ---------- */
+/* A tab's panel fades in each time it's chosen (the animation replays
+   whenever the panel goes from hidden to shown). */
+.tabPanel:not([hidden]) {
+  animation: candidatePanelIn 450ms ease both;
+}
+
+@keyframes candidatePanelIn {
+  from {
+    opacity: 0;
+  }
+}
+
+/* 인사말's band coming in: the photo settling from a slight zoom, the
+   three title lines rising one after another (as on the main hero). */
+.greetingHeroBg {
+  animation: greetingPhotoIn 1400ms cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+.heroEn,
+.heroBrand,
+.heroKr {
+  animation: greetingTitleIn 1200ms cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+.heroEn {
+  animation-delay: 200ms;
+}
+
+.heroBrand {
+  animation-delay: 350ms;
+}
+
+.heroKr {
+  animation-delay: 500ms;
+}
+
+@keyframes greetingPhotoIn {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes greetingTitleIn {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabPanel:not([hidden]),
+  .greetingHeroBg,
+  .heroEn,
+  .heroBrand,
+  .heroKr {
+    animation: none;
+  }
+}
+
 .inner {
   max-width: 1200px;
   margin: 0 auto;

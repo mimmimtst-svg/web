@@ -11,6 +11,7 @@ import PressTabs from "./PressTabs";
 import PressList from "./PressList";
 import { ProfileCv, ProfileIntro } from "./ProfilePage";
 import QnaNav from "./QnaNav";
+import Reveal from "./Reveal";
 import { CheckIcon } from "./icons";
 import { pressColumns, pressReports } from "@/lib/pressData";
 import { pledgeAnchor, pledgeParts } from "@/lib/pledgeDetail";
@@ -36,15 +37,15 @@ function RichText({ text }: { text: Rich }) {
 function Blocks({ blocks }: { blocks: TextBlock[] }) {
   return blocks.map((block, i) =>
     block.type === "p" ? (
-      <p className={styles.para} key={i}>
+      <Reveal as="p" className={styles.para} key={i}>
         <RichText text={block.text} />
-      </p>
+      </Reveal>
     ) : (
-      <ul className={styles.dashList} key={i}>
+      <Reveal as="ul" className={styles.dashList} key={i}>
         {block.items.map((item) => (
           <li key={item}>{item}</li>
         ))}
-      </ul>
+      </Reveal>
     ),
   );
 }
@@ -129,27 +130,31 @@ function Greeting() {
         </div>
       </header>
       <div className={`${styles.text} ${styles.greetingText}`}>
-        <p className={styles.salutation}>
+        <Reveal as="p" className={styles.salutation}>
           {greeting.salutation.map((line) => (
             <span key={line}>{line}</span>
           ))}
-        </p>
+        </Reveal>
         {greeting.body.map((para, i) => (
           <div key={i}>
-            <p className={styles.para}>{para}</p>
+            <Reveal as="p" className={styles.para}>
+              {para}
+            </Reveal>
             {GREETING_PHOTOS[i] && (
-              <div className={styles.wideSlot}>
+              <Reveal className={styles.wideSlot} distance={40} duration={900}>
                 <Photo {...GREETING_PHOTOS[i]} />
-              </div>
+              </Reveal>
             )}
           </div>
         ))}
-        <p className={styles.para}>{greeting.closing}</p>
-        <p className={styles.signoff}>
+        <Reveal as="p" className={styles.para}>
+          {greeting.closing}
+        </Reveal>
+        <Reveal as="p" className={styles.signoff}>
           {greeting.signoff.map((line) => (
             <span key={line}>{line}</span>
           ))}
-        </p>
+        </Reveal>
       </div>
     </>
   );
@@ -250,29 +255,34 @@ function MoImg({ photo, className }: { photo: MoPhoto; className: string }) {
 function Motivation() {
   return (
     <div className={styles.motivation}>
-      <h2 className={styles.moHeadline}>{MOTIVATION_HEADLINE}</h2>
+      <Reveal as="h2" className={styles.moHeadline} distance={32}>
+        {MOTIVATION_HEADLINE}
+      </Reveal>
       <div className={styles.moText}>
         {MOTIVATION_LAYOUT.map((block, i) =>
           block.kind === "wide" ? (
-            <MoImg
-              key={i}
-              photo={block.photo}
-              className={`${styles.moPhoto} ${styles.moWide}`}
-            />
+            <Reveal key={i} distance={40} duration={900}>
+              <MoImg
+                photo={block.photo}
+                className={`${styles.moPhoto} ${styles.moWide}`}
+              />
+            </Reveal>
           ) : block.kind === "text" ? (
-            <div className={styles.moBlock} key={i}>
+            <Reveal className={styles.moBlock} key={i}>
               {block.paras.map((n) => (
                 <p className={styles.para} key={n}>
                   {motivation[n]}
                 </p>
               ))}
-            </div>
+            </Reveal>
           ) : (
-            <div
+            <Reveal
               className={`${styles.moBlock} ${styles.moSide} ${styles[block.shape]} ${
                 block.side === "left" ? styles.moSideLeft : ""
               } ${block.phoneMid ? styles.moSideMid : ""}`}
               key={i}
+              distance={36}
+              duration={850}
             >
               <div>
                 {block.paras.map((n) => (
@@ -282,7 +292,7 @@ function Motivation() {
                 ))}
               </div>
               <MoImg photo={block.photo} className={styles.moPhoto} />
-            </div>
+            </Reveal>
           ),
         )}
       </div>
@@ -317,7 +327,7 @@ function RelatedPledges({ items }: { items: RelatedPledge[] }) {
   // name in key red over its pledges with the check, two areas side by
   // side, one area's list in two columns.
   return (
-    <div className={styles.related}>
+    <Reveal className={styles.related}>
       <p className={styles.relatedLabel}>관련 공약</p>
       <div
         className={`${planStyles.pledges} ${keys.length > 1 ? planStyles.pledgesSplit : ""}`}
@@ -351,7 +361,7 @@ function RelatedPledges({ items }: { items: RelatedPledge[] }) {
           </div>
         ))}
       </div>
-    </div>
+    </Reveal>
   );
 }
 
@@ -372,18 +382,23 @@ function QnaList() {
         >
           {/* Two columns as on the 주요 공약 detail page: "Q1" and the
               question on the left (staying in view), the answer right. */}
-          <h2 className={styles.question} id={`${q.id}-title`}>
+          <Reveal
+            as="h2"
+            className={styles.question}
+            id={`${q.id}-title`}
+            distance={32}
+          >
             <span className={styles.qBig}>Q{i + 1}</span>
             <span className={styles.questionText}>{q.question}</span>
-          </h2>
+          </Reveal>
           <div className={styles.answer}>
             <Blocks blocks={q.intro} />
             {q.sections.map((section, n) => (
               <section className={styles.qSection} key={section.title}>
-                <h3 className={styles.qSectionTitle}>
+                <Reveal as="h3" className={styles.qSectionTitle}>
                   <span className={styles.qSectionNum}>{n + 1}.</span>
                   {section.title}
-                </h3>
+                </Reveal>
                 <Blocks blocks={section.blocks} />
               </section>
             ))}
@@ -405,10 +420,13 @@ function Recommendations() {
       <p className={styles.recNote}>{recommendationNote}</p>
       <div className={styles.recList}>
         {recommendations.map((rec) => (
-          <article
+          <Reveal
+            as="article"
             className={styles.rec}
             key={rec.name}
             aria-label={`${rec.name} 추천사`}
+            distance={40}
+            duration={850}
           >
             {rec.type === "letter" ? (
               <>
@@ -444,7 +462,7 @@ function Recommendations() {
               {rec.role && <span className={styles.recRole}>{rec.role}</span>}
               {rec.place && <span className={styles.recRole}>{rec.place}</span>}
             </p>
-          </article>
+          </Reveal>
         ))}
       </div>
     </div>
