@@ -163,96 +163,57 @@ function Greeting() {
   );
 }
 
-/** 자기소개's chapters, one per paragraph from the second to the
-    seventh: the year (or name) each turns on, from its own text. */
-const MOTIVATION_MARKS = [
-  "1994",
-  "2009",
-  "2011",
-  "2012 · 2015",
-  "KU PRIDE CLUB",
-  "이제",
-];
-
-/** 자기소개's key figures, each in the booklet's words. */
-const MOTIVATION_FIGURES = [
-  {
-    value: "제1호",
-    label: "고려대학교 민사소송법 분야 법학박사",
-    note: "1994",
-  },
-  {
-    value: "1,100억 원",
-    label: "한 해 모금액 돌파, 고려대학교 역사상 최초",
-    note: "2017",
-  },
-  {
-    value: "약 5,000명",
-    label: "KU PRIDE CLUB에 참여한 교우",
-    note: "2019년 2월 기준",
-  },
-  {
-    value: "약 162억 원",
-    label: "KU PRIDE CLUB으로 모인 기금",
-    note: "2026년 6월 기준",
-  },
-];
-
 /** A paragraph's first sentence, and the rest. */
 function splitFirst(text: string): [string, string] {
   const at = text.indexOf("다. ");
   return at < 0 ? [text, ""] : [text.slice(0, at + 2), text.slice(at + 3)];
 }
 
-/** II. 자기소개 및 동기 (2026-10-24, "more readable, more refined" than
-    the booklet's alternating photos): the opening paragraph large beside
-    a portrait; four key figures from the text; the career as chapters —
-    the year in key red, the paragraph's first sentence bold, the rest,
-    a photo beside it; the closing paragraph on a rounded crimson card. */
+/** Small photos in 자기소개's text, floated beside these paragraphs,
+    sides taking turns. */
+const MOTIVATION_PHOTOS = [1, 3, 5];
+
+/** II. 자기소개 및 동기 (2026-10-24, second try — "a one-line
+    introduction on top, the text below, small photos here and there"):
+    the opening sentence large beside a big photo, then the booklet's
+    text in one reading column with small photos set into it, and the
+    closing paragraph on a crimson card. */
 function Motivation() {
-  const [lead, ...rest] = motivation;
-  const chapters = rest.slice(0, MOTIVATION_MARKS.length);
-  const [closingHead, closingRest] = splitFirst(rest[rest.length - 1]);
+  const [headline, opening] = splitFirst(motivation[0]);
+  const body = motivation.slice(1, -1);
+  const [closingHead, closingRest] = splitFirst(
+    motivation[motivation.length - 1],
+  );
   return (
     <div className={styles.motivation}>
       <header className={styles.moLead}>
-        <div>
-          <p className={styles.moEyebrow}>자기소개 및 총장 입후보 동기</p>
-          <p className={styles.moLeadText}>{lead}</p>
-        </div>
+        <p className={styles.moHeadline}>{headline}</p>
         <PhotoSlot label="자기소개 사진 1" ratio="4 / 5" />
       </header>
 
-      <ul className={styles.moFigures}>
-        {MOTIVATION_FIGURES.map((f) => (
-          <li key={f.value}>
-            <span className={styles.moFigureValue}>{f.value}</span>
-            <span className={styles.moFigureLabel}>{f.label}</span>
-            <span className={styles.moFigureNote}>{f.note}</span>
-          </li>
-        ))}
-      </ul>
-
-      <ol className={styles.moChapters}>
-        {chapters.map((para, i) => {
-          const [head, body] = splitFirst(para);
+      <div className={styles.moText}>
+        {opening && <p className={styles.para}>{opening}</p>}
+        {body.map((para, i) => {
+          const photo = MOTIVATION_PHOTOS.indexOf(i);
           return (
-            <li className={styles.moChapter} key={i}>
-              <p className={styles.moMark}>{MOTIVATION_MARKS[i]}</p>
-              <div className={styles.moBody}>
-                <p className={styles.moHead}>{head}</p>
-                {body && <p className={styles.para}>{body}</p>}
-              </div>
-              <PhotoSlot label={`자기소개 사진 ${i + 2}`} ratio="4 / 3" />
-            </li>
+            <div className={styles.moPara} key={i}>
+              {photo >= 0 && (
+                <PhotoSlot
+                  label={`자기소개 사진 ${photo + 2}`}
+                  ratio="4 / 3"
+                  className={`${styles.moPhoto} ${photo % 2 ? styles.moPhotoLeft : ""}`}
+                />
+              )}
+              <p className={styles.para}>{para}</p>
+            </div>
           );
         })}
-      </ol>
 
-      <section className={styles.moClosing}>
-        <p className={styles.moClosingHead}>{closingHead}</p>
-        {closingRest && <p className={styles.moClosingText}>{closingRest}</p>}
-      </section>
+        <section className={styles.moClosing}>
+          <p className={styles.moClosingHead}>{closingHead}</p>
+          {closingRest && <p className={styles.moClosingText}>{closingRest}</p>}
+        </section>
+      </div>
     </div>
   );
 }

@@ -296,7 +296,8 @@
   padding: clamp(56px, 8vh, 104px) var(--space-page-x) clamp(72px, 10vh, 128px);
 }
 
-/* The opening paragraph large, a portrait beside it. */
+/* A one-line introduction (the opening sentence) large, a big photo
+   beside it. */
 .moLead {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
@@ -304,110 +305,49 @@
   gap: clamp(32px, 5vw, 80px);
 }
 
-.moEyebrow {
-  font-family: var(--font-kr);
-  font-weight: 700;
-  font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.125rem);
-  letter-spacing: 0.02em;
-  color: var(--color-key);
-}
-
-.moLeadText {
-  margin-top: clamp(16px, 2vw, 28px);
-  font-family: var(--font-kr);
-  font-weight: 600;
-  font-size: clamp(1.375rem, 1.05rem + 1vw, 2rem);
-  line-height: 1.6;
-  letter-spacing: -0.01em;
-  color: var(--color-charcoal);
-  word-break: keep-all;
-  text-wrap: pretty;
-}
-
-/* Four key figures, beige tiles, the number in key red. */
-.moFigures {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(12px, 1.4vw, 20px);
-  margin-top: clamp(56px, 7vw, 96px);
-  list-style: none;
-}
-
-.moFigures li {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: clamp(22px, 2.4vw, 32px) clamp(18px, 2vw, 28px);
-  border-radius: 16px;
-  background-color: var(--color-card-bg);
-}
-
-.moFigureValue {
+.moHeadline {
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.625rem);
-  line-height: 1.15;
+  font-size: clamp(1.75rem, 1.1rem + 2vw, 3rem);
+  line-height: 1.4;
   letter-spacing: -0.02em;
-  color: var(--color-key);
-}
-
-.moFigureLabel {
-  font-family: var(--font-kr);
-  font-weight: 600;
-  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
-  line-height: 1.5;
   color: var(--color-charcoal);
   word-break: keep-all;
+  text-wrap: balance;
 }
 
-.moFigureNote {
-  margin-top: auto;
-  font-family: var(--font-kr);
-  font-size: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
-  color: var(--color-label);
+/* The text in one reading column, small photos floated into it. */
+.moText {
+  max-width: 880px;
+  margin: clamp(64px, 8vw, 112px) auto 0;
 }
 
-/* The career, a chapter per paragraph: year | text | photo. */
-.moChapters {
-  margin-top: clamp(80px, 10vw, 140px);
-  list-style: none;
+.moText > .para + .moPara,
+.moPara + .moPara {
+  margin-top: 1.1em;
 }
 
-.moChapter {
-  display: grid;
-  grid-template-columns: clamp(140px, 14vw, 200px) minmax(0, 1fr) minmax(0, 0.62fr);
-  align-items: start;
-  gap: clamp(24px, 3.4vw, 56px);
+.moPara::after {
+  content: "";
+  display: block;
+  clear: both;
 }
 
-.moChapter + .moChapter {
-  margin-top: clamp(64px, 8vw, 112px);
+.moPhoto {
+  float: right;
+  width: 40%;
+  margin: 6px 0 16px 32px;
 }
 
-.moMark {
-  font-family: var(--font-kr);
-  font-weight: 800;
-  font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--color-key);
-  word-break: keep-all;
-}
-
-.moHead {
-  margin-bottom: 14px;
-  font-family: var(--font-kr);
-  font-weight: 700;
-  font-size: clamp(1.1875rem, 1.05rem + 0.5vw, 1.5rem);
-  line-height: 1.55;
-  color: var(--color-charcoal);
-  word-break: keep-all;
+.moPhotoLeft {
+  float: left;
+  margin: 6px 32px 16px 0;
 }
 
 /* The closing paragraph on a rounded crimson card (the hero's crimson),
    clear of the footer's. */
 .moClosing {
-  margin-top: clamp(80px, 10vw, 140px);
+  margin-top: clamp(56px, 7vw, 96px);
   padding: clamp(40px, 5vw, 72px) clamp(28px, 5vw, 72px);
   border-radius: 20px;
   background-color: #791c25;
@@ -850,59 +790,20 @@
     gap: calc(24 * var(--mu));
   }
 
-  .moEyebrow {
-    font-size: calc(14 * var(--mu));
-  }
-
-  .moLeadText {
-    margin-top: calc(12 * var(--mu));
-    font-size: calc(20 * var(--mu));
-  }
-
-  .moFigures {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: calc(10 * var(--mu));
-    margin-top: calc(40 * var(--mu));
-  }
-
-  .moFigures li {
-    gap: calc(6 * var(--mu));
-    padding: calc(18 * var(--mu)) calc(14 * var(--mu));
-    border-radius: calc(14 * var(--mu));
-  }
-
-  .moFigureValue {
+  .moHeadline {
     font-size: calc(24 * var(--mu));
   }
 
-  .moFigureLabel {
-    font-size: calc(14.5 * var(--mu));
+  .moText {
+    margin-top: calc(36 * var(--mu));
   }
 
-  .moFigureNote {
-    font-size: calc(12.5 * var(--mu));
-  }
-
-  .moChapters {
-    margin-top: calc(56 * var(--mu));
-  }
-
-  .moChapter {
-    grid-template-columns: minmax(0, 1fr);
-    gap: calc(12 * var(--mu));
-  }
-
-  .moChapter + .moChapter {
-    margin-top: calc(48 * var(--mu));
-  }
-
-  .moMark {
-    font-size: calc(22 * var(--mu));
-  }
-
-  .moHead {
-    margin-bottom: calc(10 * var(--mu));
-    font-size: calc(18 * var(--mu));
+  /* On a phone the small photos sit full width between paragraphs. */
+  .moPhoto,
+  .moPhotoLeft {
+    float: none;
+    width: 100%;
+    margin: calc(8 * var(--mu)) 0 calc(20 * var(--mu));
   }
 
   .moClosing {
