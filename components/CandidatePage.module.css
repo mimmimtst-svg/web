@@ -298,19 +298,11 @@
   padding: clamp(56px, 8vh, 104px) var(--space-page-x) clamp(72px, 10vh, 128px);
 }
 
-/* A one-line introduction (the opening sentence) large, a big photo
-   beside it. */
-.moLead {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  align-items: center;
-  gap: clamp(32px, 5vw, 80px);
-}
-
+/* The one-line introduction across the top of the column. */
 .moHeadline {
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: clamp(1.75rem, 1.1rem + 2vw, 3rem);
+  font-size: clamp(1.5rem, 1rem + 1.4vw, 2.375rem);
   line-height: 1.4;
   letter-spacing: -0.02em;
   color: var(--color-charcoal);
@@ -318,40 +310,57 @@
   text-wrap: balance;
 }
 
-/* The text in one reading column, small photos floated into it. */
-.moLeadPhoto {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 7 / 5;
-  object-fit: cover;
-  border-radius: var(--radius-card);
-}
-
+/* The text, photos of different shapes set in on alternating sides. */
 .moText {
-  margin-top: clamp(64px, 8vw, 112px);
+  margin-top: clamp(32px, 4vw, 56px);
 }
 
-.moPara + .moPara {
-  margin-top: 1.1em;
-}
-
-.moPara::after {
+.moText::after {
   content: "";
   display: block;
   clear: both;
 }
 
-.moPhoto {
-  float: right;
-  width: 34%;
-  margin: 6px 0 16px 32px;
+.moText > .para + .para,
+.moText > .moPhoto + .para {
+  margin-top: 1.1em;
 }
 
-.moPhotoLeft {
-  float: left;
-  margin: 6px 32px 16px 0;
+img.moPhoto {
+  display: block;
 }
+
+.moPhoto {
+  object-fit: cover;
+  border-radius: var(--radius-card);
+}
+
+.moFloatRightLarge {
+  float: right;
+  width: 52%;
+  margin: 6px 0 24px clamp(28px, 3.4vw, 48px);
+}
+
+.moFloatLeft {
+  float: left;
+  clear: both;
+  width: 28%;
+  margin: 1.1em clamp(28px, 3.4vw, 48px) 20px 0;
+}
+
+.moFloatRight {
+  float: right;
+  clear: both;
+  width: 30%;
+  margin: 1.1em 0 20px clamp(28px, 3.4vw, 48px);
+}
+
+.moWide {
+  clear: both;
+  width: 100%;
+  margin: clamp(32px, 4vw, 56px) 0;
+}
+
 
 
 
@@ -467,7 +476,13 @@
   color: var(--color-key);
 }
 
+/* Two columns (the 주요 공약 detail page's 4 : 7): "Q1" large in key red
+   over the question, staying in view; the answer on the right. */
 .qa {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  column-gap: clamp(32px, 4vw, 64px);
+  align-items: start;
   scroll-margin-top: calc(var(--header-height) + var(--tabs-h) + 24px);
 }
 
@@ -476,18 +491,33 @@
 }
 
 .question {
+  position: sticky;
+  top: calc(var(--header-height) + var(--tabs-h) + 32px);
   display: flex;
-  gap: 14px;
-  margin-bottom: clamp(24px, 3vw, 36px);
-  font-family: var(--font-kr);
-  font-weight: 800;
-  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.125rem);
-  line-height: 1.4;
+  flex-direction: column;
+  gap: clamp(8px, 1vw, 14px);
   color: var(--color-charcoal);
-  word-break: keep-all;
 }
 
-.qa > .para + .para {
+.qBig {
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: clamp(3rem, 2rem + 3vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-key);
+}
+
+.questionText {
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: clamp(1.375rem, 1.1rem + 0.8vw, 1.875rem);
+  line-height: 1.45;
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+.answer > .para + .para {
   margin-top: 1.1em;
 }
 
@@ -767,25 +797,26 @@
     padding: calc(36 * var(--mu)) calc(20 * var(--mu)) calc(56 * var(--mu));
   }
 
-  .moLead {
-    grid-template-columns: minmax(0, 1fr);
-    gap: calc(24 * var(--mu));
-  }
-
   .moHeadline {
-    font-size: calc(24 * var(--mu));
+    font-size: calc(22 * var(--mu));
   }
 
   .moText {
-    margin-top: calc(36 * var(--mu));
+    margin-top: calc(24 * var(--mu));
   }
 
-  /* On a phone the small photos sit full width between paragraphs. */
-  .moPhoto,
-  .moPhotoLeft {
+  /* On a phone every photo sits full width between paragraphs. */
+  .moFloatRightLarge,
+  .moFloatLeft,
+  .moFloatRight,
+  .moWide {
     float: none;
     width: 100%;
-    margin: calc(8 * var(--mu)) 0 calc(20 * var(--mu));
+    margin: calc(20 * var(--mu)) 0;
+  }
+
+  .moFloatLeft {
+    aspect-ratio: 4 / 3 !important;
   }
 
 
@@ -890,9 +921,21 @@
     scroll-margin-top: calc(84 * var(--mu) + var(--tabs-h) + 66 * var(--mu));
   }
 
+  .qa {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .question {
-    gap: calc(10 * var(--mu));
+    position: static;
+    gap: calc(6 * var(--mu));
     margin-bottom: calc(20 * var(--mu));
+  }
+
+  .qBig {
+    font-size: calc(40 * var(--mu));
+  }
+
+  .questionText {
     font-size: calc(22 * var(--mu));
   }
 

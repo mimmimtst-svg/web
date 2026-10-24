@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import styles from "./CandidatePage.module.css";
 import profileStyles from "./ProfilePage.module.css";
 import pressStyles from "./PressPage.module.css";
@@ -87,7 +88,7 @@ const GREETING_PHOTOS: Record<
   11: {
     src: "greeting-photo-3-2026-10-24.webp",
     alt: "고려대학교 캠퍼스의 맞잡은 손 조형물",
-    focus: "center 45%",
+    focus: "center 68%",
   },
 };
 
@@ -179,10 +180,6 @@ function Greeting() {
   );
 }
 
-/** Small photos in 자기소개's text, floated beside these paragraphs,
-    sides taking turns. */
-const MOTIVATION_PHOTOS = [1, 3, 5];
-
 /** 자기소개's one-line introduction, written from its text (the user asked
     for a line that sums it up, not the first sentence): the closing
     paragraph's "법학자의 균형 감각 … 행정가의 실행력" and the opening's
@@ -190,38 +187,60 @@ const MOTIVATION_PHOTOS = [1, 3, 5];
 const MOTIVATION_HEADLINE =
   "법학자의 균형 감각과 행정가의 실행력으로, 고려대학교의 새로운 도약에 헌신하겠습니다.";
 
-/** II. 자기소개 및 동기 (2026-10-24, third pass): a one-line introduction
-    beside the user's photo, then the booklet's eight paragraphs in the
-    1200px column every tab shares, small photos set into the text. */
+/** 자기소개's photos, set into the text before these paragraphs, each
+    its own shape and side so the page doesn't read as a grid: the user's
+    photo beside the opening, then a tall one on the left, a wide one
+    across the column, a square on the right. */
+type MoPhoto = {
+  label?: string;
+  src?: string;
+  alt?: string;
+  ratio: string;
+  place: string;
+};
+const MOTIVATION_PHOTOS: Record<number, MoPhoto> = {
+  0: {
+    src: "motivation-photo-1-2026-10-24.webp",
+    alt: "고려대학교 역대 총장 동판 앞의 유병현 후보",
+    ratio: "7 / 5",
+    place: "moFloatRightLarge",
+  },
+  3: { label: "자기소개 사진 2", ratio: "3 / 4", place: "moFloatLeft" },
+  5: { label: "자기소개 사진 3", ratio: "21 / 9", place: "moWide" },
+  6: { label: "자기소개 사진 4", ratio: "1 / 1", place: "moFloatRight" },
+};
+
+/** II. 자기소개 및 동기 (2026-10-24): the one-line introduction across
+    the top, then the booklet's eight paragraphs in the shared 1200px
+    column with photos of different shapes set in on alternating sides. */
 function Motivation() {
   return (
     <div className={styles.motivation}>
-      <header className={styles.moLead}>
-        <p className={styles.moHeadline}>{MOTIVATION_HEADLINE}</p>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className={styles.moLeadPhoto}
-          src={withBasePath("/images/motivation-photo-1-2026-10-24.webp")}
-          alt="고려대학교 역대 총장 동판 앞의 유병현 후보"
-          width={1800}
-          height={1286}
-        />
-      </header>
-
+      <h2 className={styles.moHeadline}>{MOTIVATION_HEADLINE}</h2>
       <div className={styles.moText}>
         {motivation.map((para, i) => {
-          const photo = MOTIVATION_PHOTOS.indexOf(i);
+          const photo = MOTIVATION_PHOTOS[i];
+          const cls = photo ? `${styles.moPhoto} ${styles[photo.place]}` : "";
           return (
-            <div className={styles.moPara} key={i}>
-              {photo >= 0 && (
-                <PhotoSlot
-                  label={`자기소개 사진 ${photo + 2}`}
-                  ratio="4 / 3"
-                  className={`${styles.moPhoto} ${photo % 2 ? styles.moPhotoLeft : ""}`}
-                />
-              )}
+            <Fragment key={i}>
+              {photo &&
+                (photo.src ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    className={cls}
+                    style={{ aspectRatio: photo.ratio }}
+                    src={withBasePath(`/images/${photo.src}`)}
+                    alt={photo.alt}
+                  />
+                ) : (
+                  <PhotoSlot
+                    label={photo.label!}
+                    ratio={photo.ratio}
+                    className={cls}
+                  />
+                ))}
               <p className={styles.para}>{para}</p>
-            </div>
+            </Fragment>
           );
         })}
       </div>
@@ -309,22 +328,26 @@ function QnaList() {
           key={q.id}
           aria-labelledby={`${q.id}-title`}
         >
+          {/* Two columns as on the 주요 공약 detail page: "Q1" and the
+              question on the left (staying in view), the answer right. */}
           <h2 className={styles.question} id={`${q.id}-title`}>
-            <span className={styles.qNum}>Q{i + 1}</span>
-            {q.question}
+            <span className={styles.qBig}>Q{i + 1}</span>
+            <span className={styles.questionText}>{q.question}</span>
           </h2>
-          <Blocks blocks={q.intro} />
-          {q.sections.map((section, n) => (
-            <section className={styles.qSection} key={section.title}>
-              <h3 className={styles.qSectionTitle}>
-                <span className={styles.qSectionNum}>{n + 1}.</span>
-                {section.title}
-              </h3>
-              <Blocks blocks={section.blocks} />
-            </section>
-          ))}
-          <Blocks blocks={q.outro} />
-          <RelatedPledges items={q.related} />
+          <div className={styles.answer}>
+            <Blocks blocks={q.intro} />
+            {q.sections.map((section, n) => (
+              <section className={styles.qSection} key={section.title}>
+                <h3 className={styles.qSectionTitle}>
+                  <span className={styles.qSectionNum}>{n + 1}.</span>
+                  {section.title}
+                </h3>
+                <Blocks blocks={section.blocks} />
+              </section>
+            ))}
+            <Blocks blocks={q.outro} />
+            <RelatedPledges items={q.related} />
+          </div>
         </article>
       ))}
     </div>
