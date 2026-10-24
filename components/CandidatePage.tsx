@@ -73,11 +73,11 @@ function Blocks({ blocks }: { blocks: TextBlock[] }) {
   );
 }
 
-/** 인사말's photos in the letter, after these paragraphs, as in the
-    booklet (pages 4 and 5 end on a campus photo). */
+/** 인사말's photos in the letter (the user's, 2026-10-24), after these
+    paragraphs, where the booklet has its photos. */
 const GREETING_PHOTOS: Record<number, { src: string; alt: string }> = {
-  7: { src: "greeting-campus-aerial-2026-10-24.webp", alt: "고려대학교 캠퍼스 전경" },
-  11: { src: "greeting-campus-night-2026-10-24.webp", alt: "고려대학교 캠퍼스 야경" },
+  7: { src: "greeting-photo-2-2026-10-24.webp", alt: "행사장에서 인사를 나누는 유병현 후보" },
+  11: { src: "greeting-photo-3-2026-10-24.webp", alt: "고려대학교 캠퍼스의 맞잡은 손 조형물" },
 };
 
 /** A photo in the reading column, 3:2 with rounded corners. */
@@ -103,15 +103,16 @@ function Greeting() {
   return (
     <>
       <header className={styles.greetingHero}>
-        {/* The user's stage photo (2000×694): the candidate between
-            crimson on both sides, so it can sit anywhere in the band. */}
+        {/* The user's stage photo (from the 5760×2000 original, 2880×1000):
+            the candidate between crimson on both sides, so it can sit
+            anywhere in the band. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className={styles.greetingHeroBg}
-          src={withBasePath("/images/greeting-hero-v3-2026-10-24.webp")}
+          src={withBasePath("/images/greeting-hero-v4-2026-10-24.webp")}
           alt="연단에서 인사하는 유병현 후보"
-          width={2000}
-          height={694}
+          width={2880}
+          height={1000}
         />
         <div className={styles.greetingHeroInner}>
           {/* The main page's hero title, right-aligned. */}
