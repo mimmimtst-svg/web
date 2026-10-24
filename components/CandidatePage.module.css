@@ -199,11 +199,13 @@
   max-width: none;
 }
 
+/* The title's right edge: the text column's (1200px) up to a 1920
+   screen, then a fifth of the band, so a very wide screen doesn't leave
+   it far from the edge. */
 .greetingHeroInner {
-  max-width: 1200px;
   min-height: var(--hero-h);
-  margin: 0 auto;
-  padding: 0 var(--space-page-x);
+  padding: 0 max(var(--space-page-x), min(calc(50% - 600px + var(--space-page-x)), 20%)) 0
+    var(--space-page-x);
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -222,12 +224,16 @@
   padding: clamp(48px, 7vh, 88px) 0;
   text-align: right;
   color: var(--color-white);
+  /* Lifts the white off the lights and the suit. */
+  text-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.35),
+    0 4px 24px rgba(0, 0, 0, 0.3);
 }
 
 .heroEn {
   font-family: var(--font-kr);
   font-weight: 200;
-  font-size: clamp(1rem, 0.4rem + 1.3vw, 2rem);
+  font-size: clamp(1rem, 0.4rem + 1.3vw, 2.5rem);
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -235,7 +241,7 @@
 .heroBrand {
   font-family: var(--font-kr);
   font-weight: 700;
-  font-size: clamp(3rem, 0.5rem + 5vw, 6.75rem);
+  font-size: clamp(3rem, 0.5rem + 5vw, 8.5rem);
   line-height: 1.15;
   white-space: nowrap;
 }
@@ -244,7 +250,7 @@
   margin-top: clamp(12px, 2.2vw, 44px);
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: clamp(1.25rem, 0.3rem + 1.75vw, 2.5rem);
+  font-size: clamp(1.25rem, 0.2rem + 2.1vw, 3.5rem);
   line-height: 1.3;
 }
 
@@ -669,20 +675,22 @@
     margin: calc(32 * var(--mu)) 0;
   }
 
-  /* The band on a phone (the user's mobile layout): 786:380, the photo
-     at the band's height with the candidate at 28.6% across, the title
-     right-aligned in one line on his right. */
+  /* The band on a phone (the user's mobile layout, measured on an
+     iPhone 13 mini, 375 wide): 375:239, the photo at the band's height
+     with the candidate's face at 21% across (his left arm off the edge),
+     the title in the upper half, right-aligned 20mu from the edge. */
   .greetingHero {
-    --hero-h: calc(100vw * 380 / 786);
+    --hero-h: calc(100vw * 239 / 375);
   }
 
   .greetingHeroBg {
-    left: calc(28.6% - 1.052 * var(--hero-h));
+    left: calc(21% - 1.045 * var(--hero-h));
     height: var(--hero-h);
   }
 
   .greetingHeroInner {
-    padding: 0 6.5vw;
+    align-items: flex-start;
+    padding: calc(0.16 * var(--hero-h)) calc(20 * var(--mu)) 0;
   }
 
   .greetingHeroText {
@@ -691,16 +699,17 @@
   }
 
   .heroEn {
-    font-size: calc(10 * var(--mu));
+    font-size: calc(14 * var(--mu));
   }
 
   .heroBrand {
-    font-size: calc(30 * var(--mu));
+    font-size: calc(45 * var(--mu));
+    line-height: 1.1;
   }
 
   .heroKr {
-    margin-top: calc(6 * var(--mu));
-    font-size: calc(12 * var(--mu));
+    margin-top: calc(18 * var(--mu));
+    font-size: calc(17.5 * var(--mu));
   }
 
   .greetingText {
