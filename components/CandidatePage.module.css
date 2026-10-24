@@ -176,32 +176,31 @@
   border-radius: var(--radius-card);
 }
 
-/* 인사말's opening band (2026-10-24, the user's photo): the candidate on
-   stage, a widened photo (2000×700) covering the band — the candidate a
-   third of the way across, the event's crimson screen on the right, where
-   the main page's hero title sits right-aligned, in a wider column than
-   the text below so it clears him. */
+/* 인사말's opening band (2026-10-24, the user's photo and layout): the
+   candidate on stage between crimson edges (2000×694), the band the
+   photo's crimson. Wide screens: the photo 1.17× the band's height (its
+   foot cropped), the candidate (36.5% across it) at 32% of the band, the
+   main page's hero title right-aligned at the text column's right edge. */
 .greetingHero {
   --hero-h: clamp(480px, 66vh, 720px);
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  /* The crimson of the photo's right edge. */
-  background-color: #7c1620;
+  background-color: #791c25;
 }
 
 .greetingHeroBg {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: calc(32% - 1.231 * var(--hero-h));
   z-index: -1;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 30% 25%;
+  height: calc(1.17 * var(--hero-h));
+  width: auto;
+  max-width: none;
 }
 
 .greetingHeroInner {
-  max-width: 1600px;
+  max-width: 1200px;
   min-height: var(--hero-h);
   margin: 0 auto;
   padding: 0 var(--space-page-x);
@@ -216,7 +215,7 @@
 /* At most half the band, so the slogan goes to two lines rather than
    reaching over him on a narrower screen. */
 .greetingHeroText {
-  max-width: 50%;
+  max-width: 48%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -228,7 +227,7 @@
 .heroEn {
   font-family: var(--font-kr);
   font-weight: 200;
-  font-size: clamp(1rem, 0.5rem + 1vw, 1.875rem);
+  font-size: clamp(1rem, 0.4rem + 1.3vw, 2rem);
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -236,16 +235,16 @@
 .heroBrand {
   font-family: var(--font-kr);
   font-weight: 700;
-  font-size: clamp(3rem, 1rem + 4.2vw, 6.5rem);
+  font-size: clamp(3rem, 0.5rem + 5vw, 6.75rem);
   line-height: 1.15;
   white-space: nowrap;
 }
 
 .heroKr {
-  margin-top: clamp(10px, 1.4vw, 28px);
+  margin-top: clamp(12px, 2.2vw, 44px);
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: clamp(1.625rem, 0.6rem + 2.2vw, 3.375rem);
+  font-size: clamp(1.25rem, 0.3rem + 1.75vw, 2.5rem);
   line-height: 1.3;
 }
 
@@ -670,43 +669,20 @@
     margin: calc(32 * var(--mu)) 0;
   }
 
-  /* The band on a phone: the photo at the band's height, placed so the
-     candidate's elbow (11.5% across the photo) lines up with the text
-     column's left edge (2026-10-24: the photo had been filling the band
-     and pushing him right, crowding the title); the band's crimson takes
-     over where the photo ends on a wider portrait screen. The title sits
-     over the right side, a crimson wash behind it so it reads over the
-     screen's lights. */
+  /* The band on a phone (the user's mobile layout): 786:380, the photo
+     at the band's height with the candidate at 28.6% across, the title
+     right-aligned in one line on his right. */
   .greetingHero {
-    --hero-h: calc(300 * var(--mu));
+    --hero-h: calc(100vw * 380 / 786);
   }
 
   .greetingHeroBg {
-    inset: auto;
-    top: 0;
-    left: calc(20 * var(--mu) - 0.1725 * var(--hero-h));
-    width: auto;
-    height: 100%;
-    object-fit: fill;
-    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent 100%);
-    mask-image: linear-gradient(90deg, #000 85%, transparent 100%);
-  }
-
-  .greetingHero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(
-      90deg,
-      rgba(110, 26, 34, 0) 40%,
-      rgba(110, 26, 34, 0.75) 70%,
-      rgba(110, 26, 34, 0.9) 100%
-    );
+    left: calc(28.6% - 1.052 * var(--hero-h));
+    height: var(--hero-h);
   }
 
   .greetingHeroInner {
-    padding: 0 calc(18 * var(--mu));
+    padding: 0 6.5vw;
   }
 
   .greetingHeroText {
@@ -715,19 +691,16 @@
   }
 
   .heroEn {
-    font-size: calc(12.5 * var(--mu));
+    font-size: calc(10 * var(--mu));
   }
 
   .heroBrand {
-    font-size: calc(36 * var(--mu));
+    font-size: calc(30 * var(--mu));
   }
 
-  /* Two lines on a phone: "자유로운 지성," / "시대를 여는 고대". */
   .heroKr {
-    display: flex;
-    flex-direction: column;
     margin-top: calc(6 * var(--mu));
-    font-size: calc(17 * var(--mu));
+    font-size: calc(12 * var(--mu));
   }
 
   .greetingText {

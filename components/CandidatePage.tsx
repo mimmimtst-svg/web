@@ -103,24 +103,16 @@ function Greeting() {
   return (
     <>
       <header className={styles.greetingHero}>
-        {/* Wide screens: the user's widened stage photo (2000×700), the
-            candidate on the left, the crimson screen on the right. A phone
-            keeps the original 3:2 photo, placed by CSS. */}
-        <picture>
-          <source
-            media="(orientation: portrait)"
-            srcSet={withBasePath("/images/greeting-hero-2026-10-24.webp")}
-            width={1600}
-            height={1066}
-          />
-          <img
-            className={styles.greetingHeroBg}
-            src={withBasePath("/images/greeting-hero-wide-2026-10-24.webp")}
-            alt="연단에서 인사하는 유병현 후보"
-            width={2000}
-            height={700}
-          />
-        </picture>
+        {/* The user's stage photo (2000×694): the candidate between
+            crimson on both sides, so it can sit anywhere in the band. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className={styles.greetingHeroBg}
+          src={withBasePath("/images/greeting-hero-v3-2026-10-24.webp")}
+          alt="연단에서 인사하는 유병현 후보"
+          width={2000}
+          height={694}
+        />
         <div className={styles.greetingHeroInner}>
           {/* The main page's hero title, right-aligned. */}
           <div className={styles.greetingHeroText}>
