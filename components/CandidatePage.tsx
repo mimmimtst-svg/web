@@ -73,12 +73,11 @@ function Blocks({ blocks }: { blocks: TextBlock[] }) {
   );
 }
 
-/** 인사말's photos in the letter, after these paragraphs (the booklet's
-    pages 4 and 5 end on a campus photo; its aerial view opens the page
-    instead, in the band at the top). */
+/** 인사말's photos in the letter, after these paragraphs, as in the
+    booklet (pages 4 and 5 end on a campus photo). */
 const GREETING_PHOTOS: Record<number, { src: string; alt: string }> = {
-  7: { src: "greeting-campus-night-2026-10-24.webp", alt: "고려대학교 캠퍼스 야경" },
-  11: { src: "greeting-campus-gate-2026-10-24.webp", alt: "고려대학교 캠퍼스 정문" },
+  7: { src: "greeting-campus-aerial-2026-10-24.webp", alt: "고려대학교 캠퍼스 전경" },
+  11: { src: "greeting-campus-night-2026-10-24.webp", alt: "고려대학교 캠퍼스 야경" },
 };
 
 /** A photo in the reading column, 3:2 with rounded corners. */
@@ -96,10 +95,10 @@ function Photo({ src, alt }: { src: string; alt: string }) {
 }
 
 /** I. 후보자 인사말 (2026-10-24, "the opening should have impact"): a
-    full-width band — the campus from the air under a crimson wash, the
-    slogan large in white, the candidate's portrait standing at its foot
-    — then the letter with the booklet's photos, the sign-off on the
-    right. */
+    full-width band — the candidate on stage (the user's photo) on the
+    left, its crimson carried on to the right, where the slogan sits large
+    in white — then the letter with the booklet's photos, the sign-off on
+    the right. */
 function Greeting() {
   return (
     <>
@@ -107,9 +106,10 @@ function Greeting() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className={styles.greetingHeroBg}
-          src={withBasePath("/images/greeting-campus-aerial-2026-10-24.webp")}
-          alt=""
-          aria-hidden="true"
+          src={withBasePath("/images/greeting-hero-2026-10-24.webp")}
+          alt="연단에서 인사하는 유병현 후보"
+          width={1600}
+          height={1066}
         />
         <div className={styles.greetingHeroInner}>
           <div className={styles.greetingHeroText}>
@@ -124,14 +124,6 @@ function Greeting() {
             </p>
             <p className={styles.heroEn}>{greeting.slogan[2]}</p>
           </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className={styles.greetingPortrait}
-            src={withBasePath("/images/greeting-portrait-2026-10-24.webp")}
-            alt="유병현 후보"
-            width={837}
-            height={837}
-          />
         </div>
       </header>
       <div className={`${styles.text} ${styles.greetingText}`}>
