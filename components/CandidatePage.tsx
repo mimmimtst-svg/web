@@ -96,13 +96,22 @@ function Photo({ src, alt }: { src: string; alt: string }) {
 
 /** I. 후보자 인사말 (2026-10-24, "the opening should have impact"): a
     full-width band — the candidate on stage (the user's photo) on the
-    left, its crimson carried on to the right, where the slogan sits large
-    in white — then the letter with the booklet's photos, the sign-off on
-    the right. */
+    left, its crimson carried on to the right, where the main page's hero
+    title sits right-aligned — then the letter with the booklet's photos,
+    the sign-off on the right. */
 function Greeting() {
   return (
     <>
       <header className={styles.greetingHero}>
+        {/* The same photo, blurred, fills the band behind it where the
+            sharp one doesn't reach (the left of a wide screen). */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className={styles.greetingHeroBlur}
+          src={withBasePath("/images/greeting-hero-2026-10-24.webp")}
+          alt=""
+          aria-hidden="true"
+        />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className={styles.greetingHeroBg}
@@ -112,17 +121,18 @@ function Greeting() {
           height={1066}
         />
         <div className={styles.greetingHeroInner}>
+          {/* The main page's hero title, right-aligned. */}
           <div className={styles.greetingHeroText}>
-            <p className={styles.heroKu}>{greeting.slogan[1]}</p>
-            <p className={styles.heroSlogan}>
+            <p className={styles.heroEn}>{greeting.slogan[2]}</p>
+            <p className={styles.heroBrand}>FINE - KU</p>
+            <p className={styles.heroKr}>
               {greeting.slogan[0].split(", ").map((part, i, all) => (
                 <span key={part}>
                   {part}
-                  {i < all.length - 1 ? "," : ""}
+                  {i < all.length - 1 ? ", " : ""}
                 </span>
               ))}
             </p>
-            <p className={styles.heroEn}>{greeting.slogan[2]}</p>
           </div>
         </div>
       </header>

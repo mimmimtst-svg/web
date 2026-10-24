@@ -177,11 +177,14 @@
 }
 
 /* 인사말's opening band (2026-10-24, the user's photo): the candidate on
-   stage, the photo on the left at the band's full height; its right side
-   is the event's crimson screen, and the band carries that crimson on to
-   the right edge (the photo fading into it), where the slogan sits,
-   right-aligned. On the left the photo simply runs off the screen. */
+   stage; the photo's right side is the event's crimson screen, and the
+   band carries that crimson on to the right edge, where the main page's
+   hero title sits right-aligned. The photo stands at the band's height
+   with the candidate about a quarter of the way across (not pinned to the
+   screen's left edge), over the text's crimson; where it doesn't reach,
+   the same photo blurred fills in. */
 .greetingHero {
+  --hero-h: clamp(480px, 66vh, 720px);
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -189,21 +192,36 @@
   background: linear-gradient(180deg, #6a1220 0%, #6e1a22 50%, #77272d 100%);
 }
 
+.greetingHeroBlur {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left center;
+  filter: blur(36px) brightness(0.75);
+  transform: scale(1.15);
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 35%, transparent 65%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 35%, transparent 65%);
+}
+
+/* The candidate (35% across the photo) at 25% of the band. */
 .greetingHeroBg {
   position: absolute;
   top: 0;
-  left: 0;
+  left: max(0px, calc(25% - 0.525 * var(--hero-h)));
   z-index: -1;
   height: 100%;
   width: auto;
   max-width: none;
-  -webkit-mask-image: linear-gradient(90deg, #000 80%, transparent 100%);
-  mask-image: linear-gradient(90deg, #000 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 78%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 78%, transparent 100%);
 }
 
 .greetingHeroInner {
   max-width: 1200px;
-  min-height: clamp(460px, 64vh, 680px);
+  min-height: var(--hero-h);
   margin: 0 auto;
   padding: 0 var(--space-page-x);
   display: flex;
@@ -211,46 +229,44 @@
   justify-content: flex-end;
 }
 
+/* The main hero's three lines (Hero.module.css: 40 / 135 / 90 at its
+   scale), smaller: the English line light, "FINE - KU" large, the slogan
+   in one line where it fits. */
 .greetingHeroText {
-  padding: clamp(56px, 8vh, 96px) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: clamp(48px, 7vh, 88px) 0;
   text-align: right;
   color: var(--color-white);
 }
 
-.heroKu {
-  font-family: var(--font-en);
-  font-weight: 700;
-  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
-  letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.heroSlogan {
-  display: flex;
-  flex-direction: column;
-  margin-top: clamp(14px, 1.6vw, 22px);
+.heroEn {
   font-family: var(--font-kr);
-  font-weight: 800;
-  font-size: clamp(2.25rem, 1.2rem + 2.8vw, 4.25rem);
+  font-weight: 200;
+  font-size: clamp(1rem, 0.5rem + 1vw, 1.875rem);
   line-height: 1.2;
-  letter-spacing: -0.02em;
-}
-
-/* Two lines, each kept whole: "자유로운 지성," / "시대를 여는 고대". */
-.heroSlogan span {
   white-space: nowrap;
 }
 
-/* A short white rule, then the English line. */
-.heroEn {
-  width: fit-content;
-  margin: clamp(22px, 2.6vw, 34px) 0 0 auto;
-  padding-top: clamp(18px, 2vw, 26px);
-  border-top: 2px solid rgba(255, 255, 255, 0.55);
-  font-family: var(--font-en);
-  font-style: italic;
-  font-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.5rem);
-  color: rgba(255, 255, 255, 0.85);
+.heroBrand {
+  font-family: var(--font-kr);
+  font-weight: 700;
+  font-size: clamp(3rem, 1rem + 4.2vw, 6.5rem);
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.heroKr {
+  margin-top: clamp(10px, 1.4vw, 28px);
+  font-family: var(--font-kr);
+  font-weight: 800;
+  font-size: clamp(1.625rem, 0.6rem + 2.2vw, 3.375rem);
+  line-height: 1.3;
+}
+
+.heroKr span {
+  white-space: nowrap;
 }
 
 .greetingText {
@@ -670,40 +686,62 @@
     margin: calc(32 * var(--mu)) 0;
   }
 
-  /* The band on a phone: the photo across the top, fading at its foot
-     into the crimson, the slogan under it on the right. */
+  /* The band on a phone: the photo fills it, the candidate on the left
+     third, the title over the right side, a crimson wash behind it so it
+     reads over the screen's lights. */
+  .greetingHero {
+    --hero-h: calc(330 * var(--mu));
+  }
+
+  .greetingHeroBlur {
+    display: none;
+  }
+
   .greetingHeroBg {
-    position: relative;
-    display: block;
+    left: 0;
     width: 100%;
-    height: auto;
-    -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
-    mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+    height: 100%;
+    object-fit: cover;
+    object-position: 62% 30%;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .greetingHero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      90deg,
+      rgba(110, 26, 34, 0) 40%,
+      rgba(110, 26, 34, 0.75) 70%,
+      rgba(110, 26, 34, 0.9) 100%
+    );
   }
 
   .greetingHeroInner {
-    min-height: 0;
-    margin-top: calc(-48 * var(--mu));
-    padding: 0 calc(20 * var(--mu));
+    padding: 0 calc(18 * var(--mu));
   }
 
   .greetingHeroText {
-    padding: 0 0 calc(36 * var(--mu));
-  }
-
-  .heroKu {
-    font-size: calc(15 * var(--mu));
-  }
-
-  .heroSlogan {
-    margin-top: calc(10 * var(--mu));
-    font-size: calc(34 * var(--mu));
+    padding: 0;
   }
 
   .heroEn {
-    margin-top: calc(18 * var(--mu));
-    padding-top: calc(14 * var(--mu));
-    font-size: calc(15 * var(--mu));
+    font-size: calc(12.5 * var(--mu));
+  }
+
+  .heroBrand {
+    font-size: calc(36 * var(--mu));
+  }
+
+  /* Two lines on a phone: "자유로운 지성," / "시대를 여는 고대". */
+  .heroKr {
+    display: flex;
+    flex-direction: column;
+    margin-top: calc(6 * var(--mu));
+    font-size: calc(17 * var(--mu));
   }
 
   .greetingText {
