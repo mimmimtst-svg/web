@@ -51,6 +51,18 @@ function BoxLine({ line }: { line: PledgeLine }) {
  * pledge, cut to one lead sentence and its key points. Each box line
  * links down to the pledge it sums up.
  */
+/** A point; its closing "(연계 - …)" note on a line of its own. */
+function PointText({ text }: { text: string }) {
+  const at = text.indexOf(" (연계 - ");
+  if (at < 0) return text;
+  return (
+    <>
+      {text.slice(0, at)}
+      <span className={styles.pointLink}>{text.slice(at + 1)}</span>
+    </>
+  );
+}
+
 export default function PledgeDetail() {
   return (
     <>
@@ -142,7 +154,9 @@ export default function PledgeDetail() {
                                 {point.slice(2)}
                               </li>
                             ) : (
-                              <li key={point}>{point}</li>
+                              <li key={point}>
+                                <PointText text={point} />
+                              </li>
                             ),
                           )}
                         </ul>

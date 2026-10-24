@@ -443,6 +443,15 @@
   background: none;
 }
 
+/* "(연계 - …)", the related pledges: under the point, smaller, grey. */
+.pointLink {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.875em;
+  line-height: 1.6;
+  color: var(--color-label);
+}
+
 /* A subheading among the points ("■ 예비창업자 지원"): bold, no check,
    a little air above when it follows points. */
 .pledgePoints .pointGroup {
