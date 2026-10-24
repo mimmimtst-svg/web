@@ -113,8 +113,10 @@
 
 /* ---------- The booklet's text (인사말, 자기소개, Q&A, 추천사) ---------- */
 /* One reading column, large type for older readers. */
+/* 1200px, the width of 약력's column (ProfilePage --profile-max), so every
+   tab reads the same (2026-10-24). */
 .text {
-  max-width: calc(880px + 2 * var(--space-page-x));
+  max-width: calc(1200px + 2 * var(--space-page-x));
   margin: 0 auto;
   padding: clamp(48px, 7vh, 96px) var(--space-page-x) clamp(80px, 11vh, 150px);
 }
@@ -166,7 +168,7 @@
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 2 / 1;
   object-fit: cover;
   border-radius: var(--radius-card);
 }
@@ -181,7 +183,7 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background-color: #791c25;
+  background-color: var(--color-key);
 }
 
 .greetingHeroBg {
@@ -291,7 +293,7 @@
 
 /* ---------- 자기소개 (2026-10-24 redesign) ---------- */
 .motivation {
-  max-width: calc(1120px + 2 * var(--space-page-x));
+  max-width: calc(1200px + 2 * var(--space-page-x));
   margin: 0 auto;
   padding: clamp(56px, 8vh, 104px) var(--space-page-x) clamp(72px, 10vh, 128px);
 }
@@ -300,7 +302,7 @@
    beside it. */
 .moLead {
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   align-items: center;
   gap: clamp(32px, 5vw, 80px);
 }
@@ -317,12 +319,19 @@
 }
 
 /* The text in one reading column, small photos floated into it. */
-.moText {
-  max-width: 880px;
-  margin: clamp(64px, 8vw, 112px) auto 0;
+.moLeadPhoto {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 7 / 5;
+  object-fit: cover;
+  border-radius: var(--radius-card);
 }
 
-.moText > .para + .moPara,
+.moText {
+  margin-top: clamp(64px, 8vw, 112px);
+}
+
 .moPara + .moPara {
   margin-top: 1.1em;
 }
@@ -335,7 +344,7 @@
 
 .moPhoto {
   float: right;
-  width: 40%;
+  width: 34%;
   margin: 6px 0 16px 32px;
 }
 
@@ -344,35 +353,8 @@
   margin: 6px 32px 16px 0;
 }
 
-/* The closing paragraph on a rounded crimson card (the hero's crimson),
-   clear of the footer's. */
-.moClosing {
-  margin-top: clamp(56px, 7vw, 96px);
-  padding: clamp(40px, 5vw, 72px) clamp(28px, 5vw, 72px);
-  border-radius: 20px;
-  background-color: #791c25;
-  color: var(--color-white);
-}
 
-.moClosingHead {
-  font-family: var(--font-kr);
-  font-weight: 800;
-  font-size: clamp(1.5rem, 1.05rem + 1.4vw, 2.5rem);
-  line-height: 1.45;
-  letter-spacing: -0.01em;
-  word-break: keep-all;
-  text-wrap: balance;
-}
 
-.moClosingText {
-  max-width: 880px;
-  margin-top: clamp(18px, 2vw, 28px);
-  font-family: var(--font-kr);
-  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
-  line-height: 1.85;
-  color: rgba(255, 255, 255, 0.88);
-  word-break: keep-all;
-}
 
 /* Q&A: dots at the right edge, one per question, fixed in the middle of
    the screen; the current one key red and longer. Hovering a dot shows
@@ -806,20 +788,8 @@
     margin: calc(8 * var(--mu)) 0 calc(20 * var(--mu));
   }
 
-  .moClosing {
-    margin-top: calc(56 * var(--mu));
-    padding: calc(30 * var(--mu)) calc(22 * var(--mu));
-    border-radius: calc(16 * var(--mu));
-  }
 
-  .moClosingHead {
-    font-size: calc(22 * var(--mu));
-  }
 
-  .moClosingText {
-    margin-top: calc(14 * var(--mu));
-    font-size: calc(16.5 * var(--mu));
-  }
 
   /* No dots on a phone (2026-10-23: they meant nothing there) — a bar
      stuck under the tab bar names the question being read and drops

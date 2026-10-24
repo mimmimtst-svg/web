@@ -75,23 +75,39 @@ function Blocks({ blocks }: { blocks: TextBlock[] }) {
 
 /** 인사말's photos in the letter (the user's, 2026-10-24), after these
     paragraphs, where the booklet has its photos. */
-const GREETING_PHOTOS: Record<number, { src: string; alt: string }> = {
+const GREETING_PHOTOS: Record<
+  number,
+  { src: string; alt: string; focus: string }
+> = {
   7: {
     src: "greeting-photo-2-2026-10-24.webp",
     alt: "행사장에서 인사를 나누는 유병현 후보",
+    focus: "center 15%",
   },
   11: {
     src: "greeting-photo-3-2026-10-24.webp",
     alt: "고려대학교 캠퍼스의 맞잡은 손 조형물",
+    focus: "center 45%",
   },
 };
 
-/** A photo in the reading column, 3:2 with rounded corners. */
-function Photo({ src, alt }: { src: string; alt: string }) {
+/** A photo across the text column, 2:1 (2026-10-24: the column is now
+    1200px wide, so the photo is cut top and bottom rather than standing
+    taller), rounded corners; `focus` keeps its subject in the frame. */
+function Photo({
+  src,
+  alt,
+  focus,
+}: {
+  src: string;
+  alt: string;
+  focus?: string;
+}) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       className={styles.photo}
+      style={focus ? { objectPosition: focus } : undefined}
       src={withBasePath(`/images/${src}`)}
       alt={alt}
       loading="lazy"
@@ -115,7 +131,7 @@ function Greeting() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className={styles.greetingHeroBg}
-          src={withBasePath("/images/greeting-hero-v4-2026-10-24.webp")}
+          src={withBasePath("/images/greeting-hero-v5-2026-10-24.webp")}
           alt="연단에서 인사하는 유병현 후보"
           width={2880}
           height={1000}
@@ -163,37 +179,37 @@ function Greeting() {
   );
 }
 
-/** A paragraph's first sentence, and the rest. */
-function splitFirst(text: string): [string, string] {
-  const at = text.indexOf("다. ");
-  return at < 0 ? [text, ""] : [text.slice(0, at + 2), text.slice(at + 3)];
-}
-
 /** Small photos in 자기소개's text, floated beside these paragraphs,
     sides taking turns. */
 const MOTIVATION_PHOTOS = [1, 3, 5];
 
-/** II. 자기소개 및 동기 (2026-10-24, second try — "a one-line
-    introduction on top, the text below, small photos here and there"):
-    the opening sentence large beside a big photo, then the booklet's
-    text in one reading column with small photos set into it, and the
-    closing paragraph on a crimson card. */
+/** 자기소개's one-line introduction, written from its text (the user asked
+    for a line that sums it up, not the first sentence): the closing
+    paragraph's "법학자의 균형 감각 … 행정가의 실행력" and the opening's
+    "모교의 새로운 도약에 헌신". */
+const MOTIVATION_HEADLINE =
+  "법학자의 균형 감각과 행정가의 실행력으로, 고려대학교의 새로운 도약에 헌신하겠습니다.";
+
+/** II. 자기소개 및 동기 (2026-10-24, third pass): a one-line introduction
+    beside the user's photo, then the booklet's eight paragraphs in the
+    1200px column every tab shares, small photos set into the text. */
 function Motivation() {
-  const [headline, opening] = splitFirst(motivation[0]);
-  const body = motivation.slice(1, -1);
-  const [closingHead, closingRest] = splitFirst(
-    motivation[motivation.length - 1],
-  );
   return (
     <div className={styles.motivation}>
       <header className={styles.moLead}>
-        <p className={styles.moHeadline}>{headline}</p>
-        <PhotoSlot label="자기소개 사진 1" ratio="4 / 5" />
+        <p className={styles.moHeadline}>{MOTIVATION_HEADLINE}</p>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className={styles.moLeadPhoto}
+          src={withBasePath("/images/motivation-photo-1-2026-10-24.webp")}
+          alt="고려대학교 역대 총장 동판 앞의 유병현 후보"
+          width={1800}
+          height={1286}
+        />
       </header>
 
       <div className={styles.moText}>
-        {opening && <p className={styles.para}>{opening}</p>}
-        {body.map((para, i) => {
+        {motivation.map((para, i) => {
           const photo = MOTIVATION_PHOTOS.indexOf(i);
           return (
             <div className={styles.moPara} key={i}>
@@ -208,11 +224,6 @@ function Motivation() {
             </div>
           );
         })}
-
-        <section className={styles.moClosing}>
-          <p className={styles.moClosingHead}>{closingHead}</p>
-          {closingRest && <p className={styles.moClosingText}>{closingRest}</p>}
-        </section>
       </div>
     </div>
   );
