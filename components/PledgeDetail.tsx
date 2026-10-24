@@ -4,7 +4,7 @@ import Footer from "./Footer";
 import ScrollTopButton from "./ScrollTopButton";
 import PledgeNav from "./PledgeNav";
 import Reveal from "./Reveal";
-import { CheckIcon, LineArrowRightIcon, PlusIcon } from "./icons";
+import { LineArrowRightIcon, PlusIcon } from "./icons";
 import { pledgeAnchor, pledgeParts, type PledgeLine } from "@/lib/pledgeDetail";
 
 const NAV_ITEMS = pledgeParts.map(({ id, number, title }) => ({ id, number, label: title }));
@@ -128,17 +128,21 @@ export default function PledgeDetail() {
                         <p className={styles.pledgeLead}>{pledge.lead}</p>
                         <ul className={styles.pledgePoints}>
                           {pledge.points.map((point) =>
+                            // Bullets (2026-10-24: were checks — the check
+                            // marks lists of pledges, not what's in one).
                             // "■ …" heads a group of the points below it
-                            // (the booklet's own subheadings, 3-9 and 5-7).
+                            // (3-9, 5-7); "- …" sits under the point before
+                            // it, with a hyphen (1-8).
                             point.startsWith("■ ") ? (
                               <li className={styles.pointGroup} key={point}>
                                 {point.slice(2)}
                               </li>
-                            ) : (
-                              <li key={point}>
-                                <CheckIcon />
-                                <span>{point}</span>
+                            ) : point.startsWith("- ") ? (
+                              <li className={styles.pointSub} key={point}>
+                                {point.slice(2)}
                               </li>
+                            ) : (
+                              <li key={point}>{point}</li>
                             ),
                           )}
                         </ul>

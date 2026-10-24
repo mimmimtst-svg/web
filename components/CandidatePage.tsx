@@ -113,13 +113,12 @@ function Greeting() {
           <span key={line}>{line}</span>
         ))}
       </p>
-      <PhotoSlot label="인사말 사진 4" ratio="3 / 2" className={styles.wideSlot} />
     </div>
   );
 }
 
 /** II. 자기소개 및 동기: each paragraph beside a photo, left and right in
-    turn as in the booklet, and a wide photo to close. */
+    turn as in the booklet (2026-10-24: no closing wide photo). */
 function Motivation() {
   return (
     <div className={styles.textWide}>
@@ -129,11 +128,6 @@ function Motivation() {
           <p className={styles.para}>{para}</p>
         </div>
       ))}
-      <PhotoSlot
-        label={`자기소개 사진 ${motivation.length + 1}`}
-        ratio="3 / 2"
-        className={styles.wideSlot}
-      />
     </div>
   );
 }

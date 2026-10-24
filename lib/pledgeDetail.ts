@@ -21,7 +21,8 @@ export type PledgeBox = { name: string; tagline: string; lines: PledgeLine[] };
 /** `title`: "\n" marks where a long title breaks — after "및", or at a
     phrase boundary rather than wherever the column runs out (2026-10-18).
     A point starting "■ " is one of the booklet's subheadings over the
-    points after it (3-9, 5-7). */
+    points after it (3-9, 5-7); one starting "- " is a line under the
+    point before it (1-8). */
 export type Pledge = { code: string; title: string; lead: string; points: string[] };
 
 export type PledgePart = {
@@ -174,8 +175,9 @@ export const pledgeParts: PledgePart[] = [
         title: "우수 석학 제도 개선",
         lead: "탁월한 성과와 교육 역량을 지닌 교원이 정년 이후에도 학교에 지속적으로 기여할 수 있도록 하겠습니다.",
         points: [
-          "연구석학 교수제 시행: 본부 차원의 별도 연구 공간 제공",
-          "교양석학 교수제 시행: 교양 강의, 인재 양성, 기초 교육 혁신 참여 기회 제공",
+          "정년 이후에도 기여할 수 있는 연구석학 교수제와 교양석학 교수제 시행",
+          "- 연구석학: 본부 차원의 별도 연구 공간 제공",
+          "- 교양석학: 교양 강의, 인재 양성, 기초 교육 혁신 참여 기회 제공",
           "선발·평가 기준을 예측 가능하고 지속 가능한 제도로 정착",
         ],
       },

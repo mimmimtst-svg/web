@@ -405,10 +405,8 @@
 }
 
 .pledgePoints li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 3px 0;
+  position: relative;
+  padding: 3px 0 3px 18px;
   font-family: var(--font-kr);
   font-weight: 400;
   font-size: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
@@ -418,19 +416,43 @@
   overflow-wrap: break-word;
 }
 
-.pledgePoints svg {
-  flex: 0 0 auto;
-  width: 12px;
+/* A round bullet, centred on the first line. */
+.pledgePoints li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: calc(3px + 0.825em - 2.5px);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--color-line);
+}
+
+/* A line under the point before it ("- 연구석학: …"): a hyphen, indented. */
+.pledgePoints .pointSub {
+  padding-left: 34px;
+}
+
+.pledgePoints .pointSub::before {
+  content: "-";
+  left: 20px;
+  top: 3px;
+  width: auto;
   height: auto;
-  margin-top: 0.6em;
-  color: var(--color-key);
+  border-radius: 0;
+  background: none;
 }
 
 /* A subheading among the points ("■ 예비창업자 지원"): bold, no check,
    a little air above when it follows points. */
 .pledgePoints .pointGroup {
+  padding-left: 0;
   font-weight: 700;
   color: var(--color-charcoal);
+}
+
+.pledgePoints .pointGroup::before {
+  content: none;
 }
 
 .pledgePoints li + .pointGroup {
@@ -619,13 +641,27 @@ footer.footer {
   }
 
   .pledgePoints li {
-    gap: calc(8 * var(--mu));
+    padding-left: calc(16 * var(--mu));
     font-size: calc(15.5 * var(--mu));
     line-height: 1.6;
   }
 
-  .pledgePoints svg {
-    width: calc(11 * var(--mu));
+  .pledgePoints li::before {
+    left: calc(3 * var(--mu));
+    top: calc(3px + 0.8em - 2.5px);
+  }
+
+  .pledgePoints .pointSub {
+    padding-left: calc(30 * var(--mu));
+  }
+
+  .pledgePoints .pointSub::before {
+    left: calc(17 * var(--mu));
+    top: 3px;
+  }
+
+  .pledgePoints .pointGroup {
+    padding-left: 0;
   }
 
   .pledgePoints li + .pointGroup {
