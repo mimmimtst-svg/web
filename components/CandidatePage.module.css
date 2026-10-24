@@ -298,68 +298,81 @@
   padding: clamp(56px, 8vh, 104px) var(--space-page-x) clamp(72px, 10vh, 128px);
 }
 
-/* The one-line introduction across the top of the column. */
+/* The one-line introduction across the top, kept to one line on a
+   wide screen (its size follows the screen so it fits 1200px). */
 .moHeadline {
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: clamp(1.5rem, 1rem + 1.4vw, 2.375rem);
+  font-size: clamp(1.25rem, 0.3rem + 1.7vw, 1.875rem);
   line-height: 1.4;
   letter-spacing: -0.02em;
   color: var(--color-charcoal);
-  word-break: keep-all;
-  text-wrap: balance;
+  white-space: nowrap;
 }
 
-/* The text, photos of different shapes set in on alternating sides. */
 .moText {
   margin-top: clamp(32px, 4vw, 56px);
 }
 
-.moText::after {
-  content: "";
-  display: block;
-  clear: both;
+.moText > * + * {
+  margin-top: clamp(28px, 3vw, 40px);
 }
 
-.moText > .para + .para,
-.moText > .moPhoto + .para {
+.moBlock > .para + .para,
+.moSide > div > .para + .para {
   margin-top: 1.1em;
 }
 
-img.moPhoto {
-  display: block;
-}
-
 .moPhoto {
+  display: block;
+  width: 100%;
   object-fit: cover;
   border-radius: var(--radius-card);
 }
 
-.moFloatRightLarge {
-  float: right;
-  width: 52%;
-  margin: 6px 0 24px clamp(28px, 3.4vw, 48px);
+/* Text beside a photo that fills the paragraphs' full height: its top on
+   the first line's top, its foot on the last line's foot. The line box
+   is 1.9 × the font size, so the photo is inset by the half-leading at
+   both ends to meet the glyphs, not the line boxes. */
+.moSide {
+  display: grid;
+  align-items: stretch;
+  gap: clamp(28px, 3.4vw, 48px);
 }
 
-.moFloatLeft {
-  float: left;
-  clear: both;
-  width: 28%;
-  margin: 1.1em clamp(28px, 3.4vw, 48px) 20px 0;
+.moSide > .moPhoto {
+  /* No height of its own (a tall photo would stretch the row), so the
+     text alone sets the row. */
+  height: 0;
+  min-height: calc(100% - 0.9em * 0.9);
+  align-self: center;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
 }
 
-.moFloatRight {
-  float: right;
-  clear: both;
-  width: 30%;
-  margin: 1.1em 0 20px clamp(28px, 3.4vw, 48px);
+.moSideLarge {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.moSideTall {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+}
+
+.moSideSquare {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 3.4fr);
+}
+
+.moSideLeft > .moPhoto {
+  order: -1;
+}
+
+.moSideLeft.moSideTall {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
 }
 
 .moWide {
-  clear: both;
-  width: 100%;
-  margin: clamp(32px, 4vw, 56px) 0;
+  aspect-ratio: 2 / 1;
 }
+
 
 
 
@@ -486,8 +499,11 @@ img.moPhoto {
   scroll-margin-top: calc(var(--header-height) + var(--tabs-h) + 24px);
 }
 
+/* A thin light rule between questions, with air on both sides. */
 .qa + .qa {
-  margin-top: clamp(72px, 9vw, 120px);
+  margin-top: clamp(56px, 6vw, 88px);
+  padding-top: clamp(56px, 6vw, 88px);
+  border-top: 1px solid var(--color-light-gray);
 }
 
 .question {
@@ -495,14 +511,14 @@ img.moPhoto {
   top: calc(var(--header-height) + var(--tabs-h) + 32px);
   display: flex;
   flex-direction: column;
-  gap: clamp(8px, 1vw, 14px);
+  gap: clamp(14px, 1.6vw, 24px);
   color: var(--color-charcoal);
 }
 
 .qBig {
   font-family: var(--font-en);
   font-weight: 800;
-  font-size: clamp(3rem, 2rem + 3vw, 5.5rem);
+  font-size: clamp(2.5rem, 1.8rem + 2vw, 4.25rem);
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--color-key);
@@ -805,18 +821,27 @@ img.moPhoto {
     margin-top: calc(24 * var(--mu));
   }
 
-  /* On a phone every photo sits full width between paragraphs. */
-  .moFloatRightLarge,
-  .moFloatLeft,
-  .moFloatRight,
-  .moWide {
-    float: none;
-    width: 100%;
-    margin: calc(20 * var(--mu)) 0;
+  /* On a phone the headline wraps, and every photo sits full width
+     under its text. */
+  .moHeadline {
+    white-space: normal;
+    text-wrap: balance;
   }
 
-  .moFloatLeft {
-    aspect-ratio: 4 / 3 !important;
+  .moSide,
+  .moSideLeft.moSideTall {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(20 * var(--mu));
+  }
+
+  .moSide > .moPhoto {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+
+  .moSideLeft > .moPhoto {
+    order: 0;
   }
 
 
@@ -913,7 +938,8 @@ img.moPhoto {
   }
 
   .qa + .qa {
-    margin-top: calc(56 * var(--mu));
+    margin-top: calc(40 * var(--mu));
+    padding-top: calc(40 * var(--mu));
   }
 
   .qa {
@@ -927,12 +953,12 @@ img.moPhoto {
 
   .question {
     position: static;
-    gap: calc(6 * var(--mu));
+    gap: calc(10 * var(--mu));
     margin-bottom: calc(20 * var(--mu));
   }
 
   .qBig {
-    font-size: calc(40 * var(--mu));
+    font-size: calc(34 * var(--mu));
   }
 
   .questionText {

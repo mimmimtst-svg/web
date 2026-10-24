@@ -26,31 +26,6 @@ import {
   type TextBlock,
 } from "@/lib/candidateData";
 
-/**
- * A place kept for a photo still to come: a beige box of the photo's
- * shape, its number in the middle so it can be named ("인사말 사진 2").
- */
-function PhotoSlot({
-  label,
-  ratio,
-  className = "",
-}: {
-  label: string;
-  ratio: string;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`${styles.photoSlot} ${className}`}
-      style={{ aspectRatio: ratio }}
-      role="img"
-      aria-label={`${label} (준비 중)`}
-    >
-      <span className={styles.photoSlotLabel}>{label}</span>
-    </div>
-  );
-}
-
 function RichText({ text }: { text: Rich }) {
   if (typeof text === "string") return text;
   return text.map((part, i) =>
@@ -187,62 +162,125 @@ function Greeting() {
 const MOTIVATION_HEADLINE =
   "법학자의 균형 감각과 행정가의 실행력으로, 고려대학교의 새로운 도약에 헌신하겠습니다.";
 
-/** 자기소개's photos, set into the text before these paragraphs, each
-    its own shape and side so the page doesn't read as a grid: the user's
-    photo beside the opening, then a tall one on the left, a wide one
-    across the column, a square on the right. */
-type MoPhoto = {
-  label?: string;
-  src?: string;
-  alt?: string;
-  ratio: string;
-  place: string;
-};
-const MOTIVATION_PHOTOS: Record<number, MoPhoto> = {
-  0: {
-    src: "motivation-photo-1-2026-10-24.webp",
-    alt: "고려대학교 역대 총장 동판 앞의 유병현 후보",
-    ratio: "7 / 5",
-    place: "moFloatRightLarge",
+type MoPhoto = { src: string; alt: string; focus?: string };
+
+/** 자기소개's layout (the user's photos): the text in groups, some beside
+    a photo that runs the full height of its paragraphs (its top on the
+    first line, its foot on the last), photos of different shapes on
+    alternating sides; one wide photo across the column. `paras` are
+    indexes into the booklet's eight paragraphs. */
+type MoBlock =
+  | {
+      kind: "side";
+      paras: number[];
+      photo: MoPhoto;
+      side: "left" | "right";
+      shape: string;
+    }
+  | { kind: "text"; paras: number[] }
+  | { kind: "wide"; photo: MoPhoto };
+
+const MOTIVATION_LAYOUT: MoBlock[] = [
+  {
+    kind: "side",
+    paras: [0, 1],
+    side: "right",
+    shape: "moSideLarge",
+    photo: {
+      src: "motivation-photo-1-2026-10-24.webp",
+      alt: "고려대학교 역대 총장 동판 앞의 유병현 후보",
+      focus: "35% center",
+    },
   },
-  3: { label: "자기소개 사진 2", ratio: "3 / 4", place: "moFloatLeft" },
-  5: { label: "자기소개 사진 3", ratio: "21 / 9", place: "moWide" },
-  6: { label: "자기소개 사진 4", ratio: "1 / 1", place: "moFloatRight" },
-};
+  { kind: "text", paras: [2] },
+  {
+    kind: "side",
+    paras: [3, 4],
+    side: "left",
+    shape: "moSideTall",
+    photo: {
+      src: "motivation-photo-2-2026-10-24.webp",
+      alt: "회의 자료를 살피는 유병현 후보",
+      focus: "40% center",
+    },
+  },
+  {
+    kind: "wide",
+    photo: {
+      src: "motivation-photo-3-2026-10-24.webp",
+      alt: "KU PRIDE CLUB 게시판과 교기 앞의 유병현 후보",
+      focus: "center 30%",
+    },
+  },
+  { kind: "text", paras: [5] },
+  {
+    kind: "side",
+    paras: [6, 7],
+    side: "right",
+    shape: "moSideSquare",
+    photo: {
+      src: "motivation-photo-4-2026-10-24.webp",
+      alt: "KU PRIDE CLUB 안내판 앞의 유병현 후보",
+      focus: "60% center",
+    },
+  },
+];
+
+function MoImg({ photo, className }: { photo: MoPhoto; className: string }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      className={className}
+      style={photo.focus ? { objectPosition: photo.focus } : undefined}
+      src={withBasePath(`/images/${photo.src}`)}
+      alt={photo.alt}
+      loading="lazy"
+      decoding="async"
+    />
+  );
+}
 
 /** II. 자기소개 및 동기 (2026-10-24): the one-line introduction across
-    the top, then the booklet's eight paragraphs in the shared 1200px
-    column with photos of different shapes set in on alternating sides. */
+    the top in one line, then the booklet's eight paragraphs with the
+    user's photos (MOTIVATION_LAYOUT). */
 function Motivation() {
   return (
     <div className={styles.motivation}>
       <h2 className={styles.moHeadline}>{MOTIVATION_HEADLINE}</h2>
       <div className={styles.moText}>
-        {motivation.map((para, i) => {
-          const photo = MOTIVATION_PHOTOS[i];
-          const cls = photo ? `${styles.moPhoto} ${styles[photo.place]}` : "";
-          return (
-            <Fragment key={i}>
-              {photo &&
-                (photo.src ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    className={cls}
-                    style={{ aspectRatio: photo.ratio }}
-                    src={withBasePath(`/images/${photo.src}`)}
-                    alt={photo.alt}
-                  />
-                ) : (
-                  <PhotoSlot
-                    label={photo.label!}
-                    ratio={photo.ratio}
-                    className={cls}
-                  />
+        {MOTIVATION_LAYOUT.map((block, i) =>
+          block.kind === "wide" ? (
+            <MoImg
+              key={i}
+              photo={block.photo}
+              className={`${styles.moPhoto} ${styles.moWide}`}
+            />
+          ) : block.kind === "text" ? (
+            <div className={styles.moBlock} key={i}>
+              {block.paras.map((n) => (
+                <p className={styles.para} key={n}>
+                  {motivation[n]}
+                </p>
+              ))}
+            </div>
+          ) : (
+            <div
+              className={`${styles.moBlock} ${styles.moSide} ${styles[block.shape]} ${
+                block.side === "left" ? styles.moSideLeft : ""
+              }`}
+              key={i}
+            >
+              <div>
+                {block.paras.map((n) => (
+                  <p className={styles.para} key={n}>
+                    {motivation[n]}
+                  </p>
                 ))}
-              <p className={styles.para}>{para}</p>
-            </Fragment>
-          );
-        })}
+              </div>
+              <MoImg photo={block.photo} className={styles.moPhoto} />
+            </div>
+          ),
+        )}
       </div>
     </div>
   );
