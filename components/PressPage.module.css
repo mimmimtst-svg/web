@@ -24,7 +24,9 @@
   text-align: center;
 }
 
-/* Pill tab bar in key red; the current tab a white pill with red text. */
+/* Pill tab bar in key red; the current tab a white pill with black text
+   (2026-10-25: red before — now the same as 나답게 · 다함께 · 더높게's
+   bar, DetailNav). */
 .tabs {
   position: relative;
   display: flex;
@@ -50,7 +52,7 @@
 }
 
 .tabActive {
-  color: var(--color-key);
+  color: var(--color-charcoal);
 }
 
 /* Before the sliding pill has been measured, the chosen tab is a white
