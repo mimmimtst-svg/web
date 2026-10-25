@@ -1,5 +1,5 @@
 /**
- * 후보자 소개 (preview, components/CandidatePage.tsx): the candidate
+ * 후보자 소개 (components/CandidatePage.tsx): the candidate
  * booklet's chapters I, II, IV and VI in its own words — 인사말, 자기소개
  * 및 총장 입후보 동기, Q&A and 미주 교우님들의 추천사 (2026-10-23).
  * Generated from the booklet; only line-break spacing was mended.

@@ -470,13 +470,11 @@ function Recommendations() {
 }
 
 /**
- * 후보자 소개, the work-in-progress version (2026-10-23): only at the
- * unlisted preview address (preview-template/profile/), while the public
- * /profile/ keeps the current page. A menu of six under the header —
+ * 후보자 소개 (2026-10-23; public at /profile/ since 2026-10-25, before
+ * that only at the unlisted preview address). A menu of six under the header —
  * 인사말 · 자기소개 및 동기 · Q&A · 약력 · 언론 기고 · 미주 교우님 추천사 —
  * filled from the candidate booklet (lib/candidateData.ts); 약력 is the
- * current profile, 언론 기고 the press page's two lists. The photos of
- * 인사말 and 자기소개 are numbered places until they come.
+ * current profile, 언론 기고 the press page's two lists.
  */
 export default function CandidatePage() {
   return (
