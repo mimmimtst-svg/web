@@ -353,8 +353,12 @@ footer.footer {
     font-size: calc(14.5 * var(--mu));
   }
 
+  /* A link here (plan/#essence from section 2's cards …) lands with the
+     header showing: stop a header lower so the title isn't under it
+     (2026-10-25). */
   .part {
     padding: calc(64 * var(--mu)) calc(20 * var(--mu));
+    scroll-margin-top: calc(84 * var(--mu));
   }
 
   .partInner {
