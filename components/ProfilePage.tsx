@@ -60,9 +60,8 @@ export function ProfileIntro({ underBar = false }: { underBar?: boolean }) {
             <span className={styles.name}>{profileIntro.name}</span>
             <span className={styles.role}>고려대학교 총장 후보</span>
           </h1>
+          {/* The name in hanja left off (2026-10-25, the user). */}
           <p className={styles.meta}>
-            <span lang="zh-Hant">{profileIntro.hanja}</span>
-            <span aria-hidden="true">·</span>
             <span>{profileIntro.born}</span>
           </p>
           <dl className={styles.contacts}>
