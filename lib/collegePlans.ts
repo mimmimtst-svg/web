@@ -4,7 +4,8 @@
  * 의과대학/의료원), each with its colleges, schools or hospitals. The
  * booklet's numbers ("1.1") are left out (2026-10-21, user request).
  * Generated from the PDF's text; a block is one of:
- *   p        a paragraph
+ *   p        a paragraph; `links` turn a pledge title in it into a link
+ *            to that pledge on 주요 공약 (P4-2)
  *   heading  a "□" heading
  *   list     a "-" list
  *   group    a "[…]" heading with its key-red line (의과대학/의료원)
@@ -12,7 +13,7 @@
  */
 
 export type CollegeBlock =
-  | { type: "p"; text: string }
+  | { type: "p"; text: string; links?: { text: string; pledge: string }[] }
   | { type: "heading"; text: string }
   | { type: "list"; items: string[] }
   | { type: "group"; title: string; tagline: string }
@@ -137,7 +138,8 @@ export const collegeCampuses: CollegeCampus[] = [
           },
           {
             type: "p",
-            text: "14개 학과 학과장들의 과중한 행정 부담을 직원 배치, 업무 분장 조정 등으로 해소시켜 드리겠습니다. 행정 효율화(참고: [4-6] AI·디지털 기반 미래형 행정체계 구축)를 통해 확보되는 인력을 활용해 행정에서 자유로운 연구·교육 환경을 조성하겠습니다.",
+            text: "14개 학과 학과장들의 과중한 행정 부담을 직원 배치, 업무 분장 조정 등으로 해소시켜 드리겠습니다. 행정 효율화(참고: AI·디지털 기반 미래형 행정체계 구축)를 통해 확보되는 인력을 활용해 행정에서 자유로운 연구·교육 환경을 조성하겠습니다.",
+            links: [{ text: "AI·디지털 기반 미래형 행정체계 구축", pledge: "4-6" }],
           },
           {
             type: "heading",

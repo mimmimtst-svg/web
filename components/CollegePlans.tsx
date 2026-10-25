@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import styles from "./CollegePlans.module.css";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -5,12 +6,40 @@ import ScrollTopButton from "./ScrollTopButton";
 import CollegeNav from "./CollegeNav";
 import Reveal from "./Reveal";
 import { collegeCampuses, type CollegeBlock } from "@/lib/collegePlans";
+import { pledgeAnchor } from "@/lib/pledgeDetail";
+
+/** A paragraph's text with each `links` title as a link to its pledge. */
+function ParaText({ block }: { block: Extract<CollegeBlock, { type: "p" }> }) {
+  const parts: ReactNode[] = [];
+  let rest = block.text;
+  for (const link of block.links ?? []) {
+    const at = rest.indexOf(link.text);
+    if (at < 0) continue;
+    parts.push(
+      rest.slice(0, at),
+      <a
+        className={styles.pledgeLink}
+        href={`../pledges/detail/#${pledgeAnchor(link.pledge)}`}
+        key={link.pledge}
+      >
+        {link.text}
+      </a>,
+    );
+    rest = rest.slice(at + link.text.length);
+  }
+  parts.push(rest);
+  return <>{parts}</>;
+}
 
 /** One block of the booklet's text (lib/collegePlans.ts). */
 function Block({ block }: { block: CollegeBlock }) {
   switch (block.type) {
     case "p":
-      return <p className={styles.para}>{block.text}</p>;
+      return (
+        <p className={styles.para}>
+          <ParaText block={block} />
+        </p>
+      );
     case "heading":
       return <h4 className={styles.blockHeading}>{block.text}</h4>;
     case "list":
