@@ -19,25 +19,28 @@
   border-top: 1px solid var(--color-light-gray);
 }
 
+/* "첫째," and the title: the same sizes as the Q&A's "Q1" and question
+   (CandidatePage.module.css .qBig / .questionText, 2026-10-26). */
 .head {
   display: flex;
   flex-direction: column;
-  gap: clamp(8px, 0.9vw, 14px);
+  gap: clamp(14px, 1.6vw, 24px);
   color: var(--color-charcoal);
 }
 
 .number {
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
-  line-height: 1.2;
+  font-size: clamp(2.5rem, 1.8rem + 2vw, 4.25rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
   color: var(--color-key);
 }
 
 .title {
   font-family: var(--font-kr);
   font-weight: 700;
-  font-size: clamp(1.25rem, 1rem + 0.7vw, 1.75rem);
+  font-size: clamp(1.375rem, 1.1rem + 0.8vw, 1.875rem);
   line-height: 1.45;
   word-break: keep-all;
   text-wrap: pretty;
@@ -45,7 +48,7 @@
 
 /* First point level with the title's first line. */
 .points {
-  padding-top: calc(clamp(1.5rem, 1.2rem + 1vw, 2.25rem) * 1.2 + clamp(8px, 0.9vw, 14px));
+  padding-top: calc(clamp(2.5rem, 1.8rem + 2vw, 4.25rem) + clamp(14px, 1.6vw, 24px));
 }
 
 @media (orientation: portrait) {
@@ -59,16 +62,16 @@
   }
 
   .head {
-    gap: calc(6 * var(--mu));
-    margin-bottom: calc(16 * var(--mu));
+    gap: calc(10 * var(--mu));
+    margin-bottom: calc(20 * var(--mu));
   }
 
   .number {
-    font-size: calc(24 * var(--mu));
+    font-size: calc(34 * var(--mu));
   }
 
   .title {
-    font-size: calc(20 * var(--mu));
+    font-size: calc(22 * var(--mu));
     text-wrap: wrap;
   }
 
