@@ -368,8 +368,9 @@ function RelatedPledges({ items }: { items: RelatedPledge[] }) {
 /** IV. Q&A: each question — opening, numbered parts with their points,
     closing — and its related pledges by policy area, each opening its
     page; QnaNav goes from question to question (dots on a wide screen,
-    a drop-down bar on a phone). */
-function QnaList() {
+    a drop-down bar on a phone). On the 여섯 가지 약속 page since
+    2026-10-26 (PromisePage). */
+export function QnaList() {
   return (
     <div className={styles.text}>
       <QnaNav items={qna.map(({ id, question }) => ({ id, question }))} />
@@ -471,10 +472,11 @@ function Recommendations() {
 
 /**
  * 후보자 소개 (2026-10-23; public at /profile/ since 2026-10-25, before
- * that only at the unlisted preview address). A menu of six under the header —
- * 인사말 · 자기소개 및 동기 · Q&A · 약력 · 언론 기고 · 미주 교우님 추천사 —
- * filled from the candidate booklet (lib/candidateData.ts); 약력 is the
- * current profile, 언론 기고 the press page's two lists.
+ * that only at the unlisted preview address). A menu of five under the
+ * header — 인사말 · 자기소개 및 동기 · 약력 · 언론 기고 · 미주 교우님
+ * 추천사 — filled from the candidate booklet (lib/candidateData.ts); 약력
+ * is the current profile, 언론 기고 the press page's two lists. (Q&A
+ * moved to the 여섯 가지 약속 page on 2026-10-26.)
  */
 export default function CandidatePage() {
   return (
@@ -483,6 +485,7 @@ export default function CandidatePage() {
       <main className={`${profileStyles.page} ${styles.page}`}>
         <h1 className={styles.visuallyHidden}>후보자 소개</h1>
         <CandidateTabs
+          label="후보자 소개"
           tabs={[
             { id: "greeting", label: "인사말", content: <Greeting /> },
             {
@@ -490,7 +493,6 @@ export default function CandidatePage() {
               label: "자기소개 및 동기",
               content: <Motivation />,
             },
-            { id: "qna", label: "Q&A", content: <QnaList /> },
             {
               id: "career",
               label: "약력",

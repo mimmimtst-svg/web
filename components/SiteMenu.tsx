@@ -17,8 +17,11 @@ type MenuItem = { label: string; target?: string; page?: string };
 // (direction/), 주요 공약 the P4-1 overview (which leads on to P4-2),
 // 단과대별 발전계획 the colleges page, 공약집 다운로드 the download page.
 // 언론 보도 자료 is off the menu for now; its page (press/) stays.
+// 2026-10-26: 여섯 가지 약속 (promises/: the six promises and the Q&A)
+// added after 후보자 소개.
 const MENU_ITEMS: MenuItem[] = [
   { label: "후보자 소개", page: "profile/" },
+  { label: "여섯 가지 약속", page: "promises/" },
   { label: "3대 발전 방향", page: "direction/" },
   { label: "주요 공약", page: "pledges/" },
   { label: "단과대별 발전계획", page: "colleges/" },

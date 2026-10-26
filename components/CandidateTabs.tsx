@@ -6,8 +6,8 @@ import styles from "./CandidatePage.module.css";
 export type CandidateTab = { id: string; label: string; content: ReactNode };
 
 /**
- * The 후보자 소개 page's menu: a tab bar sticky under the header (P4-2's
- * look), one panel shown at a time. The address carries the open tab
+ * The 후보자 소개 and 여섯 가지 약속 pages' menu: a tab bar sticky under
+ * the header (P4-2's look), one panel shown at a time. The address carries the open tab
  * (#greeting …), so a link can open any of them; switching goes back to
  * the top of the page. On a phone the bar scrolls sideways, the current
  * tab kept in view; the names fade out at an edge with more beyond it,
@@ -21,7 +21,14 @@ function ChevronIcon() {
   );
 }
 
-export default function CandidateTabs({ tabs }: { tabs: CandidateTab[] }) {
+export default function CandidateTabs({
+  tabs,
+  label,
+}: {
+  tabs: CandidateTab[];
+  /** The bar's name for screen readers (the page's name). */
+  label: string;
+}) {
   const [active, setActive] = useState(tabs[0].id);
   const [stuck, setStuck] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -107,7 +114,7 @@ export default function CandidateTabs({ tabs }: { tabs: CandidateTab[] }) {
         className={`${styles.tabs} ${stuck ? styles.tabsStuck : ""} ${
           more.before ? styles.moreBefore : ""
         } ${more.after ? styles.moreAfter : ""}`}
-        aria-label="후보자 소개"
+        aria-label={label}
       >
         {/* Pointer-only helpers: the tabs themselves are all reachable
             by keyboard and screen reader. */}

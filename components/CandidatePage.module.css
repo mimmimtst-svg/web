@@ -818,6 +818,16 @@
     padding: 0 calc(12 * var(--mu));
   }
 
+  /* Centred when they fit (여섯 가지 약속's two); auto margins, unlike
+     justify-content: center, keep an overflowing bar's start reachable. */
+  .tab:first-child {
+    margin-left: auto;
+  }
+
+  .tab:last-child {
+    margin-right: auto;
+  }
+
   .tab {
     padding: calc(8 * var(--mu)) calc(14 * var(--mu));
     font-size: calc(15 * var(--mu));
