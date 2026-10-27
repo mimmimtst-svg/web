@@ -276,14 +276,15 @@
   background-color: var(--color-key);
 }
 
-/* The cut-out portrait (1241×1835) standing on the band's foot, cut
-   off at the waist like 약력's, its middle at 30% across. */
+/* The cut-out portrait (1241×1835), large (2026-10-27: "less empty
+   crimson around him"): its top a little under the band's, the rest
+   running off the foot at the chest, its middle at 35% across. */
 .greetingHeroBg {
   position: absolute;
-  bottom: calc(-0.14 * var(--hero-h));
-  left: calc(30% - 0.338 * var(--portrait-h));
+  top: calc(0.11 * var(--hero-h));
+  left: calc(35% - 0.338 * var(--portrait-h));
   z-index: -1;
-  --portrait-h: calc(1.1 * var(--hero-h));
+  --portrait-h: calc(1.65 * var(--hero-h));
   height: var(--portrait-h);
   width: auto;
   max-width: none;
@@ -947,6 +948,8 @@
 
   .greetingHeroBg {
     --portrait-h: calc(1.08 * var(--hero-h));
+    top: auto;
+    bottom: calc(-0.14 * var(--hero-h));
     left: calc(23% - 0.338 * var(--portrait-h));
   }
 
