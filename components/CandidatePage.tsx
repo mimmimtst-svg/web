@@ -102,6 +102,14 @@ function Greeting() {
   return (
     <>
       <header className={styles.greetingHero}>
+        {/* The main page hero's pattern, fainter (2026-10-27). */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className={styles.greetingHeroPattern}
+          src={withBasePath("/images/hero-bg.png")}
+          alt=""
+          aria-hidden="true"
+        />
         {/* The same cut-out as 약력 (ProfilePage), on the band's crimson. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
