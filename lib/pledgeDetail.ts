@@ -196,7 +196,7 @@ export const pledgeParts: PledgePart[] = [
         title: "산업체 Chaired Professor 제도 활성화",
         lead: "대학의 연구성과가 산업과 사회의 혁신으로 이어지는 선순환 구조를 만들겠습니다.",
         points: [
-          "산업 현장의 세계적 전문가가 연구·교육에 참여하는 산업체 Chaired Professor 제도 활성화",
+          "산업 현장과 교류하며 연구·교육에 참여하는 산업체 Chaired Professor 제도 활성화",
           "산업계 첨단 기술·현장 문제와 대학의 학문적 역량을 연계한 공동 연구주제 발굴 및 공동연구 수행",
           "연구성과의 산업·사회 혁신 연계 및 현장 문제의 연구·교육 환류",
         ],
