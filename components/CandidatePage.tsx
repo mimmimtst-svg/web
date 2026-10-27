@@ -94,24 +94,22 @@ function Photo({
 }
 
 /** I. 후보자 인사말 (2026-10-24, "the opening should have impact"): a
-    full-width band — the candidate on stage (the user's photo) on the
-    left, its crimson carried on to the right, where the main page's hero
-    title sits right-aligned — then the letter with the booklet's photos,
-    the sign-off on the right. */
+    full-width crimson band — the candidate (약력's cut-out portrait,
+    2026-10-27; a stage photo before) standing on its foot on the left,
+    the main page's hero title right-aligned on the right — then the
+    letter with the booklet's photos, the sign-off on the right. */
 function Greeting() {
   return (
     <>
       <header className={styles.greetingHero}>
-        {/* The user's stage photo (from the 5760×2000 original, 2880×1000):
-            the candidate between crimson on both sides, so it can sit
-            anywhere in the band. */}
+        {/* The same cut-out as 약력 (ProfilePage), on the band's crimson. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className={styles.greetingHeroBg}
-          src={withBasePath("/images/greeting-hero-v5-2026-10-24.webp")}
-          alt="연단에서 인사하는 유병현 후보"
-          width={2880}
-          height={1000}
+          src={withBasePath("/images/profile-portrait-2026-10-20.webp")}
+          alt="유병현 후보"
+          width={1241}
+          height={1835}
         />
         <div className={styles.greetingHeroInner}>
           {/* The main page's hero title, right-aligned. */}

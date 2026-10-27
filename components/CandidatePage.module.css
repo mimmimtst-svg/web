@@ -276,14 +276,18 @@
   background-color: var(--color-key);
 }
 
+/* The cut-out portrait (1241×1835) standing on the band's foot, cut
+   off at the waist like 약력's, its middle at 30% across. */
 .greetingHeroBg {
   position: absolute;
-  top: 0;
-  left: calc(32% - 1.231 * var(--hero-h));
+  bottom: calc(-0.14 * var(--hero-h));
+  left: calc(30% - 0.338 * var(--portrait-h));
   z-index: -1;
-  height: calc(1.17 * var(--hero-h));
+  --portrait-h: calc(1.1 * var(--hero-h));
+  height: var(--portrait-h);
   width: auto;
   max-width: none;
+  transform-origin: 50% 100%;
 }
 
 /* The title's right edge: the text column's (1200px) up to a 1920
@@ -934,16 +938,16 @@
   }
 
   /* The band on a phone (the user's mobile layout, measured on an
-     iPhone 13 mini, 375 wide): 375:239, the photo at the band's height
-     with the candidate's face at 21% across (his left arm off the edge),
-     the title in the upper half, right-aligned 20mu from the edge. */
+     iPhone 13 mini, 375 wide): 375:239, the portrait's middle at 23%
+     across, the title in the upper half, right-aligned 20mu from the
+     edge. */
   .greetingHero {
     --hero-h: calc(100vw * 239 / 375);
   }
 
   .greetingHeroBg {
-    left: calc(21% - 1.045 * var(--hero-h));
-    height: var(--hero-h);
+    --portrait-h: calc(1.08 * var(--hero-h));
+    left: calc(23% - 0.338 * var(--portrait-h));
   }
 
   .greetingHeroInner {
