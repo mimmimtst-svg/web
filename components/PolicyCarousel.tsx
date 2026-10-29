@@ -10,7 +10,8 @@ import CarouselDots from "./CarouselDots";
 import Reveal from "./Reveal";
 import FadeImage from "./FadeImage";
 import { PORTRAIT, useMediaQuery } from "@/hooks/useMediaQuery";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
+import { useEnterView } from "@/hooks/useEnterView";
 import Footer from "./Footer";
 
 // A card with more pledges than this keeps the tight spacing between its
@@ -48,12 +49,23 @@ function ItemText({ text }: { text: string }) {
   );
 }
 
-/** A card's <li>. On a phone it rises in like the rest of the main page
-    (Reveal, started just before it shows and in turn with the others,
-    2026-10-29); on a wide screen the cards simply sit in the page. */
-function Card({ mobile, children }: { mobile: boolean; children: ReactNode }) {
+/** A card's <li>. On a phone the cards rise in together, once, as the
+    section comes in (one trigger for the carousel, so swiping never moves
+    them up or down; 2026-10-29); on a wide screen they simply sit in the
+    page. */
+function Card({
+  mobile,
+  entered,
+  index,
+  children,
+}: {
+  mobile: boolean;
+  entered: boolean;
+  index: number;
+  children: ReactNode;
+}) {
   return mobile ? (
-    <Reveal as="li" className={styles.card} lead="12%" queue>
+    <Reveal as="li" className={styles.card} visible={entered} delay={Math.min(index, 2) * 120}>
       {children}
     </Reveal>
   ) : (
@@ -75,9 +87,11 @@ export default function PolicyCarousel() {
     endDrag,
   } = useHorizontalCarousel<HTMLUListElement>();
   const mobile = useMediaQuery(PORTRAIT);
+  const sectionRef = useRef<HTMLElement>(null);
+  const entered = useEnterView(sectionRef, 0.15);
 
   return (
-    <section className={styles.section} id="policies">
+    <section className={styles.section} id="policies" ref={sectionRef}>
       <div className={styles.contentWrap}>
       <div className={styles.headerWrap}>
         {/* The title opens the 주요 공약 overview, P4-1 (2026-10-29). */}
@@ -118,7 +132,7 @@ export default function PolicyCarousel() {
           onPointerCancel={endDrag}
         >
           {policyCards.map((card, cardIndex) => (
-            <Card key={card.number} mobile={mobile}>
+            <Card key={card.number} mobile={mobile} entered={entered} index={cardIndex}>
               <div className={styles.cardInner}>
                 <FadeImage
                   className={styles.cardBg}

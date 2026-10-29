@@ -348,6 +348,16 @@
   margin-top: 14px;
 }
 
+/* A photo under a part's opening text (의과대학/의료원, 2026-10-29): the
+   text column's width, the site's card corners. */
+.introPhoto {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: clamp(28px, 3vw, 44px);
+  border-radius: var(--radius-card);
+}
+
 .para {
   font-family: var(--font-kr);
   font-weight: 400;

@@ -88,21 +88,22 @@
   }
 }
 
+/* 2026-10-29 (the user's treatment): the photos a little desaturated,
+   under 50% black, and every line of text with a soft shadow. */
 .cardBg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: saturate(0.8);
   z-index: -2;
 }
 
-/* 0.58 since the campus/hospital photos (2026-10-23): brighter than the
-   old shared photo (sky, autumn colours), the text needs a little more. */
 .cardOverlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.58);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: -1;
 }
 
@@ -118,6 +119,7 @@
     max(calc(70 * var(--u)), 24px);
   text-align: center;
   color: var(--color-white);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
 }
 
 .cardTitleBlock {

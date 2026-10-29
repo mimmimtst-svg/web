@@ -30,12 +30,14 @@ export type CollegeUnit = {
 };
 
 /** `label`: the tab name. `title`: the booklet's heading for the part.
-    `intro`: what comes before the first college (세종, 의과대학/의료원). */
+    `intro`: what comes before the first college (세종, 의과대학/의료원).
+    `image`: a photo under the intro (의과대학/의료원, 2026-10-29). */
 export type CollegeCampus = {
   id: "seoul" | "sejong" | "medical";
   label: string;
   title: string;
   intro: CollegeBlock[];
+  image?: { src: string; alt: string };
   units: CollegeUnit[];
 };
 
@@ -397,7 +399,7 @@ export const collegeCampuses: CollegeCampus[] = [
           },
           {
             type: "p",
-            text: "최근 급성장한 정보대학은 극심한 공간 부족 문제를 겪고 있습니다. 신임교원의 실험실과 대학원생 공동실험실이 모두 부족하고 이를 해결하기 위해 강의실을 실험실로 전환하면서 강의 공간도 부족한 상황입니다. 또한 피지컬 AI 연구 등 하드웨어를 실제로 구동하고 테스트할 별도의 특화 공간도 필요합니다. 본부가 이러한 공간 부족 문제를 종합적으로 해결하기 위해 적극 노력하겠습니다.",
+            text: "최근 급성장한 정보대학은 극심한 공간 부족 문제를 겪고 있습니다. 신임교원의 실험실과 대학원생 공동실험실이 모두 부족하고 이를 해결하기 위해 강의실을 실험실로 전환하면서 강의 공간도 부족한 상황입니다. 또한 피지컬 AI 연구 등 하드웨어를 실제로 구동하고 테스트할 별도의 특화 공간도 필요합니다. 본부는 이러한 공간 문제를 해결하기 위해 건물을 신축하는 등 적극 노력하겠습니다.",
           },
           {
             type: "heading",
@@ -1397,6 +1399,10 @@ export const collegeCampuses: CollegeCampus[] = [
     id: "medical",
     label: "의과대학/의료원",
     title: "의과대학/의료원",
+    image: {
+      src: "/images/college-medical-2026-10-29.webp",
+      alt: "의료분쟁조정법 개정과 발전 방향 학술대회",
+    },
     intro: [
       {
         type: "p",

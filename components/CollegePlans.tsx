@@ -5,6 +5,8 @@ import Footer from "./Footer";
 import ScrollTopButton from "./ScrollTopButton";
 import CollegeNav from "./CollegeNav";
 import Reveal from "./Reveal";
+import FadeImage from "./FadeImage";
+import { withBasePath } from "@/lib/basePath";
 import { collegeCampuses, type CollegeBlock } from "@/lib/collegePlans";
 import { pledgeAnchor } from "@/lib/pledgeDetail";
 
@@ -105,6 +107,15 @@ export default function CollegePlans() {
                     {campus.intro.map((block, i) => (
                       <Block block={block} key={i} />
                     ))}
+                    {campus.image && (
+                      <FadeImage
+                        className={styles.introPhoto}
+                        src={withBasePath(campus.image.src)}
+                        alt={campus.image.alt}
+                        width={1600}
+                        height={1066}
+                      />
+                    )}
                   </div>
                 )}
               </Reveal>

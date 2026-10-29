@@ -24,6 +24,10 @@ export default function QnaNav({
 }) {
   const [active, setActive] = useState(0);
   const [shown, setShown] = useState(false);
+  // Phone: the bar only once the page's own question list (QnaPage,
+  // [data-qna-index]) has scrolled wholly off — until then it repeated
+  // the list right under it (2026-10-29). No list, always.
+  const [barShown, setBarShown] = useState(false);
   const [open, setOpen] = useState(false);
   const dotsRef = useRef<HTMLElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
@@ -56,6 +60,8 @@ export default function QnaNav({
           first.top < window.innerHeight * 0.8 &&
           last.bottom > (dots?.bottom ?? window.innerHeight / 2),
       );
+      const index = document.querySelector("[data-qna-index]");
+      setBarShown(!index || index.getBoundingClientRect().bottom <= 0);
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -123,7 +129,11 @@ export default function QnaNav({
         </ol>
       </nav>
 
-      <div className={styles.qBar} ref={barRef}>
+      <div
+        className={`${styles.qBar} ${barShown ? styles.qBarShown : ""}`}
+        ref={barRef}
+        inert={!barShown}
+      >
         <button
           type="button"
           className={styles.qBarButton}

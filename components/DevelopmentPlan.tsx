@@ -87,20 +87,21 @@ export default function DevelopmentPlan() {
                 as="li"
                 key={card.title}
                 className={`${styles.card} ${index === activeIndex ? styles.cardActive : ""}`}
-                // Phone: each card on its own, in turn with the rest of the
-                // page's reveals (Reveal's lead + queue, 2026-10-29).
-                visible={mobile ? undefined : entered}
-                lead={mobile ? "12%" : undefined}
-                queue={mobile}
+                // One trigger for the whole carousel: the cards rise together
+                // once as the section comes in and never move while it is
+                // swiped (2026-10-29: a trigger per card dropped each card
+                // and raised it again as it slid out and back in).
+                visible={entered}
                 axis={motion[index].axis}
                 distance={motion[index].distance}
-                delay={mobile ? 0 : motion[index].delay}
+                delay={motion[index].delay}
                 duration={mobile ? 700 : 1400}
               >
                 <div className={styles.cardInner}>
                   <FadeImage
                     className={styles.cardBg}
                     src={withBasePath(card.image)}
+                    style={card.focus ? { objectPosition: card.focus } : undefined}
                     aria-hidden="true"
                   />
                   <div className={styles.cardOverlay} aria-hidden="true" />

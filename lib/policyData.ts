@@ -274,6 +274,8 @@ export type PlanCard = {
   subtitle: string;
   description: string;
   image: string;
+  /** The photo's object-position (default centre). */
+  focus?: string;
 };
 
 // Figma (node 612:1416, synced 2026-09-28) reordered these to 다함께 →
@@ -289,7 +291,10 @@ export const planCards: PlanCard[] = [
     subtitle: "조화로운 다양성",
     description:
       "서로 다르기 때문에 더 강하고, 함께하기 때문에 더 멀리 나아가는 고려대학교를 만들겠습니다",
-    image: "/images/plan-card-seoul-2026-10-23.webp",
+    // 2026-10-29: the high-resolution aerial photo, the main hall and its
+    // lawn kept in the middle of the card.
+    image: "/images/plan-card-seoul-hq-2026-10-29.webp",
+    focus: "47% center",
   },
   {
     detailId: "essence",
@@ -305,6 +310,9 @@ export const planCards: PlanCard[] = [
     subtitle: "한계를 넘는 도약",
     description:
       "우리 스스로 키운 실력과 함께 모은 힘으로 한계를 넘어 도약하는 고려대학교를 만들겠습니다",
-    image: "/images/plan-card-medical-2026-10-23.webp",
+    // 2026-10-29: 고려대학교 안암병원 (the user's photo), the building in
+    // the middle of the card.
+    image: "/images/plan-card-anam-2026-10-29.webp",
+    focus: "62% center",
   },
 ];

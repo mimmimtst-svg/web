@@ -68,8 +68,8 @@
 }
 
 /* Phone: one column, the phone's own side padding (no dots there). The
-   question bar follows the rule and rises 36mu into the bottom margin
-   (CandidatePage .qBar), leaving 28mu. */
+   question bar is fixed, out of the flow (CandidatePage .qBar), so Q1
+   follows the rule after this margin. */
 @media (orientation: portrait) {
   .column.column {
     max-width: none;
@@ -78,7 +78,7 @@
   }
 
   .index {
-    margin-bottom: calc(64 * var(--mu));
+    margin-bottom: calc(40 * var(--mu));
     padding-bottom: calc(32 * var(--mu));
   }
 

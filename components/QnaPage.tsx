@@ -12,7 +12,7 @@ import { qna } from "@/lib/candidateData";
     answer (2026-10-29: in place of a page title), then a rule. */
 function QnaIndex() {
   return (
-    <nav className={styles.index} aria-label="질문 목록">
+    <nav className={styles.index} aria-label="질문 목록" data-qna-index="">
       <h1 className={candidateStyles.visuallyHidden}>후보자에게 묻는다</h1>
       <ol className={styles.indexList}>
         {qna.map((q, i) => (
