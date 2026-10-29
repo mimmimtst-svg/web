@@ -261,6 +261,16 @@
     position: sticky;
     top: 0;
     height: 100lvh;
+    will-change: transform;
+  }
+
+  /* Each fading piece (Reveal) gets its own layer up front and keeps it
+     (2026-10-29: the promises came in with a hitch at the start and end
+     — "둑. 둑." — here and not on the white pages). Without this, iOS
+     Safari makes a layer as each fade starts and drops it as it ends,
+     redrawing the white text over the pinned photo both times. */
+  .list :global(.reveal) {
+    will-change: transform, opacity;
   }
 
   .section {
