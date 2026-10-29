@@ -1,0 +1,91 @@
+/* 후보자에게 묻는다 (components/QnaPage.tsx): the seven questions as a
+   two-column list of links at the top, then a thin rule and the Q&A.
+   Each link is a beige box (the related-pledges box's colour) with the
+   question's number in key red, like the Q&A's own "Q1". */
+.index {
+  margin-bottom: clamp(56px, 6vw, 88px);
+  padding-bottom: clamp(56px, 6vw, 88px);
+  border-bottom: 1px solid var(--color-light-gray);
+}
+
+.indexList {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 1.2vw, 16px) clamp(16px, 1.6vw, 24px);
+}
+
+.indexItem {
+  height: 100%;
+  display: flex;
+  align-items: baseline;
+  gap: clamp(14px, 1.4vw, 20px);
+  padding: clamp(18px, 1.8vw, 24px) clamp(20px, 2vw, 28px);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background-color: var(--color-card-bg);
+  color: var(--color-charcoal);
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+
+@media (hover: hover) {
+  .indexItem:hover {
+    border-color: var(--color-key);
+    background-color: var(--color-white);
+  }
+}
+
+.indexItem:focus-visible {
+  outline: 2px solid var(--color-key);
+  outline-offset: 2px;
+}
+
+.indexNum {
+  flex: 0 0 auto;
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: clamp(1.25rem, 1rem + 0.6vw, 1.625rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--color-key);
+}
+
+.indexText {
+  min-width: 0;
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: clamp(1.0625rem, 0.95rem + 0.35vw, 1.3125rem);
+  line-height: 1.45;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+/* Phone: one column. The question bar follows and rises 36mu into the
+   bottom margin (CandidatePage .qBar), leaving 28mu. */
+@media (orientation: portrait) {
+  .index {
+    margin-bottom: calc(64 * var(--mu));
+    padding-bottom: calc(32 * var(--mu));
+  }
+
+  .indexList {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(10 * var(--mu));
+  }
+
+  .indexItem {
+    gap: calc(12 * var(--mu));
+    padding: calc(16 * var(--mu)) calc(18 * var(--mu));
+  }
+
+  .indexNum {
+    font-size: calc(19 * var(--mu));
+  }
+
+  /* Fill the line, breaking at words ("pretty" moved words down early,
+     leaving the right side empty, as on the main page's P3). */
+  .indexText {
+    font-size: calc(16.5 * var(--mu));
+    text-wrap: wrap;
+  }
+}

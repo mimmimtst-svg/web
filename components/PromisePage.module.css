@@ -2,8 +2,8 @@
    the Q&A's two columns — "첫째," in key red over the title on the left,
    the points (CandidatePage's bullets) on the right — with the Q&A's thin
    light rule between them. */
-/* No tab bar on these pages (여섯 가지 약속, 후보자에게 묻는다 — QnaPage
-   too): the sticky offsets CandidatePage.module.css adds for one drop
+/* No tab bar on these pages (여섯 가지 약속, and 후보자에게 묻는다 —
+   QnaPage uses this too): the sticky offsets CandidatePage.module.css adds for one drop
    to nothing. Doubled for weight over its .page in the phone block. */
 .noTabs.noTabs {
   --tabs-h: 0px;
@@ -70,10 +70,8 @@
 }
 
 @media (orientation: portrait) {
-  /* On 후보자에게 묻는다 the question bar comes next and rises 36mu into
-     this margin (CandidatePage .qBar), leaving 28mu. */
   .pageTitle {
-    margin-bottom: calc(64 * var(--mu));
+    margin-bottom: calc(40 * var(--mu));
     font-size: calc(28 * var(--mu));
   }
 
