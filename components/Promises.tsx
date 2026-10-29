@@ -18,8 +18,9 @@ const QNA_PAGE = "qna/";
 export default function Promises() {
   const { ref, settled } = useSectionSettled<HTMLElement>();
   // Each promise rises in on its own as it scrolls into view — on the
-  // phone (Figma 672:2228 motion: 152.4px up + fade, easeInOut) and, now
-  // that the desktop section is a long page too (2026-10-18), there.
+  // phone (Figma 672:2228 motion: 152.4px up + fade, easeInOut; 56mu over
+  // 700ms since 2026-10-29, the long rise stuttered on a fast flick) and,
+  // now that the desktop section is a long page too (2026-10-18), there.
   const mobile = useMediaQuery(PORTRAIT);
 
   // Wide screens: the gap between promises (--promise-gap), from the
@@ -67,6 +68,12 @@ export default function Promises() {
           <div className={styles.overlay} />
         </div>
       </div>
+      {/* Phone: "후보자에게 묻는다" as a band at the top of the section,
+          centred over a soft line (no room beside the heading). */}
+      <a className={styles.askBand} href={QNA_PAGE}>
+        <MicIcon className={styles.askIcon} />
+        <span>후보자에게 묻는다</span>
+      </a>
       <div className={styles.inner}>
         {/* The title opens the 여섯 가지 약속 page (2026-10-29). */}
         <a className={styles.heading} href={PROMISES_PAGE}>
@@ -79,8 +86,8 @@ export default function Promises() {
               as="li"
               key={item.index}
               className={styles.item}
-              distance={mobile ? "calc(152.4 * var(--mu))" : "calc(90 * var(--u))"}
-              duration={mobile ? 1000 : 900}
+              distance={mobile ? "calc(56 * var(--mu))" : "calc(90 * var(--u))"}
+              duration={mobile ? 700 : 900}
             >
               <span className={styles.itemNumber}>{item.index}</span>
               <div className={styles.itemBody}>

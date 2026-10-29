@@ -67,25 +67,30 @@ export default function Reveal({
     const el = ref.current;
     if (!el) return;
 
-    // In view once 15% of it shows — or, for a block taller than the
-    // screen can ever show 15% of (단과대별 발전계획's 의료원 runs to
-    // several screens on a phone), once it fills a fifth of the screen.
-    // Hence the thresholds every 1%: each is a chance to check. On a phone
-    // it starts sooner — 8%, an eighth of the screen, measured nearly to
-    // the bottom edge (2026-10-21: the next block came in "a little
-    // late" while scrolling).
+    // Desktop: in view once 15% of it shows — or, for a block taller
+    // than the screen can ever show 15% of (단과대별 발전계획's 의료원 runs
+    // to several screens), once it fills a fifth of the screen. Hence
+    // the thresholds every 1%: each is a chance to check.
+    // Phone (2026-10-29): it starts just before it comes on screen — any
+    // part of it within 15% of a screen below the bottom edge — so a fast
+    // flick finds each block already rising as it arrives instead of
+    // blank and popping in late, one by one (a hidden block also waits
+    // `distance` below its place, which delayed it further). (2026-10-21
+    // had moved it from 8% visible nearly to the edge already.)
     const phone = window.matchMedia(PORTRAIT).matches;
-    const share = phone ? 0.08 : 0.15;
-    const screenShare = phone ? 0.12 : 0.2;
     const observer = new IntersectionObserver(
       ([entry]) => {
         const rootHeight = entry.rootBounds?.height ?? window.innerHeight;
         const enough =
-          entry.intersectionRatio >= share || entry.intersectionRect.height >= rootHeight * screenShare;
+          phone ||
+          entry.intersectionRatio >= 0.15 ||
+          entry.intersectionRect.height >= rootHeight * 0.2;
         if (entry.isIntersecting && enough) setObservedVisible(true);
         else if (!entry.isIntersecting && entry.boundingClientRect.top > 0) setObservedVisible(false);
       },
-      { threshold: THRESHOLDS, rootMargin: phone ? "0px 0px -3% 0px" : "0px 0px -10% 0px" }
+      phone
+        ? { threshold: 0, rootMargin: "0px 0px 15% 0px" }
+        : { threshold: THRESHOLDS, rootMargin: "0px 0px -10% 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();

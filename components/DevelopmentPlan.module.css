@@ -242,10 +242,14 @@
     user-select: none;
   }
 
+  /* A quick-start curve on a phone (2026-10-29): the easeInOut kept a
+     card faint for the first part of its rise, which read as late on a
+     fast flick. */
   .card {
     flex: 0 0 calc(333 * var(--mu));
     height: calc(344 * var(--mu));
     scroll-snap-align: center;
+    --reveal-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   }
 
   .cardInner {

@@ -24,11 +24,13 @@ const CARD_MOTION = [
   { axis: "x" as const, distance: "calc(667 * var(--u))", delay: 530 },
 ];
 // Mobile carousel (portrait): sliding sideways would drag the track's
-// scroll width around, so all three rise instead, same timing.
+// scroll width around, so all three rise instead — a short, quick rise
+// (2026-10-29: 120mu over 1.4s stuttered on a fast flick).
 const CARD_MOTION_MOBILE = CARD_MOTION.map((motion) => ({
   ...motion,
   axis: "y" as const,
-  distance: "calc(120 * var(--mu))",
+  distance: "calc(56 * var(--mu))",
+  delay: motion.delay ? 120 : 0,
 }));
 /** Figma's mobile carousel opens on the middle card (나답게). */
 const MOBILE_START_INDEX = 1;
@@ -50,8 +52,10 @@ export default function DevelopmentPlan() {
   // Cards come in while the section is still sliding into view (~25% on
   // screen), not after it has fully snapped — waiting for the snap made
   // them feel late.
-  const entered = useEnterView(sectionRef, 0.25);
   const mobile = useMediaQuery(PORTRAIT);
+  // On a phone as soon as a sliver shows, so a fast flick doesn't find
+  // the band empty (2026-10-29).
+  const entered = useEnterView(sectionRef, mobile ? 0.05 : 0.25);
   const motion = mobile ? CARD_MOTION_MOBILE : CARD_MOTION;
 
   // Mobile carousel: start centred on the middle card, like Figma.
@@ -87,7 +91,7 @@ export default function DevelopmentPlan() {
                 axis={motion[index].axis}
                 distance={motion[index].distance}
                 delay={motion[index].delay}
-                duration={1400}
+                duration={mobile ? 800 : 1400}
               >
                 <div className={styles.cardInner}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}

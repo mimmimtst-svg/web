@@ -62,6 +62,13 @@
   display: none;
 }
 
+/* "후보자에게 묻는다" on a phone: a band across the top of the section —
+   mic and label centred, 18mu Bold white, over a 1px line that fades out
+   to both ends (a plain full-width rule read too hard on the photo). */
+.askBand {
+  display: none;
+}
+
 /* SCROLL DOWN, pinned to the bottom of the screen while the section is
    on it (ScrollDownIndicator is absolute to this pin). */
 .cue {
@@ -250,6 +257,50 @@
     gap: 0;
   }
 
+  .askBand {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(8 * var(--mu));
+    padding: calc(18 * var(--mu)) calc(20 * var(--mu));
+    font-family: var(--font-kr);
+    font-weight: 700;
+    font-size: calc(18 * var(--mu));
+    line-height: 1.2;
+    color: var(--color-white);
+  }
+
+  .askBand > span {
+    text-box: trim-both cap alphabetic;
+  }
+
+  .askBand::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0.45) 50%,
+      rgba(255, 255, 255, 0)
+    );
+  }
+
+  .askBand .askIcon {
+    width: calc(26 * var(--mu));
+    height: calc(26 * var(--mu));
+    flex-shrink: 0;
+  }
+
+  .askBand:active {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
   .heading {
     gap: calc(8 * var(--mu));
     padding: calc(20 * var(--mu));
@@ -271,10 +322,10 @@
     padding: calc(20 * var(--mu));
   }
 
+  /* The shared quick-start reveal curve (2026-10-29: Figma's easeInOut
+     kept a promise faint early in its rise, so it read as late). */
   .item {
     gap: calc(10 * var(--mu));
-    /* Figma's authored item motion curve. */
-    --reveal-ease: cubic-bezier(0.42, 0, 0.58, 1);
   }
 
   /* 2026-10-23: one type scale for P2–P4 on a phone — titles 18 (700),
