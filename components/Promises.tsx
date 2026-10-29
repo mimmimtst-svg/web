@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, type ElementType, type ReactNode } from "react";
 import styles from "./Promises.module.css";
 import { MicIcon, PlusIcon } from "./icons";
 import { promises } from "@/lib/policyData";
@@ -15,13 +15,24 @@ import ScrollDownIndicator from "./ScrollDownIndicator";
 const PROMISES_PAGE = "promises/";
 const QNA_PAGE = "qna/";
 
+/** Stands in for Reveal where a piece doesn't animate on its own. */
+function Plain({
+  as: Tag = "div",
+  className,
+  children,
+}: {
+  as?: ElementType;
+  className?: string;
+  children: ReactNode;
+}) {
+  return <Tag className={className}>{children}</Tag>;
+}
+
 export default function Promises() {
   const { ref, settled } = useSectionSettled<HTMLElement>();
-  // Each promise rises in on its own as it scrolls into view — on the
-  // phone and, now that the desktop section is a long page too
-  // (2026-10-18), there. On the phone it is the 후보자 소개 page's rise
-  // (32px over 700ms, Reveal's ease-out; 2026-10-29) — Figma's 152.4px
-  // easeInOut came and went abruptly on a fast flick.
+  // The promises rise in as they scroll into view: on a wide screen
+  // each whole promise (the section is a long page since 2026-10-18), on
+  // a phone each piece of it (below).
   const mobile = useMediaQuery(PORTRAIT);
 
   // Wide screens: the gap between promises (--promise-gap), from the
@@ -82,25 +93,49 @@ export default function Promises() {
           <h2 className={styles.headingTitle}>유병현의 여섯 가지 약속</h2>
         </a>
         <ol className={styles.list} data-pager-stops="">
-          {promises.map((item) => (
-            <Reveal
-              as="li"
-              key={item.index}
-              className={styles.item}
-              distance={mobile ? 32 : "calc(90 * var(--u))"}
-              duration={mobile ? 700 : 900}
-            >
-              <span className={styles.itemNumber}>{item.index}</span>
-              <div className={styles.itemBody}>
-                <p className={styles.itemTitle}>{item.title}</p>
-                <ul className={`${styles.itemPoints} ${item.tight ? styles.itemPointsTight : ""}`}>
-                  {item.points.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
-          ))}
+          {promises.map((item) => {
+            // Phone: each piece comes in on its own — the number and title,
+            // then every point as it reaches the screen — the size of a
+            // 후보자 소개 paragraph, with its rise (Reveal's 24px, 700ms).
+            // A whole promise at once was a big block, and a fast flick
+            // brought them in one chunk after another (2026-10-29). Wide
+            // screens: the whole promise rises, paged two at a time.
+            const Piece = mobile ? Reveal : Plain;
+            const content = (
+              <>
+                <Piece as="span" className={styles.itemNumber}>
+                  {item.index}
+                </Piece>
+                <div className={styles.itemBody}>
+                  <Piece as="p" className={styles.itemTitle}>
+                    {item.title}
+                  </Piece>
+                  <ul className={`${styles.itemPoints} ${item.tight ? styles.itemPointsTight : ""}`}>
+                    {item.points.map((point) => (
+                      <Piece as="li" key={point}>
+                        {point}
+                      </Piece>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            );
+            return mobile ? (
+              <li key={item.index} className={styles.item}>
+                {content}
+              </li>
+            ) : (
+              <Reveal
+                as="li"
+                key={item.index}
+                className={styles.item}
+                distance="calc(90 * var(--u))"
+                duration={900}
+              >
+                {content}
+              </Reveal>
+            );
+          })}
         </ol>
       </div>
       {/* Wide screens: the heading stays put at the top while the promises
