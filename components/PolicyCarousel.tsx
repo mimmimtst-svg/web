@@ -66,7 +66,6 @@ export default function PolicyCarousel() {
         <a className={styles.heading} href="pledges/" draggable={false}>
           <PlusIcon />
           <h2 className={styles.headingTitle}>나답게・다함께・더높게 핵심 공약</h2>
-          <LineArrowRightIcon className={styles.headingArrow} />
         </a>
         <div className={styles.navButtons}>
           <button

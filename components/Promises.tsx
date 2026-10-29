@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./Promises.module.css";
-import { LineArrowRightIcon, PlusIcon } from "./icons";
+import { PlusIcon } from "./icons";
 import { promises } from "@/lib/policyData";
 import { withBasePath } from "@/lib/basePath";
 import { useSectionSettled } from "@/hooks/useSectionSettled";
@@ -36,7 +36,6 @@ export default function Promises() {
         <a className={styles.heading} href={PROMISES_PAGE}>
           <PlusIcon />
           <h2 className={styles.headingTitle}>유병현의 여섯 가지 약속</h2>
-          <LineArrowRightIcon className={styles.headingArrow} />
         </a>
         <ol className={styles.list} data-pager-stops="">
           {promises.map((item) => (
@@ -80,7 +79,6 @@ export default function Promises() {
           >
             <PlusIcon />
             <span className={styles.headingTitle}>유병현의 여섯 가지 약속</span>
-            <LineArrowRightIcon className={styles.headingArrow} />
           </a>
           <span className={styles.capEdge} data-pager-cover="" />
         </div>

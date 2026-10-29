@@ -111,29 +111,17 @@
   line-height: 1.4;
 }
 
-/* The title is a link to its page (2026-10-29): a small line arrow after
-   it, which moves on hover while the title brightens. */
+/* The title is a link to its page (2026-10-29); it brightens on hover
+   (no arrow — the user's call). */
 .heading {
   width: fit-content;
   max-width: 100%;
   transition: color 200ms ease;
 }
 
-.heading .headingArrow {
-  width: calc(var(--fs-section-title-fit) * 0.6);
-  height: auto;
-  margin-left: calc(var(--fs-section-title-fit) * 0.1);
-  color: var(--color-muted);
-  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
 @media (hover: hover) {
   .heading:hover {
     color: var(--color-white);
-  }
-
-  .heading:hover .headingArrow {
-    transform: translateX(6px);
   }
 }
 
@@ -260,11 +248,6 @@
   .headingTitle {
     font-size: calc(20 * var(--mu));
     line-height: 1.398;
-  }
-
-  .heading .headingArrow {
-    width: calc(14 * var(--mu));
-    margin-left: calc(2 * var(--mu));
   }
 
   .list {
