@@ -252,17 +252,6 @@
    Left-aligned: justify on a phone-width column opened
    wide gaps in the English copy. */
 @media (orientation: portrait) {
-  /* The photo pinned to one screen while the promises scroll over it, as
-     on a wide screen (2026-10-29): stretched over the whole section it
-     was an image several screens tall to redraw under every rising
-     promise, and a fast flick stuttered here and nowhere else. lvh, not
-     dvh: it doesn't change while the address bar slides. */
-  .backdropPin {
-    position: sticky;
-    top: 0;
-    height: 100lvh;
-  }
-
   .section {
     height: auto;
     padding: 0 0 calc(20 * var(--mu));
@@ -337,8 +326,8 @@
     padding: calc(20 * var(--mu));
   }
 
-  /* The shared quick-start reveal curve (2026-10-29: Figma's easeInOut
-     kept a promise faint early in its rise, so it read as late). */
+  /* Reveal's shared ease-out, as on 후보자 소개 (2026-10-29; Figma's
+     easeInOut before). */
   .item {
     gap: calc(10 * var(--mu));
   }

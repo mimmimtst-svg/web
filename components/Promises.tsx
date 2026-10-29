@@ -18,9 +18,10 @@ const QNA_PAGE = "qna/";
 export default function Promises() {
   const { ref, settled } = useSectionSettled<HTMLElement>();
   // Each promise rises in on its own as it scrolls into view — on the
-  // phone (Figma 672:2228 motion: 152.4px up + fade, easeInOut; 56mu over
-  // 700ms since 2026-10-29, the long rise stuttered on a fast flick) and,
-  // now that the desktop section is a long page too (2026-10-18), there.
+  // phone and, now that the desktop section is a long page too
+  // (2026-10-18), there. On the phone it is the 후보자 소개 page's rise
+  // (32px over 700ms, Reveal's ease-out; 2026-10-29) — Figma's 152.4px
+  // easeInOut came and went abruptly on a fast flick.
   const mobile = useMediaQuery(PORTRAIT);
 
   // Wide screens: the gap between promises (--promise-gap), from the
@@ -86,7 +87,7 @@ export default function Promises() {
               as="li"
               key={item.index}
               className={styles.item}
-              distance={mobile ? "calc(56 * var(--mu))" : "calc(90 * var(--u))"}
+              distance={mobile ? 32 : "calc(90 * var(--u))"}
               duration={mobile ? 700 : 900}
             >
               <span className={styles.itemNumber}>{item.index}</span>

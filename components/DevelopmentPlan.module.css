@@ -242,9 +242,7 @@
     user-select: none;
   }
 
-  /* A quick-start curve on a phone (2026-10-29): the easeInOut kept a
-     card faint for the first part of its rise, which read as late on a
-     fast flick. */
+  /* Reveal's shared ease-out on a phone, as on 후보자 소개 (2026-10-29). */
   .card {
     flex: 0 0 calc(333 * var(--mu));
     height: calc(344 * var(--mu));
