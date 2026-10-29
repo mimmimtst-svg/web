@@ -15,6 +15,14 @@ import ScrollDownIndicator from "./ScrollDownIndicator";
 const PROMISES_PAGE = "promises/";
 const QNA_PAGE = "qna/";
 
+/** A phone piece: Reveal, started a little before it reaches the screen
+    (Reveal's `lead`), so a momentum glide's late, bunched signals happen
+    off screen and each line is already rising at its own pace as it
+    comes into view. */
+function LeadReveal(props: { as?: ElementType; className?: string; children: ReactNode }) {
+  return <Reveal {...props} lead="12%" />;
+}
+
 /** Stands in for Reveal where a piece doesn't animate on its own. */
 function Plain({
   as: Tag = "div",
@@ -100,7 +108,7 @@ export default function Promises() {
             // A whole promise at once was a big block, and a fast flick
             // brought them in one chunk after another (2026-10-29). Wide
             // screens: the whole promise rises, paged two at a time.
-            const Piece = mobile ? Reveal : Plain;
+            const Piece = mobile ? LeadReveal : Plain;
             const content = (
               <>
                 <Piece as="span" className={styles.itemNumber}>

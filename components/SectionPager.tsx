@@ -309,10 +309,32 @@ export default function SectionPager() {
     updatePaged();
     const active = { passive: false } as const;
     window.addEventListener("wheel", onWheel, active);
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, active);
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
-    window.addEventListener("touchcancel", onTouchEnd, { passive: true });
+    // The touch handlers page the landscape layout only. Attached only
+    // there (2026-10-29): a touchmove listener that may cancel makes the
+    // browser wait for the page's script on every finger move before it
+    // scrolls — on a phone that tied the scroll to whatever else was
+    // running (each promise starting its rise) and made the main page
+    // stutter, the one page with this listener.
+    let touchOn = false;
+    const syncTouch = () => {
+      const want = !mobile.matches;
+      if (want === touchOn) return;
+      touchOn = want;
+      if (want) {
+        window.addEventListener("touchstart", onTouchStart, { passive: true });
+        window.addEventListener("touchmove", onTouchMove, active);
+        window.addEventListener("touchend", onTouchEnd, { passive: true });
+        window.addEventListener("touchcancel", onTouchEnd, { passive: true });
+      } else {
+        window.removeEventListener("touchstart", onTouchStart);
+        window.removeEventListener("touchmove", onTouchMove);
+        window.removeEventListener("touchend", onTouchEnd);
+        window.removeEventListener("touchcancel", onTouchEnd);
+        touch = null;
+      }
+    };
+    syncTouch();
+    mobile.addEventListener("change", syncTouch);
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("scroll", scheduleRealign, { passive: true });
     window.addEventListener("resize", onResize);
@@ -322,6 +344,7 @@ export default function SectionPager() {
       if (frame) cancelAnimationFrame(frame);
       clearTimeout(idleTimer);
       window.removeEventListener("wheel", onWheel);
+      mobile.removeEventListener("change", syncTouch);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("touchend", onTouchEnd);

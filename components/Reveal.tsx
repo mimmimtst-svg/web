@@ -31,6 +31,12 @@ type RevealProps = {
    * than each one reacting to its own individual visibility.
    */
   visible?: boolean;
+  /** Phone only: start this far (a CSS length, e.g. "12%") before the
+      element reaches the bottom of the screen, at the first pixel, instead
+      of once 8% of it shows. The main page's promises use it (2026-10-29):
+      during a phone's momentum glide the "in view" signals come late and
+      bunched, and starting off screen hides that. Other uses unchanged. */
+  lead?: string;
 } & Omit<HTMLAttributes<HTMLElement>, "children" | "className" | "style">;
 
 /**
@@ -54,6 +60,7 @@ export default function Reveal({
   duration = 700,
   axis = "y",
   visible: controlledVisible,
+  lead,
   ...rest
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
@@ -75,7 +82,8 @@ export default function Reveal({
     // the bottom edge (2026-10-21: the next block came in "a little
     // late" while scrolling).
     const phone = window.matchMedia(PORTRAIT).matches;
-    const share = phone ? 0.08 : 0.15;
+    const early = phone && lead !== undefined;
+    const share = early ? 0 : phone ? 0.08 : 0.15;
     const screenShare = phone ? 0.12 : 0.2;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -85,11 +93,14 @@ export default function Reveal({
         if (entry.isIntersecting && enough) setObservedVisible(true);
         else if (!entry.isIntersecting && entry.boundingClientRect.top > 0) setObservedVisible(false);
       },
-      { threshold: THRESHOLDS, rootMargin: phone ? "0px 0px -3% 0px" : "0px 0px -10% 0px" }
+      {
+        threshold: early ? 0 : THRESHOLDS,
+        rootMargin: early ? `0px 0px ${lead} 0px` : phone ? "0px 0px -3% 0px" : "0px 0px -10% 0px",
+      }
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [isControlled]);
+  }, [isControlled, lead]);
 
   return (
     <Tag
