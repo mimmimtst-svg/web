@@ -96,6 +96,15 @@ export default function SectionPager() {
       return parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height")) || 0;
     };
 
+    /** How far down the screen a section's content can be read: the
+        bottom, or the top of whatever the section keeps pinned at the
+        foot, marked [data-pager-floor] (the Promises cue's cover). */
+    const floorOf = (el: HTMLElement) => {
+      const floor = el.querySelector<HTMLElement>("[data-pager-floor]");
+      if (floor?.offsetParent) return floor.offsetTop;
+      return window.innerHeight;
+    };
+
     /** Page top of an element, ignoring transforms (a Reveal still
         waiting to rise in sits lower than its place). */
     const layoutTop = (el: HTMLElement) => {
@@ -106,18 +115,21 @@ export default function SectionPager() {
 
     /** Where a tall section with marked blocks (the children of
         [data-pager-stops] — the six promises) comes to rest: its top,
-        then each block that wasn't wholly on the last screen brought up
-        to just under the cover — so a turn never leaves a block half
-        under the pinned heading. */
+        then each block that wasn't wholly readable on the last screen
+        (above the floor) brought up to just under the cover — so a turn
+        never leaves a block half under the pinned heading or the cue's
+        cover. */
     const restingPoints = (s: { el: HTMLElement; top: number; bottom: number }) => {
       const stops = s.el.querySelectorAll<HTMLElement>("[data-pager-stops] > *");
       if (!stops.length) return null;
       const vh = window.innerHeight;
       const cover = coverOf(s.el);
+      const floor = floorOf(s.el);
       const points = [s.top];
       for (const el of stops) {
         const top = layoutTop(el);
-        if (top + el.offsetHeight > points[points.length - 1] + vh - 2) {
+        // A few px into the cover's fade don't show.
+        if (top + el.offsetHeight > points[points.length - 1] + floor + 4) {
           points.push(Math.min(Math.round(top - cover), s.bottom - vh));
         }
       }

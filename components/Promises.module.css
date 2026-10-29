@@ -81,7 +81,9 @@
    the bottom of the screen and fading out upward (the heading's cover,
    upside down), so the promises slip under it instead of crossing the
    cue, scrolling either way (2026-10-29). */
-.cueCover {
+.cueCover,
+.cueFloor,
+.cueSolid {
   display: none;
 }
 
@@ -334,26 +336,35 @@
   .section {
     height: auto;
     min-height: 100dvh;
+    /* Bottom padding = the floor (below): on the last page the sixth
+       promise ends clear of the cue's cover. */
     padding: calc(var(--header-height) + 40 * var(--u)) calc(50 * var(--u))
-      max(calc(230 * var(--u)), 150px, var(--pair-gap)) calc(40 * var(--u));
+      var(--floor) calc(40 * var(--u));
     /* Where the text is clear of the pinned heading and its fade (the
        cap's edge, below): the first promise starts there, and every
        page turn brings the next one up to it. */
     --cap-edge: calc(
       var(--header-height) + 40 * var(--u) + var(--fs-section-title-fit) * 1.4 + 106 * var(--u)
     );
+    /* The same at the bottom: how far up from the screen's foot the cue's
+       cover (.cueCover) reaches before the text is clear of it, plus a
+       little air. SectionPager reads it (.cueFloor) and counts a promise
+       as on screen only when it ends above it. */
+    --floor: calc(210 * var(--u) + 24px);
     /* The promises' unit. It follows the screen's width (2026-10-19:
        --u also follows the height, so the type stayed put while a short
        window narrowed; the 1920 sizes also came down a step, as the page
        read larger than the others) — but never so far that two promises
-       (233 units each, title on one line) and a gap stop fitting between
-       the cap's edge and the bottom of the screen. */
-    --pu: min(calc(100vw / 1920), calc((100dvh - var(--cap-edge) - 40px) / 550));
-    /* Two promises to a screen (2026-10-19, "첫째, 둘째 on one page"): the
-       space under the cap's edge split in two, each half one promise and
-       the gap after it — so the third starts right at the bottom edge,
-       never peeking in, and the next page turn brings it up to the edge. */
-    --pair-gap: calc((100dvh - var(--cap-edge)) / 2 - 233 * var(--pu));
+       (233 units each, title on one line) and the gap between them stop
+       fitting between the cap's edge and the floor. */
+    --pu: min(calc(100vw / 1920), calc((100dvh - var(--cap-edge) - var(--floor)) / 560));
+    /* The gap between promises: set from the screen by Promises.tsx
+       (as many to a page as fit above the floor, the next one hidden
+       under the cover); this only until that runs. It used to stretch
+       so exactly two filled the screen — a big hole on a medium window,
+       where the type follows the narrow width, and the second running
+       into the cue's cover on a wide short one (2026-10-29). */
+    --promise-gap: max(calc(80 * var(--pu)), 40px);
   }
 
   .backdropPin,
@@ -394,6 +405,23 @@
     left: calc(40 * var(--u));
     /* The cover lets clicks through to the text; its title takes them. */
     pointer-events: auto;
+  }
+
+  /* The floor, as a mark SectionPager can measure (cf. .capEdge). */
+  .cueFloor {
+    display: block;
+    position: absolute;
+    top: calc(100dvh - var(--floor));
+    left: 0;
+  }
+
+  /* Where the cover turns solid: a promise starting below it is out of
+     sight (Promises.tsx sizes the gap with it). */
+  .cueSolid {
+    display: block;
+    position: absolute;
+    top: calc(100dvh - 130 * var(--u));
+    left: 0;
   }
 
   .cueCover {
@@ -503,7 +531,7 @@
     width: fit-content;
     max-width: 100%;
     margin: 0 auto;
-    gap: var(--pair-gap);
+    gap: var(--promise-gap);
   }
 
   /* Number column wide enough for "여섯째," at this size. */

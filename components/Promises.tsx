@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import styles from "./Promises.module.css";
 import { MicIcon, PlusIcon } from "./icons";
 import { promises } from "@/lib/policyData";
@@ -20,6 +21,40 @@ export default function Promises() {
   // phone (Figma 672:2228 motion: 152.4px up + fade, easeInOut) and, now
   // that the desktop section is a long page too (2026-10-18), there.
   const mobile = useMediaQuery(PORTRAIT);
+
+  // Wide screens: the gap between promises (--promise-gap), from the
+  // screen (2026-10-29). As many promises as fit between the pinned
+  // heading's edge and the floor (the top of the cue's cover) make a
+  // page, and the gap is as wide as it can be while they still do, up to
+  // where the next promise starts under the cover's solid part — so a
+  // page never shows its last lines faded, nor the next promise peeking
+  // in, on any window. SectionPager then pages them that many at a time.
+  useEffect(() => {
+    const section = ref.current;
+    if (!section || mobile) {
+      section?.style.removeProperty("--promise-gap");
+      return;
+    }
+    const MIN_GAP = 40;
+    const fit = () => {
+      const items = section.querySelectorAll<HTMLElement>("[data-pager-stops] > *");
+      const cap = section.querySelector<HTMLElement>("[data-pager-cover]");
+      const floor = section.querySelector<HTMLElement>("[data-pager-floor]");
+      const solid = section.querySelector<HTMLElement>("[data-cover-solid]");
+      if (!items.length || !cap?.offsetParent || !floor || !solid) return;
+      const h = Math.max(...Array.from(items, (el) => el.offsetHeight));
+      const room = floor.offsetTop - cap.offsetTop; // the promises' space
+      const hidden = solid.offsetTop - cap.offsetTop; // where the next is out of sight
+      const n = Math.max(1, Math.floor((room + MIN_GAP) / (h + MIN_GAP)));
+      const most = n > 1 ? (room - n * h) / (n - 1) : Infinity;
+      const gap = Math.max(MIN_GAP, Math.min(hidden / n - h, most));
+      section.style.setProperty("--promise-gap", `${Math.floor(gap)}px`);
+    };
+    fit();
+    document.fonts?.ready.then(fit);
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [ref, mobile]);
 
   return (
     <section className={styles.section} id="promises" ref={ref}>
@@ -105,6 +140,8 @@ export default function Promises() {
             <div className={styles.overlay} />
           </div>
           <ScrollDownIndicator active={settled} />
+          <span className={styles.cueFloor} data-pager-floor="" />
+          <span className={styles.cueSolid} data-cover-solid="" />
         </div>
       </div>
     </section>
