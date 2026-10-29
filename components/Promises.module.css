@@ -482,6 +482,16 @@
     column-gap: max(calc(90 * var(--pu)), 24px);
   }
 
+  /* The rise fades in on its own, slow-starting curve (2026-10-29): with
+     the shared ease-out a promise was nearly opaque while still low on
+     the screen, crossing the pinned SCROLL DOWN; now it stays faint down
+     there and turns solid as it settles. (Opacity first, transform
+     second — Reveal's transition-property order.) */
+  .list > .item {
+    transition-timing-function: cubic-bezier(0.55, 0, 0.75, 0.3),
+      var(--reveal-ease, cubic-bezier(0.22, 0.61, 0.36, 1));
+  }
+
   .itemNumber {
     font-weight: 700;
     font-size: max(calc(56 * var(--pu)), 1.75rem);
