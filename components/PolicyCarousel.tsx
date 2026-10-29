@@ -62,10 +62,12 @@ export default function PolicyCarousel() {
     <section className={styles.section} id="policies">
       <div className={styles.contentWrap}>
       <div className={styles.headerWrap}>
-        <div className={styles.heading}>
+        {/* The title opens the 주요 공약 overview, P4-1 (2026-10-29). */}
+        <a className={styles.heading} href="pledges/" draggable={false}>
           <PlusIcon />
           <h2 className={styles.headingTitle}>나답게・다함께・더높게 핵심 공약</h2>
-        </div>
+          <LineArrowRightIcon className={styles.headingArrow} />
+        </a>
         <div className={styles.navButtons}>
           <button
             type="button"

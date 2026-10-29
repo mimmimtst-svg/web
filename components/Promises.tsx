@@ -1,13 +1,17 @@
 "use client";
 
 import styles from "./Promises.module.css";
-import { PlusIcon } from "./icons";
+import { LineArrowRightIcon, PlusIcon } from "./icons";
 import { promises } from "@/lib/policyData";
 import { withBasePath } from "@/lib/basePath";
 import { useSectionSettled } from "@/hooks/useSectionSettled";
 import { PORTRAIT, useMediaQuery } from "@/hooks/useMediaQuery";
 import Reveal from "./Reveal";
 import ScrollDownIndicator from "./ScrollDownIndicator";
+
+// Relative: the main page sits at the site root or under the unlisted
+// preview address.
+const PROMISES_PAGE = "promises/";
 
 export default function Promises() {
   const { ref, settled } = useSectionSettled<HTMLElement>();
@@ -28,10 +32,12 @@ export default function Promises() {
         </div>
       </div>
       <div className={styles.inner}>
-        <div className={styles.heading}>
+        {/* The title opens the 여섯 가지 약속 page (2026-10-29). */}
+        <a className={styles.heading} href={PROMISES_PAGE}>
           <PlusIcon />
           <h2 className={styles.headingTitle}>유병현의 여섯 가지 약속</h2>
-        </div>
+          <LineArrowRightIcon className={styles.headingArrow} />
+        </a>
         <ol className={styles.list} data-pager-stops="">
           {promises.map((item) => (
             <Reveal
@@ -64,10 +70,18 @@ export default function Promises() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} alt="" />
           <div className={styles.overlay} />
-          <div className={`${styles.heading} ${styles.capHeading}`}>
+          {/* What shows and takes the click on a wide screen; out of the
+              tab order (the link in the flow is the one for keyboards
+              and screen readers). */}
+          <a
+            className={`${styles.heading} ${styles.capHeading}`}
+            href={PROMISES_PAGE}
+            tabIndex={-1}
+          >
             <PlusIcon />
             <span className={styles.headingTitle}>유병현의 여섯 가지 약속</span>
-          </div>
+            <LineArrowRightIcon className={styles.headingArrow} />
+          </a>
           <span className={styles.capEdge} data-pager-cover="" />
         </div>
       </div>
