@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./Promises.module.css";
-import { PlusIcon } from "./icons";
+import { MicIcon, PlusIcon } from "./icons";
 import { promises } from "@/lib/policyData";
 import { withBasePath } from "@/lib/basePath";
 import { useSectionSettled } from "@/hooks/useSectionSettled";
@@ -12,6 +12,7 @@ import ScrollDownIndicator from "./ScrollDownIndicator";
 // Relative: the main page sits at the site root or under the unlisted
 // preview address.
 const PROMISES_PAGE = "promises/";
+const QNA_PAGE = "qna/";
 
 export default function Promises() {
   const { ref, settled } = useSectionSettled<HTMLElement>();
@@ -81,6 +82,16 @@ export default function Promises() {
             <span className={styles.headingTitle}>유병현의 여섯 가지 약속</span>
           </a>
           <span className={styles.capEdge} data-pager-cover="" />
+        </div>
+      </div>
+      {/* Wide screens: "후보자에게 묻는다" on the right of the pinned
+          heading's row, pinned with it (2026-10-29). */}
+      <div className={styles.ask}>
+        <div className={styles.askPin}>
+          <a className={styles.askButton} href={QNA_PAGE}>
+            <MicIcon className={styles.askIcon} />
+            후보자에게 묻는다
+          </a>
         </div>
       </div>
       {/* The cue pinned to the bottom of the screen while the section is

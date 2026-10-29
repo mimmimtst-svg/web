@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 import styles from "./CandidatePage.module.css";
 import profileStyles from "./ProfilePage.module.css";
 import pressStyles from "./PressPage.module.css";
@@ -374,11 +374,13 @@ function RelatedPledges({ items }: { items: RelatedPledge[] }) {
 /** IV. Q&A: each question — opening, numbered parts with their points,
     closing — and its related pledges by policy area, each opening its
     page; QnaNav goes from question to question (dots on a wide screen,
-    a drop-down bar on a phone). On the 여섯 가지 약속 page since
-    2026-10-26 (PromisePage). */
-export function QnaList() {
+    a drop-down bar on a phone). Its own page, 후보자에게 묻는다, since
+    2026-10-29 (QnaPage; on 여섯 가지 약속 before). `heading`: the page
+    title over it. */
+export function QnaList({ heading }: { heading?: ReactNode }) {
   return (
     <div className={styles.text}>
+      {heading}
       <QnaNav items={qna.map(({ id, question }) => ({ id, question }))} />
       {qna.map((q, i) => (
         <article

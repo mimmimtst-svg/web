@@ -57,6 +57,11 @@
   display: none;
 }
 
+/* "후보자에게 묻는다" — wide screens only (the landscape block). */
+.ask {
+  display: none;
+}
+
 /* SCROLL DOWN, pinned to the bottom of the screen while the section is
    on it (ScrollDownIndicator is absolute to this pin). */
 .cue {
@@ -381,6 +386,63 @@
     left: calc(40 * var(--u));
     /* The cover lets clicks through to the text; its title takes them. */
     pointer-events: auto;
+  }
+
+  /* "후보자에게 묻는다": an outlined pill with a mic, pinned like the
+     heading and centred on its row at the right edge, above the cover
+     (which lets clicks through) and the cue. */
+  .ask {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .askPin {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+  }
+
+  .askButton {
+    position: absolute;
+    top: calc(var(--header-height) + 40 * var(--u) + var(--fs-section-title-fit) * 0.7);
+    right: calc(50 * var(--u));
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    padding: max(calc(14 * var(--u)), 10px) max(calc(32 * var(--u)), 20px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 999px;
+    font-family: var(--font-kr);
+    font-weight: 600;
+    font-size: max(calc(22 * var(--u)), 0.9375rem);
+    line-height: 1.2;
+    color: var(--color-white);
+    white-space: nowrap;
+    pointer-events: auto;
+    transition: background-color 250ms ease, color 250ms ease, border-color 250ms ease;
+  }
+
+  .askIcon {
+    width: 1.3em;
+    height: 1.3em;
+    flex-shrink: 0;
+  }
+
+  @media (hover: hover) {
+    .askButton:hover {
+      background-color: var(--color-white);
+      border-color: var(--color-white);
+      color: var(--color-charcoal);
+    }
+  }
+
+  .askButton:focus-visible {
+    outline: 1px solid var(--color-white);
+    outline-offset: 4px;
   }
 
   /* Where the text below is fully clear again. */

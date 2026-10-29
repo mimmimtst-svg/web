@@ -296,3 +296,25 @@ function LineIcon({ className, d }: IconProps & { d: string }) {
 export function ChevronDownIcon({ className }: IconProps) {
   return <LineIcon className={className} d="M6.5 9.5L12 15L17.5 9.5" />;
 }
+
+/** "후보자에게 묻는다" (2026-10-29): a stand microphone drawn in the site's
+    line style — a tilted capsule head with one band, a gooseneck and a
+    domed base, round-capped strokes in currentColor. */
+export function MicIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <g stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+        <rect x="13.5" y="2" width="5" height="9" rx="2.5" transform="rotate(45 16 6.5)" />
+        <path d="M13.17 5.79L16.71 9.33" />
+        <path d="M12.8 9.7C10.4 11.9 9 14 9 17V19" />
+        <path d="M5 21.5C5 19.9 6.8 19 9 19C11.2 19 13 19.9 13 21.5Z" />
+      </g>
+    </svg>
+  );
+}
