@@ -72,10 +72,17 @@
   color: #333;
 }
 
+/* A link to the main page's hero. */
 .brand {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  color: inherit;
+}
+
+.brand:focus-visible {
+  outline: 1px solid #333;
+  outline-offset: 4px;
 }
 
 .brandLabel {

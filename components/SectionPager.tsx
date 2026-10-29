@@ -296,7 +296,9 @@ export default function SectionPager() {
 
     const onResize = () => {
       updatePaged();
-      scheduleRealign();
+      // A phone pages nothing; its browser bar sliding on scroll fires
+      // resize after resize (see useHorizontalCarousel).
+      if (!mobile.matches) scheduleRealign();
     };
     const scheduleRealign = () => {
       if (animating) return;

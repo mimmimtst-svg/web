@@ -129,10 +129,20 @@ export default function SiteMenu({ id, open, onClose, homeHref }: SiteMenuProps)
       >
         <div className={styles.top}>
           <div className={styles.head}>
-            <p className={styles.brand}>
+            {/* The name opens the main page's hero (2026-10-29), as the
+                header's own name does. */}
+            <a
+              className={styles.brand}
+              href={hrefFor({ label: "", target: "hero" })}
+              onClick={(e) => {
+                if (homeHref !== undefined) return;
+                e.preventDefault();
+                go("hero");
+              }}
+            >
               <span className={styles.brandLabel}>고려대학교 제22대 총장 후보</span>
               <span className={styles.brandName}>유병현</span>
-            </p>
+            </a>
             <button
               type="button"
               className={styles.close}

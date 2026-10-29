@@ -45,7 +45,11 @@ export function useSectionSettled<T extends HTMLElement>(epsilon = 6) {
     // scrolling". Debouncing collapses that burst into a single check once
     // the toolbar (or any other resize) has actually finished moving.
     let resizeTimer: ReturnType<typeof setTimeout>;
+    let width = window.innerWidth;
     const onResize = () => {
+      // Height-only resizes are a phone's browser bar sliding on scroll.
+      if (window.innerWidth === width) return;
+      width = window.innerWidth;
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(check, 200);
     };

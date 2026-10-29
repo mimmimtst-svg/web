@@ -38,11 +38,22 @@ export function useHorizontalCarousel<T extends HTMLElement>() {
     updateState();
     const el = trackRef.current;
     if (!el) return;
+    // Only a width change moves the cards. A phone's browser bar sliding
+    // in and out on scroll is a height-only resize, fired many times a
+    // second; measuring the track on each one forced a layout mid-scroll
+    // and made the main page stutter on iPhones (2026-10-29: smooth on
+    // an iPad, whose bar doesn't move).
+    let width = window.innerWidth;
+    const onResize = () => {
+      if (window.innerWidth === width) return;
+      width = window.innerWidth;
+      updateState();
+    };
     el.addEventListener("scroll", updateState, { passive: true });
-    window.addEventListener("resize", updateState);
+    window.addEventListener("resize", onResize);
     return () => {
       el.removeEventListener("scroll", updateState);
-      window.removeEventListener("resize", updateState);
+      window.removeEventListener("resize", onResize);
     };
   }, [updateState]);
 
