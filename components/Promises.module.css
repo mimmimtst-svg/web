@@ -252,6 +252,17 @@
    Left-aligned: justify on a phone-width column opened
    wide gaps in the English copy. */
 @media (orientation: portrait) {
+  /* The photo stays put — pinned to one screen — and only the promises
+     scroll over it, as on a wide screen (2026-10-29, the user: "배경은
+     고정, 텍스트만"). Stretched over the whole section it changed scale
+     and crop as the section grew. lvh, not dvh: it doesn't change while
+     the address bar slides. */
+  .backdropPin {
+    position: sticky;
+    top: 0;
+    height: 100lvh;
+  }
+
   .section {
     height: auto;
     padding: 0 0 calc(20 * var(--mu));
