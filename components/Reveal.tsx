@@ -37,6 +37,10 @@ type RevealProps = {
       during a phone's momentum glide the "in view" signals come late and
       bunched, and starting off screen hides that. Other uses unchanged. */
   lead?: string;
+  /** Start in turn with the other `queue` reveals rather than all at once
+      when several come into view together (the main page, 2026-10-29:
+      "순차적으로 주르르륵"). Other uses unchanged. */
+  queue?: boolean;
 } & Omit<HTMLAttributes<HTMLElement>, "children" | "className" | "style">;
 
 /**
@@ -50,6 +54,40 @@ type RevealProps = {
 /** 0, 1%, 2% … 15%. */
 const THRESHOLDS = Array.from({ length: 16 }, (_, i) => i / 100);
 
+/** `queue` reveals start one after another, top to bottom, however many
+    are signalled at once (a fast scroll): the ones signalled in the same
+    frame are sorted by where they sit and given rising delays, QUEUE_STEP
+    apart — closer together when a big jump brings many at once, so the
+    run still takes no more than QUEUE_SPAN — and the next batch follows
+    on from the last. */
+const QUEUE_STEP = 110;
+const QUEUE_SPAN = 1100;
+let queueTail = 0;
+let pending: { el: HTMLElement; start: (delay: number) => void }[] = [];
+let flushFrame = 0;
+const enqueue = (el: HTMLElement, start: (delay: number) => void) => {
+  pending.push({ el, start });
+  if (flushFrame) return;
+  flushFrame = requestAnimationFrame(() => {
+    flushFrame = 0;
+    const batch = pending;
+    pending = [];
+    const pos = (e: HTMLElement) => {
+      const r = e.getBoundingClientRect();
+      return r.top * 10000 + r.left;
+    };
+    batch.sort((a, b) => pos(a.el) - pos(b.el));
+    const now = performance.now();
+    const step = Math.min(QUEUE_STEP, QUEUE_SPAN / batch.length);
+    let at = Math.max(now, Math.min(queueTail, now + QUEUE_STEP));
+    for (const item of batch) {
+      item.start(Math.round(at - now));
+      at += step;
+    }
+    queueTail = at;
+  });
+};
+
 export default function Reveal({
   children,
   className = "",
@@ -61,10 +99,12 @@ export default function Reveal({
   axis = "y",
   visible: controlledVisible,
   lead,
+  queue = false,
   ...rest
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
   const [observedVisible, setObservedVisible] = useState(false);
+  const [queuedDelay, setQueuedDelay] = useState(0);
   const isControlled = controlledVisible !== undefined;
   const visible = isControlled ? controlledVisible : observedVisible;
   const length = typeof distance === "number" ? `${distance}px` : distance;
@@ -90,8 +130,14 @@ export default function Reveal({
         const rootHeight = entry.rootBounds?.height ?? window.innerHeight;
         const enough =
           entry.intersectionRatio >= share || entry.intersectionRect.height >= rootHeight * screenShare;
-        if (entry.isIntersecting && enough) setObservedVisible(true);
-        else if (!entry.isIntersecting && entry.boundingClientRect.top > 0) setObservedVisible(false);
+        if (entry.isIntersecting && enough) {
+          if (queue) {
+            enqueue(el, (d) => {
+              setQueuedDelay(d);
+              setObservedVisible(true);
+            });
+          } else setObservedVisible(true);
+        } else if (!entry.isIntersecting && entry.boundingClientRect.top > 0) setObservedVisible(false);
       },
       {
         threshold: early ? 0 : THRESHOLDS,
@@ -100,7 +146,7 @@ export default function Reveal({
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [isControlled, lead]);
+  }, [isControlled, lead, queue]);
 
   return (
     <Tag
@@ -108,7 +154,7 @@ export default function Reveal({
       ref={ref}
       className={`reveal ${className} ${visible ? "revealVisible" : "revealHidden"}`}
       style={{
-        transitionDelay: visible ? `${delay}ms` : "0ms",
+        transitionDelay: visible ? `${delay + (isControlled ? 0 : queuedDelay)}ms` : "0ms",
         transitionDuration: `${duration}ms`,
         ["--reveal-distance-y" as string]: axis === "y" ? length : "0px",
         ["--reveal-distance-x" as string]: axis === "x" ? length : "0px",

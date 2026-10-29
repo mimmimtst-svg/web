@@ -252,25 +252,23 @@
    Left-aligned: justify on a phone-width column opened
    wide gaps in the English copy. */
 @media (orientation: portrait) {
-  /* The photo stays put — pinned to one screen — and only the promises
-     scroll over it, as on a wide screen (2026-10-29, the user: "배경은
-     고정, 텍스트만"). Stretched over the whole section it changed scale
-     and crop as the section grew. lvh, not dvh: it doesn't change while
-     the address bar slides. */
-  .backdropPin {
-    position: sticky;
-    top: 0;
-    height: 100lvh;
-    will-change: transform;
+  /* The photo stays put — one screen, fixed — and only the promises
+     scroll over it (the user: "배경은 고정, 텍스트만"; never stretch it
+     over the section again — it changes scale and crop). A fixed layer
+     clipped to the section (clip-path clips fixed children), not
+     sticky: once the phone's scroll no longer waited for the page's
+     script (2026-10-29), Safari let the sticky photo tremble. lvh: it
+     doesn't change while the address bar slides. */
+  .backdrop {
+    clip-path: inset(0);
   }
 
-  /* Each fading piece (Reveal) gets its own layer up front and keeps it
-     (2026-10-29: the promises came in with a hitch at the start and end
-     — "둑. 둑." — here and not on the white pages). Without this, iOS
-     Safari makes a layer as each fade starts and drops it as it ends,
-     redrawing the white text over the pinned photo both times. */
-  .list :global(.reveal) {
-    will-change: transform, opacity;
+  .backdropPin {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100lvh;
   }
 
   .section {

@@ -7,6 +7,10 @@ import { pledgeAnchor, pledgeParts } from "@/lib/pledgeDetail";
 import { useHorizontalCarousel } from "@/hooks/useHorizontalCarousel";
 import { withBasePath } from "@/lib/basePath";
 import CarouselDots from "./CarouselDots";
+import Reveal from "./Reveal";
+import FadeImage from "./FadeImage";
+import { PORTRAIT, useMediaQuery } from "@/hooks/useMediaQuery";
+import type { ReactNode } from "react";
 import Footer from "./Footer";
 
 // A card with more pledges than this keeps the tight spacing between its
@@ -44,6 +48,19 @@ function ItemText({ text }: { text: string }) {
   );
 }
 
+/** A card's <li>. On a phone it rises in like the rest of the main page
+    (Reveal, started just before it shows and in turn with the others,
+    2026-10-29); on a wide screen the cards simply sit in the page. */
+function Card({ mobile, children }: { mobile: boolean; children: ReactNode }) {
+  return mobile ? (
+    <Reveal as="li" className={styles.card} lead="12%" queue>
+      {children}
+    </Reveal>
+  ) : (
+    <li className={styles.card}>{children}</li>
+  );
+}
+
 export default function PolicyCarousel() {
   const {
     trackRef,
@@ -57,6 +74,7 @@ export default function PolicyCarousel() {
     onPointerMove,
     endDrag,
   } = useHorizontalCarousel<HTMLUListElement>();
+  const mobile = useMediaQuery(PORTRAIT);
 
   return (
     <section className={styles.section} id="policies">
@@ -100,13 +118,11 @@ export default function PolicyCarousel() {
           onPointerCancel={endDrag}
         >
           {policyCards.map((card, cardIndex) => (
-            <li className={styles.card} key={card.number}>
+            <Card key={card.number} mobile={mobile}>
               <div className={styles.cardInner}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <FadeImage
                   className={styles.cardBg}
                   src={withBasePath("/images/policy-card-bg-dark-2026-10-29.webp")}
-                  alt=""
                   aria-hidden="true"
                 />
                 <div className={styles.cardHead}>
@@ -153,7 +169,7 @@ export default function PolicyCarousel() {
                   ))}
                 </div>
               </div>
-            </li>
+            </Card>
           ))}
         </ul>
       </div>

@@ -224,6 +224,23 @@ ol {
   transform: translate(0, 0) scale(1);
 }
 
+/* components/FadeImage.tsx: a photo fades in once loaded. :where()
+   keeps it from outranking a component's own opacity rules. */
+:where(.fadeImage) {
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+
+:where(.fadeImageLoaded) {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fadeImage {
+    transition: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .revealHidden,
   .revealVisible {

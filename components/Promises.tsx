@@ -8,6 +8,7 @@ import { withBasePath } from "@/lib/basePath";
 import { useSectionSettled } from "@/hooks/useSectionSettled";
 import { PORTRAIT, useMediaQuery } from "@/hooks/useMediaQuery";
 import Reveal from "./Reveal";
+import FadeImage from "./FadeImage";
 import ScrollDownIndicator from "./ScrollDownIndicator";
 
 // Relative: the main page sits at the site root or under the unlisted
@@ -17,10 +18,10 @@ const QNA_PAGE = "qna/";
 
 /** A phone piece: Reveal, started a little before it reaches the screen
     (Reveal's `lead`), so a momentum glide's late, bunched signals happen
-    off screen and each line is already rising at its own pace as it
-    comes into view. */
+    off screen, and in turn with the others (`queue`), so pieces that are
+    signalled together still come in one after another. */
 function LeadReveal(props: { as?: ElementType; className?: string; children: ReactNode }) {
-  return <Reveal {...props} lead="12%" />;
+  return <Reveal {...props} lead="12%" queue />;
 }
 
 /** Stands in for Reveal where a piece doesn't animate on its own. */
@@ -83,8 +84,7 @@ export default function Promises() {
           while the promises scroll over it (2026-10-19). */}
       <div className={styles.backdrop} aria-hidden="true">
         <div className={styles.backdropPin}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} alt="" />
+          <FadeImage className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} />
           <div className={styles.overlay} />
         </div>
       </div>
@@ -153,8 +153,7 @@ export default function Promises() {
           SectionPager how much of the screen top this covers. */}
       <div className={styles.cap} aria-hidden="true">
         <div className={styles.capPin}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} alt="" />
+          <FadeImage className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} />
           <div className={styles.overlay} />
           {/* What shows and takes the click on a wide screen; out of the
               tab order (the link in the flow is the one for keyboards
@@ -186,8 +185,7 @@ export default function Promises() {
       <div className={styles.cue}>
         <div className={styles.cuePin}>
           <div className={styles.cueCover} aria-hidden="true">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} alt="" />
+            <FadeImage className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} />
             <div className={styles.overlay} />
           </div>
           <ScrollDownIndicator active={settled} />
