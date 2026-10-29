@@ -90,7 +90,7 @@ export default function Promises() {
         <div className={styles.askPin}>
           <a className={styles.askButton} href={QNA_PAGE}>
             <MicIcon className={styles.askIcon} />
-            후보자에게 묻는다
+            <span className={styles.askLabel}>후보자에게 묻는다</span>
           </a>
         </div>
       </div>

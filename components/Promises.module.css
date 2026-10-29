@@ -426,6 +426,14 @@
     transition: background-color 250ms ease, color 250ms ease, border-color 250ms ease;
   }
 
+  /* The label's box trimmed to its letters (cap height to baseline), so
+     it centres the same in every browser (2026-10-29: on a Mac the text
+     sat high — Pretendard's line metrics differ by platform). The
+     icon, taller, sets the button's height either way. */
+  .askLabel {
+    text-box: trim-both cap alphabetic;
+  }
+
   .askIcon {
     width: 1.5em;
     height: 1.5em;
