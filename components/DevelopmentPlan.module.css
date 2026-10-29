@@ -332,8 +332,3 @@
     opacity: 1;
   }
 }
-
-/* Light colours (?theme=light, Figma 837:3361): the cards on charcoal. */
-:global(html[data-light]) .section {
-  background-color: var(--color-charcoal);
-}

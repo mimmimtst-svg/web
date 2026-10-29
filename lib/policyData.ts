@@ -302,7 +302,10 @@ export const planCards: PlanCard[] = [
     subtitle: "대학의 본질 회복",
     description:
       "내적 충실함을 바탕으로 고려대학교가 더욱 고려대학교답게 발전하도록 하겠습니다",
-    image: "/images/plan-card-sejong-2026-10-23.webp",
+    // 2026-10-29: the higher-resolution photo ("고려대-세종캠퍼스(중화질)"),
+    // the main building in the middle of the card.
+    image: "/images/plan-card-sejong-2026-10-29.webp",
+    focus: "51% center",
   },
   {
     detailId: "higher",
