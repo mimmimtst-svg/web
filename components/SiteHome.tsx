@@ -15,6 +15,16 @@ export default function SiteHome() {
     <>
       <Header />
       <SectionPager />
+      {/* Colour test (2026-10-29, Figma 837:3361 "1920w light"): with
+          ?theme=light the page takes its light colours — set before the
+          sections paint, so there is no flash of the regular colours.
+          Layout and photos stay as they are. */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html:
+            'if(/[?&]theme=light(&|$)/.test(location.search))document.documentElement.setAttribute("data-light","")',
+        }}
+      />
       <main>
         <Hero />
         {/* 2026-10-29: the six promises before the three plan cards

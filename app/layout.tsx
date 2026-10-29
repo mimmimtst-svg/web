@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <body>
         {/* Reveal starts hidden (opacity: 0) until IntersectionObserver
             fires; without JS that would never happen, so force it visible. */}

@@ -583,3 +583,67 @@
     opacity: 1;
   }
 }
+
+/* ---------- Light colours (?theme=light, Figma 837:3361) ----------
+   The light version from before 2026-10-29: white section, white cards
+   with the light line pattern (.cardBgLight), key-red titles and labels. */
+.cardBgLight {
+  display: none;
+}
+
+:global(html[data-light]) .section {
+  background-color: var(--color-white);
+}
+
+:global(html[data-light]) .heading {
+  color: var(--color-line);
+}
+
+:global(html[data-light]) .navButton {
+  color: var(--color-charcoal);
+}
+
+:global(html[data-light]) .navButton:hover:not(:disabled) {
+  background-color: var(--color-charcoal);
+  border-color: var(--color-charcoal);
+  color: var(--color-white);
+}
+
+:global(html[data-light]) .cardInner {
+  background-color: var(--color-white);
+}
+
+:global(html[data-light]) .cardBg {
+  display: none;
+}
+
+:global(html[data-light]) .cardBgLight {
+  display: block;
+  mix-blend-mode: normal;
+}
+
+:global(html[data-light]) .cardNumber,
+:global(html[data-light]) .cardTitle,
+:global(html[data-light]) .categoryLabel,
+:global(html[data-light]) .categoryItem svg {
+  color: var(--color-key);
+}
+
+:global(html[data-light]) .categoryLabel {
+  font-weight: 500;
+}
+
+:global(html[data-light]) .cardHeadLink {
+  color: var(--color-muted);
+}
+
+:global(html[data-light]) .categoryItem > span {
+  color: var(--color-charcoal);
+}
+
+@media (hover: hover) {
+  :global(html[data-light]) .categoryItem:hover > span {
+    color: var(--color-key);
+    text-decoration: none;
+  }
+}

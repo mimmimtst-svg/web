@@ -139,6 +139,13 @@ export default function PolicyCarousel() {
                   src={withBasePath("/images/policy-card-bg-dark-2026-10-29.webp")}
                   aria-hidden="true"
                 />
+                {/* The light colour test's pattern (?theme=light). */}
+                <FadeImage
+                  className={`${styles.cardBg} ${styles.cardBgLight}`}
+                  src={withBasePath("/images/policy-card-bg-light.png")}
+                  loading="lazy"
+                  aria-hidden="true"
+                />
                 <div className={styles.cardHead}>
                   <span className={styles.cardTitleRow}>
                     <span className={styles.cardNumber}>{card.number}</span>

@@ -658,3 +658,71 @@
     margin-left: 1.1em;
   }
 }
+
+/* ---------- Light colours (?theme=light, SiteHome; Figma 837:3361) ----------
+   White section, the photo at 15% in hard-light over white (Figma's
+   treatment), dark text, key-red numbers. */
+:global(html[data-light]) .section {
+  background-color: var(--color-white);
+}
+
+:global(html[data-light]) .backdropPin,
+:global(html[data-light]) .capPin,
+:global(html[data-light]) .cueCover {
+  background-color: var(--color-white);
+}
+
+:global(html[data-light]) .bgImage {
+  opacity: 0.15;
+  mix-blend-mode: hard-light;
+}
+
+:global(html[data-light]) .overlay {
+  display: none;
+}
+
+:global(html[data-light]) .heading {
+  color: var(--color-line);
+}
+
+:global(html[data-light]) .itemNumber {
+  color: var(--color-key);
+}
+
+:global(html[data-light]) .itemTitle {
+  color: var(--color-charcoal);
+}
+
+:global(html[data-light]) .itemPoints {
+  color: var(--color-charcoal);
+}
+
+:global(html[data-light]) .askButton {
+  border-color: var(--color-muted);
+  color: var(--color-line);
+}
+
+@media (hover: hover) {
+  :global(html[data-light]) .askButton:hover {
+    background-color: var(--color-line);
+    border-color: var(--color-line);
+    color: var(--color-white);
+  }
+
+  :global(html[data-light]) .heading:hover {
+    color: var(--color-key);
+  }
+}
+
+:global(html[data-light]) .askBand {
+  color: var(--color-line);
+}
+
+:global(html[data-light]) .askBand::after {
+  background: linear-gradient(
+    to right,
+    rgba(51, 51, 51, 0),
+    rgba(51, 51, 51, 0.35) 50%,
+    rgba(51, 51, 51, 0)
+  );
+}
