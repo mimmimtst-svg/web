@@ -9,7 +9,7 @@ import { QnaList } from "./CandidatePage";
 import { qna } from "@/lib/candidateData";
 
 /** Every question at the top, two to a row, each a link down to its
-    answer (2026-10-29: in place of a page title). */
+    answer (2026-10-29: in place of a page title), then a rule. */
 function QnaIndex() {
   return (
     <nav className={styles.index} aria-label="질문 목록">
@@ -41,7 +41,7 @@ export default function QnaPage() {
       <main
         className={`${profileStyles.page} ${candidateStyles.page} ${promiseStyles.noTabs}`}
       >
-        <QnaList heading={<QnaIndex />} />
+        <QnaList heading={<QnaIndex />} className={styles.column} />
       </main>
       <Footer className={profileStyles.footer} />
       <ScrollTopButton />

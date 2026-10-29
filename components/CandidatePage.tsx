@@ -375,11 +375,11 @@ function RelatedPledges({ items }: { items: RelatedPledge[] }) {
     closing — and its related pledges by policy area, each opening its
     page; QnaNav goes from question to question (dots on a wide screen,
     a drop-down bar on a phone). Its own page, 후보자에게 묻는다, since
-    2026-10-29 (QnaPage; on 여섯 가지 약속 before). `heading`: the page
-    title over it. */
-export function QnaList({ heading }: { heading?: ReactNode }) {
+    2026-10-29 (QnaPage; on 여섯 가지 약속 before). `heading`: what goes
+    over it; `className`: added to its text column. */
+export function QnaList({ heading, className = "" }: { heading?: ReactNode; className?: string }) {
   return (
-    <div className={styles.text}>
+    <div className={`${styles.text} ${className}`}>
       {heading}
       <QnaNav items={qna.map(({ id, question }) => ({ id, question }))} />
       {qna.map((q, i) => (

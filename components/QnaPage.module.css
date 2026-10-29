@@ -1,33 +1,37 @@
-/* 후보자에게 묻는다 (components/QnaPage.tsx): the seven questions at the
-   top as a two-column table of contents — rows split by thin light
-   rules, "Q1" in key red beside the question, each row a link down to
-   its answer (2026-10-29: beige boxes before, "too boxy"). */
+/* 후보자에게 묻는다 (components/QnaPage.tsx). */
+
+/* The text column's sides as on the plan detail page (PlanDetail
+   .part): room for the question dots on the right edge, both sides
+   alike so the text stays centred — at narrower widths the answers ran
+   under the dots (2026-10-29). Doubled for weight over CandidatePage's
+   .text, whichever file loads last. */
+.column.column {
+  max-width: calc(1200px + 2 * max(var(--space-page-x), calc(var(--detail-float-x) + 64px)));
+  padding-left: max(var(--space-page-x), calc(var(--detail-float-x) + 64px));
+  padding-right: max(var(--space-page-x), calc(var(--detail-float-x) + 64px));
+}
+
+/* The seven questions at the top: a plain two-column list, "Q1" in key
+   red beside each question, each a link down to its answer; then one
+   long rule across the column before the answers (2026-10-29: rules
+   between the rows before, and beige boxes before that). */
 .index {
-  margin-bottom: clamp(64px, 7vw, 104px);
+  margin-bottom: clamp(56px, 6vw, 88px);
+  padding-bottom: clamp(48px, 5vw, 72px);
+  border-bottom: 1px solid var(--color-light-gray);
 }
 
 .indexList {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: clamp(32px, 4vw, 64px);
-}
-
-.indexList li {
-  border-bottom: 1px solid var(--color-light-gray);
-}
-
-/* The first row's top rule, both columns. */
-.indexList li:nth-child(-n + 2) {
-  border-top: 1px solid var(--color-light-gray);
+  gap: clamp(14px, 1.4vw, 20px) clamp(32px, 4vw, 64px);
 }
 
 .indexItem {
-  height: 100%;
   display: flex;
   align-items: baseline;
   gap: clamp(16px, 1.6vw, 24px);
-  padding: clamp(18px, 1.8vw, 24px) 4px;
   color: var(--color-charcoal);
 }
 
@@ -60,27 +64,31 @@
 
 .indexItem:focus-visible {
   outline: 1px solid var(--color-charcoal);
-  outline-offset: -1px;
+  outline-offset: 4px;
 }
 
-/* Phone: one column. The question bar follows and rises 36mu into the
-   bottom margin (CandidatePage .qBar), leaving 28mu. */
+/* Phone: one column, the phone's own side padding (no dots there). The
+   question bar follows the rule and rises 36mu into the bottom margin
+   (CandidatePage .qBar), leaving 28mu. */
 @media (orientation: portrait) {
+  .column.column {
+    max-width: none;
+    padding-left: calc(20 * var(--mu));
+    padding-right: calc(20 * var(--mu));
+  }
+
   .index {
     margin-bottom: calc(64 * var(--mu));
+    padding-bottom: calc(32 * var(--mu));
   }
 
   .indexList {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .indexList li:nth-child(2) {
-    border-top: 0;
+    gap: calc(14 * var(--mu));
   }
 
   .indexItem {
     gap: calc(12 * var(--mu));
-    padding: calc(14 * var(--mu)) calc(2 * var(--mu));
   }
 
   .indexNum {
