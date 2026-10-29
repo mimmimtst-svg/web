@@ -297,9 +297,10 @@ export function ChevronDownIcon({ className }: IconProps) {
   return <LineIcon className={className} d="M6.5 9.5L12 15L17.5 9.5" />;
 }
 
-/** "후보자에게 묻는다" (2026-10-29): a stand microphone drawn in the site's
-    line style — a tilted capsule head with one band, a gooseneck and a
-    domed base, round-capped strokes in currentColor. */
+/** "후보자에게 묻는다" (2026-10-29): a handheld microphone on a desk stand,
+    filled in currentColor — a round head and tapering handle tilted 40°,
+    a straight stem and a flat base (a line drawing read too faint at
+    button size). */
 export function MicIcon({ className }: IconProps) {
   return (
     <svg
@@ -309,11 +310,13 @@ export function MicIcon({ className }: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      <g stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-        <rect x="13.5" y="2" width="5" height="9" rx="2.5" transform="rotate(45 16 6.5)" />
-        <path d="M13.17 5.79L16.71 9.33" />
-        <path d="M12.8 9.7C10.4 11.9 9 14 9 17V19" />
-        <path d="M5 21.5C5 19.9 6.8 19 9 19C11.2 19 13 19.9 13 21.5Z" />
+      <g fill="currentColor">
+        <g transform="rotate(40 12 12)">
+          <rect x="8.4" y="1" width="7.2" height="8.2" rx="3.6" />
+          <path d="M9.3 9.9H14.7L13.1 19.4C13 19.8 12.6 20 12 20C11.4 20 11 19.8 10.9 19.4Z" />
+        </g>
+        <rect x="10.1" y="13.6" width="1.5" height="7.4" />
+        <rect x="6.6" y="20.4" width="8.5" height="1.6" rx="0.8" />
       </g>
     </svg>
   );
