@@ -22,6 +22,11 @@
   --color-label: #77868c;
   --color-muted: #aea89b;
   --color-light-gray: #d9d9d9;
+  /* Dark section 4 (Figma 836:1671, 2026-10-29): card fill, pledge
+     text, the card's arrow. */
+  --color-grey-25: #404040;
+  --color-cream: #f4f2ed;
+  --color-muted-dark: #6a6661;
   --color-overlay: rgba(41, 33, 33, 0.82);
   --color-bg: #ffffff;
   --color-ink: #171717;

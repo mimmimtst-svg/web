@@ -42,6 +42,9 @@
 | `--color-label` | `#77868C` (Rolling Stone) | 카테고리 라벨(예: "나답게 | 대학의 본질 회복") |
 | `--color-muted` | `#AEA89B` (Napa) | Section 3 구분선, "자세히 보기" 텍스트(다크 배경 위), Section 4 카드 헤더의 화살표 아이콘(`.cardHeadLink`) |
 | `--color-light-gray` | `#D9D9D9` (Alto) | Section 3/4 헤딩 텍스트 컬러 (다크 배경 위) |
+| `--color-grey-25` | `#404040` | Section 4 카드 면 (다크, 2026-10-29) |
+| `--color-cream` | `#F4F2ED` | Section 4 카드의 공약 글자 (다크) |
+| `--color-muted-dark` | `#6A6661` | Section 4 카드 헤더의 화살표 (다크 카드 위) |
 | `--color-overlay` | `rgba(41,33,33,0.82)` | 사진 배경 위 다크 오버레이 (Section 3) |
 | 플러스 아이콘 컬러 | `#ABB8C3` (Section 3) / `#F4F2ED` (Section 4) | 섹션별로 다름 — 헤딩 텍스트 컬러와 동일하지 않으니 주의 |
 | Section 4 배경 | `#141414` | 카드 슬라이더 섹션 전용 다크 배경 (토큰화되어 있지 않음 — 필요시 `--color-carousel-bg`로 승격) |
@@ -146,7 +149,7 @@ intercept = min - slope * 390
 새 컴포넌트를 만들 때는 기존 컴포넌트 중 가장 가까운 패턴을 복제해서 시작한다.
 
 ### 4.1 섹션 헤더 (`heading` 패턴)
-- `Promises`와 `PolicyCarousel`은 `+` 아이콘(`PlusIcon`) + 제목 텍스트, 밑줄 없음. 아이콘/텍스트 색은 섹션 배경에 맞춰 바꾼다 — 다크 배경(`Promises`)은 아이콘 `#ABB8C3`/텍스트 `--color-light-gray`. **`PolicyCarousel`은 2026-09-28 동기화로 섹션 배경이 다크(`#141414`)에서 흰색(`--color-white`)으로 바뀌면서, 헤딩 색도 `--color-white`에서 `--color-line`(#333)으로 함께 바뀌었다** — 배경이 바뀌면 헤딩·아이콘 색은 항상 같이 재검토한다(하드코딩된 흰색이 새 배경에 묻히는 사고를 막기 위함). 제목 텍스트도 "나답게・다함께・앞으로"에서 "나답게・다함께・앞으로 핵심 공약"으로 바뀌었다.
+- `Promises`와 `PolicyCarousel`은 `+` 아이콘(`PlusIcon`) + 제목 텍스트, 밑줄 없음. 아이콘/텍스트 색은 섹션 배경에 맞춰 바꾼다 — 다크 배경(`Promises`)은 아이콘 `#ABB8C3`/텍스트 `--color-light-gray`. **`PolicyCarousel`은 2026-09-28 동기화로 섹션 배경이 다크(`#141414`)에서 흰색(`--color-white`)으로 바뀌면서, 헤딩 색도 `--color-white`에서 `--color-line`(#333)으로 함께 바뀌었다** — 배경이 바뀌면 헤딩·아이콘 색은 항상 같이 재검토한다(하드코딩된 흰색이 새 배경에 묻히는 사고를 막기 위함). **2026-10-29: 다시 다크(`--color-charcoal`)** — 헤딩 `--color-light-gray`, `+` 아이콘 `--color-muted`(4.50). 제목 텍스트도 "나답게・다함께・앞으로"에서 "나답게・다함께・앞으로 핵심 공약"으로 바뀌었다.
 - **`DevelopmentPlan`(section2)은 섹션 헤더가 없다.** 예전엔 여기도 "유병현의 세 가지 약속" 타이틀을 달고 있었는데, `Promises`의 제목과 완전히 같은 문구라 중복이었다 — Figma가 2026-09-28 동기화에서 이 중복을 없애면서 section2의 헤더 자체를 지웠다. 새 섹션을 만들 때 Figma에 헤더가 없으면 억지로 만들어 넣지 않는다.
 - 제목 폰트 크기: `--fs-section-title`, weight 400, `text-transform: uppercase`(국문에는 영향 없음, 영문 대비용으로 유지)
 
@@ -608,6 +611,14 @@ P4-1(4.31)의 카드, 메인 P4 카드, P2-2의 세부 공약 줄에서 오는 �
 
 ### 4.49 주요 공약 1-10 수정 (2026-10-27, `lib/pledgeDetail.ts`)
 산업체 Chaired Professor 제도 활성화: 첫 항목 "산업 현장의 세계적 전문가가 연구·교육에 참여하는" → "산업 현장과 교류하며 연구·교육에 참여하는". 수정본의 본문 두 문단(교원의 기업 파견근무 등)은 이 페이지에 싣지 않는다 — 페이지는 제목 · 한 줄 요약(lead) · 항목만.
+
+### 4.50 Section 4 핵심 공약 — 다크 버전 (Figma `836:1671`, 2026-10-29)
+크기·간격·글자 크기는 그대로 두고 색과 카드 무늬만 Figma 다크 버전으로:
+- 섹션 배경 `--color-charcoal`(#2C2C2C), 헤딩 `--color-light-gray`, `+` 아이콘 `--color-muted`.
+- 화살표 버튼: 테두리·아이콘 `--color-muted`, 호버 시 `--color-muted` 면 + 차콜 아이콘, 비활성 30%.
+- 카드: 면 `--color-grey-25`(#404040), 무늬는 다크 카드 전용 에셋 `policy-card-bg-dark-2026-10-29.webp`(Figma에서 받은 PNG를 무손실 webp로; 예전 `policy-card-bg.png`는 삭제)를 `mix-blend-mode: multiply`로 — CSS opacity 없음(80%가 에셋 알파에 이미 들어 있다. 실측: 빈 면 Figma 58–60 / 사이트 59–61). 그림자 그대로(호버 0.35).
+- 번호·제목 `--color-light-gray`(800), 카드 화살표 `--color-muted-dark`(#6A6661), 분야 라벨 `--color-muted` **Bold 700**, 체크 `--color-muted`, 공약 글자 `--color-cream`(#F4F2ED). 공약 호버는 흰색 + 밑줄(키 컬러는 어두운 면에서 안 보임).
+- 모바일도 같은 색. 제목은 사이트 이름대로 "더높게"(Figma 시안의 "앞으로"는 옛 이름).
 
 ### 4.32 텍스트 선택(드래그) 색 (`app/globals.css`, 2026-10-18)
 `::selection`: 키 컬러 배경 + 흰 글자(사이트 전체). 키 컬러 면 위(히어로 `#hero`, `footer`, `[data-red-surface]` — 준비 중 화면, 주요 공약 인포그래픽의 원)에서는 반대로 흰 배경 + 키 컬러 글자 — 같은 색이면 선택이 안 보인다. 새로 키 컬러 면을 만들면 `data-red-surface`를 단다.

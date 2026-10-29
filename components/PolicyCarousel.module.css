@@ -5,7 +5,10 @@
    2026-10-18: the footer is no longer squeezed into the same screen —
    the heading and cards fill one screen (.contentWrap) and the footer
    follows below it, one more page turn down (SectionPager pages into a
-   section taller than the screen), so the cards get its height. */
+   section taller than the screen), so the cards get its height.
+   2026-10-29: the dark version (Figma 836:1671) — charcoal section,
+   #404040 cards with a darker line pattern, light text; sizes as
+   before. */
 .section {
   width: 100%;
   min-height: 100dvh;
@@ -13,7 +16,7 @@
   display: flex;
   flex-direction: column;
   padding-top: calc(var(--header-height) + 40 * var(--u));
-  background-color: var(--color-white);
+  background-color: var(--color-charcoal);
 }
 
 /* 2026-10-23: when the cards are at full size with room to spare, the
@@ -57,13 +60,14 @@
   display: flex;
   align-items: center;
   gap: max(calc(16 * var(--u)), 8px);
-  color: var(--color-line);
+  color: var(--color-light-gray);
 }
 
 .heading svg {
   width: max(calc(32 * var(--u)), 20px);
   height: max(calc(32 * var(--u)), 20px);
   flex-shrink: 0;
+  color: var(--color-muted);
 }
 
 .headingTitle {
@@ -89,15 +93,15 @@
   height: max(calc(50 * var(--u)), 36px);
   border: 1px solid var(--color-muted);
   border-radius: 999px;
-  color: var(--color-charcoal);
+  color: var(--color-muted);
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease,
     opacity 0.2s ease;
 }
 
 .navButton:hover:not(:disabled) {
-  background-color: var(--color-charcoal);
-  border-color: var(--color-charcoal);
-  color: var(--color-white);
+  background-color: var(--color-muted);
+  border-color: var(--color-muted);
+  color: var(--color-charcoal);
 }
 
 .navButton:disabled {
@@ -197,7 +201,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--color-white);
+  background-color: var(--color-grey-25);
   border-radius: 10px;
   overflow: hidden;
   isolation: isolate;
@@ -209,7 +213,7 @@
 @media (hover: hover) {
   .cardInner:hover {
     transform: translateY(-6px);
-    box-shadow: 0 16px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 16px 24px rgba(0, 0, 0, 0.35);
   }
 }
 
@@ -219,10 +223,13 @@
   }
 }
 
-/* Faint line-pattern texture (the card's own Figma image asset). Figma
-   stretches the landscape image to the portrait card (no crop), which
-   thins the lines into a soft wash; `cover` instead zoomed into the
-   middle and made the curves read far too strong. */
+/* Line-pattern texture (the dark card's own Figma image asset),
+   multiplied into the grey. No CSS opacity: as with the light card,
+   Figma's export already bakes the fill's 80% into the image's alpha
+   (with `opacity: 0.8` on top the card came out lighter than Figma). Figma stretches the
+   landscape image to the portrait card (no crop), which thins the lines
+   into a soft wash; `cover` instead zoomed into the middle and made the
+   curves read far too strong. */
 .cardBg {
   position: absolute;
   inset: 0;
@@ -230,9 +237,7 @@
   height: 100%;
   object-fit: fill;
   object-position: bottom;
-  /* No CSS opacity: Figma's export already bakes the fill's 95% opacity
-     into the PNG's alpha. The old `opacity: 0.8` on top of an asset with
-     0.8 baked in rendered the texture at ~64%, fainter than Figma. */
+  mix-blend-mode: multiply;
   z-index: -1;
 }
 
@@ -256,14 +261,15 @@
   min-width: 0;
 }
 
-/* 30px ExtraBold, key color (2026-10-18: was Figma's 34px). */
+/* 30px ExtraBold, light gray (2026-10-18: was Figma's 34px; key color
+   until the dark version). */
 .cardNumber,
 .cardTitle {
   font-family: var(--font-kr);
   font-weight: 800;
   font-size: max(calc(30 * var(--cu)), 1rem);
   line-height: 1.2;
-  color: var(--color-key);
+  color: var(--color-light-gray);
 }
 
 .cardNumber {
@@ -274,13 +280,13 @@
   min-width: 0;
 }
 
-/* Icon-only link, the icon's own Figma fill (#AEA89B). */
+/* Icon-only link, the icon's own Figma fill (#6A6661 on the dark card). */
 .cardHeadLink {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-muted);
+  color: var(--color-muted-dark);
   transition: opacity 200ms ease;
 }
 
@@ -327,13 +333,13 @@
   gap: calc(5 * var(--cu));
 }
 
-/* 15px / 21px Medium, key color. */
+/* 15px / 21px Bold, muted beige (dark version; Medium key color before). */
 .categoryLabel {
   font-family: var(--font-kr);
-  font-weight: 500;
+  font-weight: 700;
   font-size: max(calc(15 * var(--cu)), 0.625rem);
   line-height: 1.4;
-  color: var(--color-key);
+  color: var(--color-muted);
   white-space: pre-wrap;
 }
 
@@ -358,12 +364,14 @@
 
 @media (hover: hover) {
   .categoryItem:hover > span {
-    color: var(--color-key);
+    color: var(--color-white);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 }
 
 .categoryItem:focus-visible {
-  outline: 1px solid var(--color-charcoal);
+  outline: 1px solid var(--color-light-gray);
   outline-offset: 2px;
 }
 
@@ -373,7 +381,7 @@
   height: auto;
   /* Centers the check on the first 28px text line. */
   margin-top: calc(10.6 * var(--cu));
-  color: var(--color-key);
+  color: var(--color-muted);
 }
 
 .categoryItem > span {
@@ -383,7 +391,7 @@
   font-weight: 300;
   font-size: max(calc(19 * var(--cu)), 0.6875rem);
   line-height: 1.474;
-  color: var(--color-charcoal);
+  color: var(--color-cream);
   transition: color 200ms ease;
 }
 
@@ -465,7 +473,7 @@
 
   .cardInner {
     border-radius: calc(8 * var(--mu));
-    box-shadow: 0 calc(9.6 * var(--mu)) calc(12 * var(--mu)) rgba(0, 0, 0, 0.15);
+    box-shadow: 0 calc(9.6 * var(--mu)) calc(12 * var(--mu)) rgba(0, 0, 0, 0.25);
   }
 
   .cardHead {

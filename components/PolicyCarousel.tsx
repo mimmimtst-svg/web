@@ -104,7 +104,7 @@ export default function PolicyCarousel() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   className={styles.cardBg}
-                  src={withBasePath("/images/policy-card-bg.png")}
+                  src={withBasePath("/images/policy-card-bg-dark-2026-10-29.webp")}
                   alt=""
                   aria-hidden="true"
                 />
