@@ -57,6 +57,21 @@
   display: none;
 }
 
+/* SCROLL DOWN, pinned to the bottom of the screen while the section is
+   on it (ScrollDownIndicator is absolute to this pin). */
+.cue {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cuePin {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+}
+
 /* section3_body: heading, then a 50px gap, then the 2x3 grid. No width
    cap (2026-10-18): on a screen wider than 16:9 --u follows the height,
    and the old 1830u cap left an empty band on the right while titles

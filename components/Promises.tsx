@@ -71,7 +71,14 @@ export default function Promises() {
           <span className={styles.capEdge} data-pager-cover="" />
         </div>
       </div>
-      <ScrollDownIndicator active={settled} />
+      {/* The cue pinned to the bottom of the screen while the section is
+          on it: the section runs past the screen, and at the bottom of
+          the section it was cut off by the last page stop (2026-10-29). */}
+      <div className={styles.cue}>
+        <div className={styles.cuePin}>
+          <ScrollDownIndicator active={settled} />
+        </div>
+      </div>
     </section>
   );
 }

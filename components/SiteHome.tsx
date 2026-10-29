@@ -17,8 +17,10 @@ export default function SiteHome() {
       <SectionPager />
       <main>
         <Hero />
-        <DevelopmentPlan />
+        {/* 2026-10-29: the six promises before the three plan cards
+            (they were section 3, after the cards). */}
         <Promises />
+        <DevelopmentPlan />
         {/* PolicyCarousel renders its own <Footer /> as the last element
             inside its <section>, so Section 4 + footer share a single
             one-screen snap block instead of the footer being its own
