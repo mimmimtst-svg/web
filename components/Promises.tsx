@@ -99,6 +99,11 @@ export default function Promises() {
           the section it was cut off by the last page stop (2026-10-29). */}
       <div className={styles.cue}>
         <div className={styles.cuePin}>
+          <div className={styles.cueCover} aria-hidden="true">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className={styles.bgImage} src={withBasePath("/images/promises-bg.png")} alt="" />
+            <div className={styles.overlay} />
+          </div>
           <ScrollDownIndicator active={settled} />
         </div>
       </div>

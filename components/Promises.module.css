@@ -77,6 +77,14 @@
   height: 100dvh;
 }
 
+/* Wide screens: behind the cue, a copy of the pinned photo shown only at
+   the bottom of the screen and fading out upward (the heading's cover,
+   upside down), so the promises slip under it instead of crossing the
+   cue, scrolling either way (2026-10-29). */
+.cueCover {
+  display: none;
+}
+
 /* section3_body: heading, then a 50px gap, then the 2x3 grid. No width
    cap (2026-10-18): on a screen wider than 16:9 --u follows the height,
    and the old 1830u cap left an empty band on the right while titles
@@ -388,6 +396,22 @@
     pointer-events: auto;
   }
 
+  .cueCover {
+    display: block;
+    position: absolute;
+    inset: 0;
+    -webkit-mask-image: linear-gradient(
+      to top,
+      #000 calc(130 * var(--u)),
+      transparent calc(210 * var(--u))
+    );
+    mask-image: linear-gradient(
+      to top,
+      #000 calc(130 * var(--u)),
+      transparent calc(210 * var(--u))
+    );
+  }
+
   /* "후보자에게 묻는다": an outlined pill with a mic, pinned like the
      heading and centred on its row at the right edge, above the cover
      (which lets clicks through) and the cue. */
@@ -488,16 +512,6 @@
     grid-template-columns: max(calc(230 * var(--pu)), 7rem) minmax(0, 1fr);
     align-items: baseline;
     column-gap: max(calc(90 * var(--pu)), 24px);
-  }
-
-  /* The rise fades in on its own, slow-starting curve (2026-10-29): with
-     the shared ease-out a promise was nearly opaque while still low on
-     the screen, crossing the pinned SCROLL DOWN; now it stays faint down
-     there and turns solid as it settles. (Opacity first, transform
-     second — Reveal's transition-property order.) */
-  .list > .item {
-    transition-timing-function: cubic-bezier(0.55, 0, 0.75, 0.3),
-      var(--reveal-ease, cubic-bezier(0.22, 0.61, 0.36, 1));
   }
 
   .itemNumber {
