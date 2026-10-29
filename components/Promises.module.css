@@ -70,8 +70,12 @@
 }
 
 /* SCROLL DOWN, pinned to the bottom of the screen while the section is
-   on it (ScrollDownIndicator is absolute to this pin). */
+   on it (ScrollDownIndicator is absolute to this pin). Wide screens only
+   (the landscape block shows it): a phone has no cue, and the pin's
+   100dvh, changing as the address bar slides, made the phone lay the
+   section out again on every frame of a scroll (2026-10-29). */
 .cue {
+  display: none;
   position: absolute;
   inset: 0;
   z-index: 2;
@@ -248,6 +252,17 @@
    Left-aligned: justify on a phone-width column opened
    wide gaps in the English copy. */
 @media (orientation: portrait) {
+  /* The photo pinned to one screen while the promises scroll over it, as
+     on a wide screen (2026-10-29): stretched over the whole section it
+     was an image several screens tall to redraw under every rising
+     promise, and a fast flick stuttered here and nowhere else. lvh, not
+     dvh: it doesn't change while the address bar slides. */
+  .backdropPin {
+    position: sticky;
+    top: 0;
+    height: 100lvh;
+  }
+
   .section {
     height: auto;
     padding: 0 0 calc(20 * var(--mu));
@@ -423,6 +438,10 @@
     position: sticky;
     top: 0;
     height: 100dvh;
+  }
+
+  .cue {
+    display: block;
   }
 
   /* The heading pinned at its old place: a copy of the photo layer laid
