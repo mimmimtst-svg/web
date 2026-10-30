@@ -230,6 +230,25 @@ export function NaverIcon({ className }: IconProps) {
 }
 
 /** Facebook "f", for the footer's SNS links. */
+/** Instagram (2026-10-30): the camera glyph in the same weight and size
+    as the Naver and Facebook marks — a rounded square, the lens and the
+    flash dot — drawn in currentColor for the round SNS buttons. */
+export function InstagramIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <rect x="5.6" y="5.6" width="12.8" height="12.8" rx="3.8" stroke="currentColor" strokeWidth="1.7" />
+      <circle cx="12" cy="12" r="3.05" stroke="currentColor" strokeWidth="1.7" />
+      <circle cx="15.75" cy="8.25" r="0.95" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function FacebookIcon({ className }: IconProps) {
   return (
     <svg

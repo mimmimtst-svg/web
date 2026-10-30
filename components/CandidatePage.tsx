@@ -234,9 +234,11 @@ const MOTIVATION_LAYOUT: MoBlock[] = [
     shape: "moSideSquare",
     phoneMid: true,
     photo: {
-      src: "motivation-photo-4-2026-10-24.webp",
-      alt: "KU PRIDE CLUB 안내판 앞의 유병현 후보",
-      focus: "60% center",
+      // 2026-10-30: the user's photo ("자기소개_마지막"), cropped to their
+      // marked area — his face and the stand's title, room above his head.
+      src: "motivation-photo-4-2026-10-30.webp",
+      alt: "‘의료분쟁조정법 개정과 발전 방향’ 학술대회 안내판 옆의 유병현 후보",
+      focus: "55% 20%",
     },
   },
 ];

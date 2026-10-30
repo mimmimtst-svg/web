@@ -10,7 +10,8 @@ import { withBasePath } from "@/lib/basePath";
 /** The booklet, served from public/. Until the file is added there the
     download button shows "준비 중" instead of a link that would 404. */
 const PLAN_PDF = "/files/development-plan.pdf";
-const PLAN_PDF_NAME = "유병현_고려대학교_발전계획서.pdf";
+// The booklet as the user named it (2026-10-30).
+const PLAN_PDF_NAME = "공약집 _ 자유로운 지성, 시대를 여는 고대 20261030.pdf";
 const hasPlanPdf = existsSync(join(process.cwd(), "public", PLAN_PDF));
 
 /**

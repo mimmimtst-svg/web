@@ -1,8 +1,9 @@
-import { FacebookIcon, NaverIcon } from "./icons";
+import { FacebookIcon, InstagramIcon, NaverIcon } from "./icons";
 
 const SNS_LINKS = [
   { label: "네이버 블로그", href: "https://m.blog.naver.com/pfyoo", Icon: NaverIcon },
   { label: "페이스북", href: "https://www.facebook.com/pfyoo", Icon: FacebookIcon },
+  { label: "인스타그램", href: "https://www.instagram.com/your_byunghyun", Icon: InstagramIcon },
 ];
 
 type SnsLinksProps = {
@@ -10,7 +11,8 @@ type SnsLinksProps = {
   linkClassName?: string;
 };
 
-/** The candidate's Naver Blog and Facebook, as icon links in a new tab.
+/** The candidate's Naver Blog, Facebook and Instagram (2026-10-30), as
+    icon links in a new tab.
     Used by the Footer and the site menu, each with its own styles. */
 export default function SnsLinks({ className, linkClassName }: SnsLinksProps) {
   return (
