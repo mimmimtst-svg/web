@@ -291,10 +291,10 @@ export const planCards: PlanCard[] = [
     subtitle: "조화로운 다양성",
     description:
       "서로 다르기 때문에 더 강하고, 함께하기 때문에 더 멀리 나아가는 고려대학교를 만들겠습니다",
-    // 2026-10-29: the high-resolution aerial photo, the main hall and its
-    // lawn kept in the middle of the card.
-    image: "/images/plan-card-seoul-hq-2026-10-29.webp",
-    focus: "47% center",
+    // 2026-10-30: 세종캠퍼스 — the dormitory ("세종캠_기숙사"), its two
+    // wings and bridge in the middle of the card.
+    image: "/images/plan-card-sejong-dorm-2026-10-30.webp",
+    focus: "50% center",
   },
   {
     detailId: "essence",
@@ -302,10 +302,10 @@ export const planCards: PlanCard[] = [
     subtitle: "대학의 본질 회복",
     description:
       "내적 충실함을 바탕으로 고려대학교가 더욱 고려대학교답게 발전하도록 하겠습니다",
-    // 2026-10-29: the higher-resolution photo ("고려대-세종캠퍼스(중화질)"),
-    // the main building in the middle of the card.
-    image: "/images/plan-card-sejong-2026-10-29.webp",
-    focus: "51% center",
+    // 2026-10-30: 서울캠퍼스 — the high-resolution aerial photo (on 다함께
+    // until now), the main hall and its lawn in the middle of the card.
+    image: "/images/plan-card-seoul-hq-2026-10-29.webp",
+    focus: "47% center",
   },
   {
     detailId: "higher",
