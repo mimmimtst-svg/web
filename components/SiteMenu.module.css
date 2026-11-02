@@ -57,7 +57,10 @@
   transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Neither part shrinks (2026-11-02): on a short screen the panel scrolls
+   instead of the footer sliding up over the last links. */
 .top {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -195,6 +198,7 @@
    Mono caps); address 14px / 22.4px lowercase (was 16px caps). The
    Naver Blog / Facebook icons sit beside it (2026-10-17). */
 .footer {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -260,6 +264,24 @@
   line-height: 1.6;
   text-transform: lowercase;
   color: inherit;
+}
+
+/* Phone (2026-11-02, "빡빡하다"): the links a size down (22 → 18px) with
+   a little less between them, so the eight fit with air and "Development
+   Plan Download" stays on one line. */
+@media (orientation: portrait) {
+  .top {
+    gap: 24px;
+  }
+
+  .list {
+    gap: 4px;
+  }
+
+  .link {
+    padding: 9px 0;
+    font-size: 18px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

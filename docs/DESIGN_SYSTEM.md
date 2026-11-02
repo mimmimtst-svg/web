@@ -673,6 +673,7 @@ P4-1(4.31)의 카드, 메인 P4 카드, P2-2의 세부 공약 줄에서 오는 �
 - **자기소개 마지막 사진**: 드롭박스 "자기소개_마지막"(학술대회 입간판 옆) — 사용자가 표시한 영역(얼굴·입간판 제목, 머리 위 여백)으로 잘라 `motivation-photo-4-2026-10-30.webp`(1050×880), `focus: 55% 20%`. 예전 KU PRIDE CLUB 사진 삭제.
 
 ### 4.60 Development Plan Download — 영문 요약본 (2026-11-02)
+- **휴대폰 메뉴가 빡빡함**: 세로 화면에서 메뉴 글자 22 → **18px**, 줄 패딩 10 → 9px, 항목 사이 10 → 4px, 머리와 목록 사이 40 → 24px — 8개가 여유 있게, "Development Plan Download"는 한 줄. 패널의 위(목록)·아래(E-Mail·SNS)가 줄어들지 않게(`flex-shrink: 0`) — 낮은 화면에선 겹치지 않고 패널이 스크롤된다. 데스크톱 그대로.
 - 햄버거 메뉴 맨 끝(공약집 다운로드 다음)에 **Development Plan Download**(`development-plan-en/`).
 - 페이지는 공약집 다운로드와 같은 틀(`DevelopmentPlanPage`에 `lang="en"`): 제목 "Development Plan Download", 카드 "Strategic Development Plan", 슬로건 "Free Intelligence, a New Era"(아래 작게 한글), 안내문, "Download PDF" 버튼(파일 없으면 "Coming soon"). `<main lang="en">`. 문구는 `PLANS` 객체(ko/en)에 모음.
 - 파일: 드롭박스 "공약집/TalkFile_Strategic Development Plan.pdf"(30쪽, 0.65MB) → `public/files/strategic-development-plan.pdf`, 받는 이름 "Korea University Strategic Development Plan.pdf".
