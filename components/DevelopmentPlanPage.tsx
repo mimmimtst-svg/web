@@ -13,9 +13,11 @@ import { withBasePath } from "@/lib/basePath";
     English. */
 const PLANS = {
   ko: {
-    pdf: "/files/development-plan.pdf",
-    // The booklet as the user named it (2026-10-30).
-    pdfName: "공약집 _ 자유로운 지성, 시대를 여는 고대 20261030.pdf",
+    // The final booklet (Dropbox 공약집/최종, 2026-11-02). The file itself
+    // carries the name too, so browsers that ignore `download` (in-app
+    // browsers) still save it under this name.
+    pdf: "/files/유병현 고려대 제22대 총장후보자.pdf",
+    pdfName: "유병현 고려대 제22대 총장후보자.pdf",
     heading: "공약집 다운로드",
     title: "발전계획서 내려받기",
     slogan: "자유로운 지성, 시대를 여는 고대",
@@ -25,9 +27,9 @@ const PLANS = {
     pending: "준비 중입니다",
   },
   en: {
-    // The user's file ("TalkFile_Strategic Development Plan.pdf").
-    pdf: "/files/strategic-development-plan.pdf",
-    pdfName: "Korea University Strategic Development Plan.pdf",
+    // The final English summary (Dropbox 공약집/최종, 2026-11-02).
+    pdf: "/files/Byung-Hyun Yoo, Candidate for the 22nd President of Korea University.pdf",
+    pdfName: "Byung-Hyun Yoo, Candidate for the 22nd President of Korea University.pdf",
     heading: "Development Plan Download",
     title: "Strategic Development Plan",
     slogan: "Free Intelligence, a New Era",
@@ -68,7 +70,7 @@ export default function DevelopmentPlanPage({ lang = "ko" }: { lang?: "ko" | "en
               {hasPdf(plan.pdf) ? (
                 <a
                   className={`${styles.button} ${styles.buttonPrimary}`}
-                  href={withBasePath(plan.pdf)}
+                  href={encodeURI(withBasePath(plan.pdf))}
                   download={plan.pdfName}
                 >
                   {plan.button}
