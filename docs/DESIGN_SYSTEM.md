@@ -430,7 +430,7 @@ const revealedCount = useSequentialReveal(promises.length, settled, entered);
 - **미리보기 주소는 저장소에 적지 않는다.** 이 저장소는 공개라서, 주소를 코드·문서·커밋 메시지 어디에 써도 누구나 볼 수 있다(처음 쓴 주소는 그래서 폐기했다). 주소는 저장소 Secret **`PREVIEW_SLUG`**(영소문자·숫자·`-`)에만 있고, 워크플로가 빌드 직전에 `preview-template/` 폴더 전체를 `app/<PREVIEW_SLUG>/`로 복사한다(`page.tsx` → 메인, `plan/` → P2-2 상세 페이지). 새 상세 페이지를 만들면 `app/<경로>/page.tsx`(비공개 모드에선 `ComingSoon`)와 `preview-template/<경로>/page.tsx`를 **둘 다** 추가한다. 빌드 로그에서는 GitHub이 Secret 값을 `***`로 가린다. Secret이 없으면 미리보기 페이지 없이 빌드된다. 로컬에서는 `/`가 그대로 전체 사이트다.
 - **주소 바꾸기**: Secret 값만 새로 바꾸고 배포를 다시 돌린다(코드 수정 없음).
 - **한계**: 저장소가 공개인 동안 사이트의 코드·문구·이미지 자체는 누구나 저장소에서 볼 수 있다 — 이 모드는 "도메인에서 바로 보이지 않게" 가리는 수준이다. 완전히 숨기려면 저장소를 비공개로 해야 하고, 그러려면 GitHub Pages에 유료 플랜(GitHub Pro 등)이 필요하다. 또 배포용 빌드 결과물(Actions의 `github-pages` 아티팩트, 보존 1일)에는 미리보기 폴더가 들어 있어 로그인한 GitHub 사용자가 받아 볼 수 있다.
-- 메뉴 항목 (2026-10-23 이름 변경, 연결 페이지는 그대로): **후보자 소개**(프로필) · **여섯 가지 약속**(`promises/`, 2026-10-26 추가) · **후보자에게 묻는다**(`qna/`, 2026-10-29 추가) · **3대 발전 방향**(`direction/`, 2026-10-26 "여섯 가지 약속"에서 변경) · 주요 공약 · 단과대별 발전계획 · **공약집 다운로드**(`development-plan/`). **언론 보도 자료는 메뉴에서만 뺐다** — 페이지(`press/`)는 남아 있다. (2026-10-21: 유 병 현 · 발전 방향 · 주요 공약 · 단과대별 발전계획 · 발전계획서 · 언론 보도 자료.)
+- 메뉴 항목 (2026-10-23 이름 변경, 연결 페이지는 그대로): **후보자 소개**(프로필) · **여섯 가지 약속**(`promises/`, 2026-10-26 추가) · **후보자에게 묻는다**(`qna/`, 2026-10-29 추가) · **3대 발전 방향**(`direction/`, 2026-10-26 "여섯 가지 약속"에서 변경) · 주요 공약 · 단과대별 발전계획 · **공약집 다운로드**(`development-plan/`) · **Development Plan Download**(`development-plan-en/`, 2026-11-02 추가). **언론 보도 자료는 메뉴에서만 뺐다** — 페이지(`press/`)는 남아 있다. (2026-10-21: 유 병 현 · 발전 방향 · 주요 공약 · 단과대별 발전계획 · 발전계획서 · 언론 보도 자료.)
 - **2026-10-20 공개 전환** (사용자 요청 "임시 주소를 정식 주소로"): 워크플로에서 `NEXT_PUBLIC_SITE_PRIVATE` 줄을 지웠다 — 이제 `byunghyun.kr/`과 각 메뉴 주소(`/plan/`, `/pledges/` …)가 실제 페이지이고 검색 노출도 허용된다. 미리보기 주소는 Secret이 남아 있는 동안 같은 내용으로 계속 열린다(그쪽은 `noindex`). 다시 가리려면 같은 줄을 `"true"`로 되살리고 push.
 - **공개하기**(참고): `.github/workflows/deploy-pages.yml`에서 `NEXT_PUBLIC_SITE_PRIVATE` 줄을 지우고 push. GitHub Pages 설정·커스텀 도메인·DNS는 건드리지 않는다(도메인 연결을 끊으면 다른 사람이 도메인을 가로챌 수 있다).
 - `next.config.ts`의 `trailingSlash: true`는 미리보기 경로 때문 — 정적 export가 `<route>.html`과 같은 이름의 `<route>/` 폴더(RSC 페이로드)를 함께 만들면 GitHub Pages가 폴더로 해석해 404가 난다. `<route>/index.html`로 내보낸다.
@@ -671,6 +671,11 @@ P4-1(4.31)의 카드, 메인 P4 카드, P2-2의 세부 공약 줄에서 오는 �
 - **인스타그램**: `SnsLinks`(푸터·햄버거 메뉴 공통)에 세 번째 버튼 — https://www.instagram.com/your_byunghyun, 새 창. 아이콘 `InstagramIcon`: 둥근 사각형 + 렌즈 원 + 플래시 점, 1.7 선, 네이버·페이스북 글리프와 같은 크기, 기존 원형 버튼 스타일 그대로.
 - **공약집 다운로드 활성화**: 드롭박스 "공약집 _ 자유로운 지성, 시대를 여는 고대 20261030.pdf"(31MB)를 `public/files/development-plan.pdf`로 — 버튼이 "준비 중" → "PDF 다운로드". 받은 파일 이름은 원본 그대로(`PLAN_PDF_NAME`). 새 판이 나오면 같은 경로의 파일만 바꾸고 이름 상수를 고친다.
 - **자기소개 마지막 사진**: 드롭박스 "자기소개_마지막"(학술대회 입간판 옆) — 사용자가 표시한 영역(얼굴·입간판 제목, 머리 위 여백)으로 잘라 `motivation-photo-4-2026-10-30.webp`(1050×880), `focus: 55% 20%`. 예전 KU PRIDE CLUB 사진 삭제.
+
+### 4.60 Development Plan Download — 영문 요약본 (2026-11-02)
+- 햄버거 메뉴 맨 끝(공약집 다운로드 다음)에 **Development Plan Download**(`development-plan-en/`).
+- 페이지는 공약집 다운로드와 같은 틀(`DevelopmentPlanPage`에 `lang="en"`): 제목 "Development Plan Download", 카드 "Strategic Development Plan", 슬로건 "Free Intelligence, a New Era"(아래 작게 한글), 안내문, "Download PDF" 버튼(파일 없으면 "Coming soon"). `<main lang="en">`. 문구는 `PLANS` 객체(ko/en)에 모음.
+- 파일: 드롭박스 "공약집/TalkFile_Strategic Development Plan.pdf"(30쪽, 0.65MB) → `public/files/strategic-development-plan.pdf`, 받는 이름 "Korea University Strategic Development Plan.pdf".
 
 ### 4.32 텍스트 선택(드래그) 색 (`app/globals.css`, 2026-10-18)
 `::selection`: 키 컬러 배경 + 흰 글자(사이트 전체). 키 컬러 면 위(히어로 `#hero`, `footer`, `[data-red-surface]` — 준비 중 화면, 주요 공약 인포그래픽의 원)에서는 반대로 흰 배경 + 키 컬러 글자 — 같은 색이면 선택이 안 보인다. 새로 키 컬러 면을 만들면 `data-red-surface`를 단다.

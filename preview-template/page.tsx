@@ -8,7 +8,8 @@ import SiteHome from "@/components/SiteHome";
  * file → the main page, profile/ → 후보자 소개, promises/ → 여섯 가지
  * 약속, qna/ → 후보자에게 묻는다, direction/ → P2-1,
  * plan/ → P2-2, press/ → the press page, development-plan/ → the
- * 발전계획서 download page, pledges/ → P4-1, pledges/detail/ →
+ * 발전계획서 download page, development-plan-en/ → its English
+ * summary, pledges/ → P4-1, pledges/detail/ →
  * P4-2),
  * using the PREVIEW_SLUG repository secret, so the address never appears
  * in this public repository. Never indexed.

@@ -19,7 +19,8 @@ type MenuItem = { label: string; target?: string; page?: string };
 // 언론 보도 자료 is off the menu for now; its page (press/) stays.
 // 2026-10-26: 여섯 가지 약속 (promises/) added after 후보자 소개;
 // 2026-10-29: 후보자에게 묻는다 (qna/, the Q&A, out of 여섯 가지 약속)
-// after it.
+// after it. 2026-11-02: Development Plan Download (development-plan-en/,
+// the English summary) last.
 const MENU_ITEMS: MenuItem[] = [
   { label: "후보자 소개", page: "profile/" },
   { label: "여섯 가지 약속", page: "promises/" },
@@ -28,6 +29,7 @@ const MENU_ITEMS: MenuItem[] = [
   { label: "주요 공약", page: "pledges/" },
   { label: "단과대별 발전계획", page: "colleges/" },
   { label: "공약집 다운로드", page: "development-plan/" },
+  { label: "Development Plan Download", page: "development-plan-en/" },
 ];
 
 // Keys that would scroll the page behind the open menu.
