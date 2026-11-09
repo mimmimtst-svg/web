@@ -23,10 +23,20 @@
   font-size: clamp(2.25rem, 1.7rem + 2vw, 3.5rem);
   line-height: 1.2;
   text-align: center;
+  word-break: keep-all;
+  text-wrap: balance;
 }
 
 .cardWrap {
   margin-top: clamp(40px, 5vw, 64px);
+}
+
+/* Two boxes (전문 | 요약, 2026-11-09): side by side, equal height, the
+   buttons on one line (.button has margin-top: auto). */
+.cardWrapTwo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 32px);
 }
 
 .card {
@@ -142,6 +152,11 @@ footer.footer {
 
   .cardWrap {
     margin-top: calc(28 * var(--mu));
+  }
+
+  .cardWrapTwo {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(16 * var(--mu));
   }
 
   .card {
