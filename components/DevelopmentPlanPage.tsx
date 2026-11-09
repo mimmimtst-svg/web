@@ -27,7 +27,7 @@ const PLANS: Record<
     pending: "준비 중입니다",
     files: [
       {
-        pdf: "/files/유병현 고려대 제22대 총장후보자.pdf",
+        pdf: "/files/유병현 고려대 제22대 총장후보자_V.pdf",
         title: "발전계획서 전문",
         text: "고려대학교 발전계획서 전문을 PDF 파일로 받아 보실 수 있습니다.",
         button: "전문 다운로드",
