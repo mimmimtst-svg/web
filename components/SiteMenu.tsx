@@ -33,7 +33,7 @@ const MENU_ITEMS: MenuItem[] = [
 ];
 
 /** 비전 영상 (2026-11-10): the YouTube playlist of the candidate's
-    videos, the last link, opening in a new tab. Set like the other links
+    videos, the first link (last until 2026-11-10), opening in a new tab. Set like the other links
     with an arrow after it (a pill button there read cluttered). */
 const VISION_VIDEO_URL = "https://youtube.com/playlist?list=PLcJJontX9TKo&si=7rZmJG7WDsfPPB0z";
 
@@ -161,11 +161,24 @@ export default function SiteMenu({ id, open, onClose, homeHref }: SiteMenuProps)
           </div>
           <nav aria-label="주요 메뉴">
             <ul className={styles.list}>
+              {/* First (2026-11-10, was last). */}
+              <li className={styles.item} style={{ ["--i" as string]: 0 }}>
+                <a
+                  className={`${styles.link} ${styles.outLink}`}
+                  href={VISION_VIDEO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="비전 영상 (유튜브 재생목록, 새 창)"
+                >
+                  비전 영상
+                  <ArrowOutIcon className={styles.outIcon} />
+                </a>
+              </li>
               {MENU_ITEMS.map((item, index) => (
                 <li
                   key={item.label}
                   className={styles.item}
-                  style={{ ["--i" as string]: index }}
+                  style={{ ["--i" as string]: index + 1 }}
                 >
                   <a
                     className={styles.link}
@@ -182,18 +195,6 @@ export default function SiteMenu({ id, open, onClose, homeHref }: SiteMenuProps)
                   </a>
                 </li>
               ))}
-              <li className={styles.item} style={{ ["--i" as string]: MENU_ITEMS.length }}>
-                <a
-                  className={`${styles.link} ${styles.outLink}`}
-                  href={VISION_VIDEO_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="비전 영상 (유튜브 재생목록, 새 창)"
-                >
-                  비전 영상
-                  <ArrowOutIcon className={styles.outIcon} />
-                </a>
-              </li>
             </ul>
           </nav>
         </div>
