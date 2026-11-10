@@ -201,10 +201,16 @@
   gap: 0.25em;
 }
 
+/* A touch larger, in a finer line, to sit with the words (2026-11-10). */
 .outIcon {
-  width: 0.95em;
-  height: 0.95em;
+  width: 1.4em;
+  height: 1.4em;
+  margin-left: -0.1em;
   flex-shrink: 0;
+}
+
+.outIcon path {
+  stroke-width: 1.05;
 }
 
 /* div.footer-detail (Figma 2026-09-30): 20px top padding, 5px gap,
