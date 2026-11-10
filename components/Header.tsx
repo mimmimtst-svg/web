@@ -10,7 +10,7 @@ import { PORTRAIT, useMediaQuery } from "@/hooks/useMediaQuery";
 /** The candidate's video on YouTube (the link left of the menu button,
     2026-11-10). The playlist of all the videos is the menu's 비전 영상
     button (SiteMenu). */
-export const VIDEO_URL = "https://youtu.be/GrfRoiMUFLY?si=cqnfSceraySK_MW0";
+export const VIDEO_URL = "https://youtu.be/PCdxVLdm4e4";
 
 /** Mobile: past this much scroll, scrolling down slides the header away. */
 const HIDE_AFTER_PX = 40;
