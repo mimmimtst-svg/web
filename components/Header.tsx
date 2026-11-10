@@ -205,7 +205,7 @@ export default function Header({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className={styles.videoLabel}>영상으로 만나는 유병현</span>
+                <span className={styles.videoLabel}>영상으로 보는 비전</span>
                 <ArrowOutIcon className={styles.videoIcon} />
               </a>
             )}

@@ -563,6 +563,17 @@
     font-size: max(calc(19 * var(--u)), 0.875rem);
   }
 
+  /* The mic to the label's size (2026-11-10: it read big next to the
+     smaller text): 1.5 → 1.2em, a little closer to the words. */
+  .askButtonCompact {
+    gap: 0.4em;
+  }
+
+  .askButtonCompact .askIcon {
+    width: 1.2em;
+    height: 1.2em;
+  }
+
   /* The label's box trimmed to its letters (cap height to baseline), so
      it centres the same in every browser (2026-10-29: on a Mac the text
      sat high — Pretendard's line metrics differ by platform). The
