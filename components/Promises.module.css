@@ -542,36 +542,20 @@
     transform: translateY(-50%);
     display: inline-flex;
     align-items: center;
-    gap: 0.45em;
-    padding: max(calc(14 * var(--u)), 10px) max(calc(32 * var(--u)), 20px);
+    gap: 0.4em;
+    /* 2026-11-10: a step smaller ("페이지 타이틀이랑 비교해보니까 좀 큰 것
+       같아"): 22 → 19u type, the padding and the mic in step. */
+    padding: max(calc(12 * var(--u)), 9px) max(calc(26 * var(--u)), 18px);
     border: 1px solid rgba(255, 255, 255, 0.7);
     border-radius: 999px;
     font-family: var(--font-kr);
     font-weight: 600;
-    font-size: max(calc(22 * var(--u)), 0.9375rem);
+    font-size: max(calc(19 * var(--u)), 0.875rem);
     line-height: 1.2;
     color: var(--color-white);
     white-space: nowrap;
     pointer-events: auto;
     transition: background-color 250ms ease, color 250ms ease, border-color 250ms ease;
-  }
-
-  /* A step smaller (2026-11-10, test page): 22 → 19u type, the pill's
-     padding in step. */
-  .askButtonCompact {
-    padding: max(calc(12 * var(--u)), 9px) max(calc(26 * var(--u)), 18px);
-    font-size: max(calc(19 * var(--u)), 0.875rem);
-  }
-
-  /* The mic to the label's size (2026-11-10: it read big next to the
-     smaller text): 1.5 → 1.2em, a little closer to the words. */
-  .askButtonCompact {
-    gap: 0.4em;
-  }
-
-  .askButtonCompact .askIcon {
-    width: 1.2em;
-    height: 1.2em;
   }
 
   /* The label's box trimmed to its letters (cap height to baseline), so
@@ -582,9 +566,10 @@
     text-box: trim-both cap alphabetic;
   }
 
+  /* The mic to the label's size (2026-11-10: 1.5 → 1.2em). */
   .askIcon {
-    width: 1.5em;
-    height: 1.5em;
+    width: 1.2em;
+    height: 1.2em;
     flex-shrink: 0;
   }
 

@@ -23,15 +23,11 @@ type HeaderProps = {
   homeHref?: string;
   /** The white bar from the start, for pages without a red hero. */
   solid?: boolean;
-  /** The video link left of the menu button (2026-11-10: on the test
-      page only until its design is settled). */
-  videoLink?: boolean;
 };
 
 export default function Header({
   homeHref,
   solid: alwaysSolid = false,
-  videoLink = false,
 }: HeaderProps = {}) {
   const headerRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -198,33 +194,31 @@ export default function Header({
             <span className={styles.brandName}>유병현</span>
           </a>
           <div className={styles.actions}>
-            {videoLink && (
-              <a
-                className={styles.videoLink}
-                href={VIDEO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="후보자 영상 보기 (유튜브, 새 창)"
-              >
-                {/* Wide screens: the words and an arrow; phones, short of
-                    room beside the stacked name: the YouTube mark alone. */}
-                <span className={styles.videoLabel}>후보자 영상 보기</span>
-                <ArrowOutIcon className={styles.videoIcon} />
-                <YoutubeIcon className={styles.videoMark} />
-              </a>
-            )}
+            <a
+              className={styles.videoLink}
+              href={VIDEO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="후보자 영상 보기 (유튜브, 새 창)"
+            >
+              {/* Wide screens: the words and an arrow; phones, short of
+                  room beside the stacked name: the YouTube mark alone. */}
+              <span className={styles.videoLabel}>후보자 영상 보기</span>
+              <ArrowOutIcon className={styles.videoIcon} />
+              <YoutubeIcon className={styles.videoMark} />
+            </a>
             <button
-            className={styles.menuToggle}
-            type="button"
-            ref={menuButtonRef}
-            aria-label="메뉴 열기"
-            aria-haspopup="dialog"
-            aria-expanded={menuOpen}
-            aria-controls="site-menu"
-            onClick={() => setMenuOpen(true)}
-          >
-            <MenuIcon />
-          </button>
+              className={styles.menuToggle}
+              type="button"
+              ref={menuButtonRef}
+              aria-label="메뉴 열기"
+              aria-haspopup="dialog"
+              aria-expanded={menuOpen}
+              aria-controls="site-menu"
+              onClick={() => setMenuOpen(true)}
+            >
+              <MenuIcon />
+            </button>
           </div>
         </div>
       </header>

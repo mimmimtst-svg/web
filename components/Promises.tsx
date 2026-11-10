@@ -37,10 +37,7 @@ function Plain({
   return <Tag className={className}>{children}</Tag>;
 }
 
-/** `compactAsk`: the wide-screen 후보자에게 묻는다 button a step smaller
-    (2026-11-10: "페이지 타이틀이랑 비교해보니까 좀 큰 것 같아" — on the test
-    page until it is approved). */
-export default function Promises({ compactAsk = false }: { compactAsk?: boolean } = {}) {
+export default function Promises() {
   const { ref, settled } = useSectionSettled<HTMLElement>();
   // The promises rise in as they scroll into view: on a wide screen
   // each whole promise (the section is a long page since 2026-10-18), on
@@ -176,10 +173,7 @@ export default function Promises({ compactAsk = false }: { compactAsk?: boolean 
           heading's row, pinned with it (2026-10-29). */}
       <div className={styles.ask}>
         <div className={styles.askPin}>
-          <a
-            className={`${styles.askButton} ${compactAsk ? styles.askButtonCompact : ""}`}
-            href={QNA_PAGE}
-          >
+          <a className={styles.askButton} href={QNA_PAGE}>
             <MicIcon className={styles.askIcon} />
             <span className={styles.askLabel}>후보자에게 묻는다</span>
           </a>
