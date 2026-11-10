@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import styles from "./SiteMenu.module.css";
-import { CloseIcon } from "./icons";
+import { ArrowOutIcon, CloseIcon } from "./icons";
 import SnsLinks from "./SnsLinks";
 import { goToSection } from "@/lib/pageNav";
 import { MENU_OPEN_ATTR } from "@/lib/menuState";
@@ -31,6 +31,10 @@ const MENU_ITEMS: MenuItem[] = [
   { label: "공약집 다운로드", page: "development-plan/" },
   { label: "Development Plan Download", page: "development-plan-en/" },
 ];
+
+/** 비전 영상 (2026-11-10): the YouTube playlist of the candidate's
+    videos, a pill button under the links, opening in a new tab. */
+const VISION_VIDEO_URL = "https://youtube.com/playlist?list=PLcJJontX9TKo&si=7rZmJG7WDsfPPB0z";
 
 // Keys that would scroll the page behind the open menu.
 const SCROLL_KEYS = new Set([" ", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"]);
@@ -177,6 +181,22 @@ export default function SiteMenu({ id, open, onClose, homeHref }: SiteMenuProps)
                   </a>
                 </li>
               ))}
+              {/* Last, as a button like the header's 후보자 영상 보기. */}
+              <li
+                className={`${styles.item} ${styles.videoItem}`}
+                style={{ ["--i" as string]: MENU_ITEMS.length }}
+              >
+                <a
+                  className={styles.videoButton}
+                  href={VISION_VIDEO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="비전 영상 (유튜브 재생목록, 새 창)"
+                >
+                  <span className={styles.videoLabel}>비전 영상</span>
+                  <ArrowOutIcon className={styles.videoIcon} />
+                </a>
+              </li>
             </ul>
           </nav>
         </div>
