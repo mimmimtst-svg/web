@@ -193,55 +193,18 @@
   }
 }
 
-/* 비전 영상 (2026-11-10): a pill like the header's 후보자 영상 보기 on
-   its white bar — charcoal outline and words, key red filled on hover. */
-.videoItem {
-  margin-top: 14px;
-}
-
-.videoButton {
+/* 비전 영상 (2026-11-10): a link like the others, an arrow after it —
+   it opens YouTube in a new tab. */
+.outLink {
   display: inline-flex;
   align-items: center;
-  gap: 0.35em;
-  padding: 0.6em 1.15em 0.6em 1.35em;
-  border: 1px solid #333;
-  border-radius: 999px;
-  font-family: var(--font-kr);
-  font-weight: 600;
-  font-size: 17px;
-  line-height: 1.2;
-  color: #333;
-  white-space: nowrap;
-  transition: background-color 250ms ease, color 250ms ease, border-color 250ms ease;
+  gap: 0.25em;
 }
 
-.videoLabel {
-  text-box: trim-both cap alphabetic;
-}
-
-.videoIcon {
-  width: 1.15em;
-  height: 1.15em;
+.outIcon {
+  width: 0.95em;
+  height: 0.95em;
   flex-shrink: 0;
-}
-
-@media (hover: hover) {
-  .videoButton:hover {
-    border-color: var(--color-key);
-    background-color: var(--color-key);
-    color: var(--color-white);
-  }
-}
-
-.videoButton:active {
-  border-color: var(--color-key);
-  background-color: var(--color-key);
-  color: var(--color-white);
-}
-
-.videoButton:focus-visible {
-  outline: 1px solid #333;
-  outline-offset: 3px;
 }
 
 /* div.footer-detail (Figma 2026-09-30): 20px top padding, 5px gap,
@@ -332,14 +295,6 @@
   .link {
     padding: 9px 0;
     font-size: 18px;
-  }
-
-  .videoItem {
-    margin-top: 12px;
-  }
-
-  .videoButton {
-    font-size: 15px;
   }
 }
 

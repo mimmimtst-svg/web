@@ -33,7 +33,8 @@ const MENU_ITEMS: MenuItem[] = [
 ];
 
 /** 비전 영상 (2026-11-10): the YouTube playlist of the candidate's
-    videos, a pill button under the links, opening in a new tab. */
+    videos, the last link, opening in a new tab. Set like the other links
+    with an arrow after it (a pill button there read cluttered). */
 const VISION_VIDEO_URL = "https://youtube.com/playlist?list=PLcJJontX9TKo&si=7rZmJG7WDsfPPB0z";
 
 // Keys that would scroll the page behind the open menu.
@@ -181,20 +182,16 @@ export default function SiteMenu({ id, open, onClose, homeHref }: SiteMenuProps)
                   </a>
                 </li>
               ))}
-              {/* Last, as a button like the header's 후보자 영상 보기. */}
-              <li
-                className={`${styles.item} ${styles.videoItem}`}
-                style={{ ["--i" as string]: MENU_ITEMS.length }}
-              >
+              <li className={styles.item} style={{ ["--i" as string]: MENU_ITEMS.length }}>
                 <a
-                  className={styles.videoButton}
+                  className={`${styles.link} ${styles.outLink}`}
                   href={VISION_VIDEO_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="비전 영상 (유튜브 재생목록, 새 창)"
                 >
-                  <span className={styles.videoLabel}>비전 영상</span>
-                  <ArrowOutIcon className={styles.videoIcon} />
+                  비전 영상
+                  <ArrowOutIcon className={styles.outIcon} />
                 </a>
               </li>
             </ul>
