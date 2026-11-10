@@ -363,8 +363,10 @@ export function ArrowOutIcon({ className }: IconProps) {
   );
 }
 
-/** YouTube's mark in one colour (currentColor): the rounded screen with the
-    play triangle cut out — the header's video link on phones (2026-11-10). */
+/** YouTube's mark in one colour (currentColor), drawn in line: the
+    rounded screen as an outline, the play triangle filled — the header's
+    video link on phones (2026-11-10; the solid mark read heavy beside the
+    thin menu lines). */
 export function YoutubeIcon({ className }: IconProps) {
   return (
     <svg
@@ -374,12 +376,8 @@ export function YoutubeIcon({ className }: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M27.4 3.1A3.5 3.5 0 0 0 24.9.6C22.7 0 14 0 14 0S5.3 0 3.1.6A3.5 3.5 0 0 0 .6 3.1C0 5.3 0 10 0 10s0 4.7.6 6.9a3.5 3.5 0 0 0 2.5 2.5C5.3 20 14 20 14 20s8.7 0 10.9-.6a3.5 3.5 0 0 0 2.5-2.5c.6-2.2.6-6.9.6-6.9s0-4.7-.6-6.9ZM11.2 14.3V5.7L18.5 10l-7.3 4.3Z"
-        fill="currentColor"
-      />
+      <rect x="0.75" y="0.75" width="26.5" height="18.5" rx="5.2" stroke="currentColor" strokeWidth="1.25" />
+      <path d="M11.4 6.2V13.8L18.2 10L11.4 6.2Z" fill="currentColor" />
     </svg>
   );
 }
