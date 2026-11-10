@@ -62,6 +62,61 @@
   white-space: nowrap;
 }
 
+/* The video link and the menu button, side by side on the right. */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.4vw, 24px);
+}
+
+/* 영상으로 만나는 유병현 ↗ (2026-11-10, test page): the 후보자에게 묻는다
+   button's family — a thin pill in the header's own colour (white over
+   the red hero, charcoal on the white bar), filled on hover. */
+.videoLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.55em 1.05em 0.55em 1.25em;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-family: var(--font-kr);
+  font-weight: 600;
+  font-size: clamp(0.875rem, 0.8rem + 0.25vw, 1.0625rem);
+  line-height: 1.2;
+  color: inherit;
+  white-space: nowrap;
+  transition: background-color 250ms ease, color 250ms ease, border-color 250ms ease;
+}
+
+.videoLabel {
+  text-box: trim-both cap alphabetic;
+}
+
+.videoIcon {
+  width: 1.15em;
+  height: 1.15em;
+  flex-shrink: 0;
+}
+
+@media (hover: hover) {
+  .videoLink:hover {
+    background-color: var(--color-white);
+    border-color: var(--color-white);
+    color: var(--color-key);
+  }
+
+  .header.scrolled .videoLink:hover {
+    background-color: var(--color-key);
+    border-color: var(--color-key);
+    color: var(--color-white);
+  }
+}
+
+.videoLink:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 3px;
+}
+
 .menuToggle {
   display: flex;
   align-items: center;
@@ -106,6 +161,11 @@
 
   .brandName {
     font-size: calc(20 * var(--mu));
+  }
+
+  /* Web first (2026-11-10): the phone header keeps its look for now. */
+  .videoLink {
+    display: none;
   }
 
   .menuToggle {

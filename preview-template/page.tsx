@@ -10,7 +10,7 @@ import SiteHome from "@/components/SiteHome";
  * plan/ → P2-2, press/ → the press page, development-plan/ → the
  * 발전계획서 download page, development-plan-en/ → its English
  * summary, pledges/ → P4-1, pledges/detail/ →
- * P4-2),
+ * P4-2, test/ → a design test copy of the main page),
  * using the PREVIEW_SLUG repository secret, so the address never appears
  * in this public repository. Never indexed.
  */

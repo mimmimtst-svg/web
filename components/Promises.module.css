@@ -556,6 +556,13 @@
     transition: background-color 250ms ease, color 250ms ease, border-color 250ms ease;
   }
 
+  /* A step smaller (2026-11-10, test page): 22 → 19u type, the pill's
+     padding in step. */
+  .askButtonCompact {
+    padding: max(calc(12 * var(--u)), 9px) max(calc(26 * var(--u)), 18px);
+    font-size: max(calc(19 * var(--u)), 0.875rem);
+  }
+
   /* The label's box trimmed to its letters (cap height to baseline), so
      it centres the same in every browser (2026-10-29: on a Mac the text
      sat high — Pretendard's line metrics differ by platform). The

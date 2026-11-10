@@ -340,3 +340,25 @@ export function MicIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+/** A thin arrow pointing up and to the right — "opens elsewhere" (the
+    header's video link, 2026-11-10). Stroke in currentColor. */
+export function ArrowOutIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M7 17L17 7M9 7H17V15"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}

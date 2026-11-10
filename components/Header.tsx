@@ -2,10 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Header.module.css";
-import { MenuIcon } from "./icons";
+import { ArrowOutIcon, MenuIcon } from "./icons";
 import { goToSection } from "@/lib/pageNav";
 import SiteMenu from "./SiteMenu";
 import { PORTRAIT, useMediaQuery } from "@/hooks/useMediaQuery";
+
+/** The candidate's YouTube (the video link left of the menu button).
+    TODO: the real address — a placeholder until the user sends it. */
+export const VIDEO_URL = "https://www.youtube.com/";
 
 /** Mobile: past this much scroll, scrolling down slides the header away. */
 const HIDE_AFTER_PX = 40;
@@ -19,9 +23,16 @@ type HeaderProps = {
   homeHref?: string;
   /** The white bar from the start, for pages without a red hero. */
   solid?: boolean;
+  /** The video link left of the menu button (2026-11-10: on the test
+      page only until its design is settled). */
+  videoLink?: boolean;
 };
 
-export default function Header({ homeHref, solid: alwaysSolid = false }: HeaderProps = {}) {
+export default function Header({
+  homeHref,
+  solid: alwaysSolid = false,
+  videoLink = false,
+}: HeaderProps = {}) {
   const headerRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -186,7 +197,19 @@ export default function Header({ homeHref, solid: alwaysSolid = false }: HeaderP
             <span className={styles.brandLabel}>고려대학교 제22대 총장 후보</span>
             <span className={styles.brandName}>유병현</span>
           </a>
-          <button
+          <div className={styles.actions}>
+            {videoLink && (
+              <a
+                className={styles.videoLink}
+                href={VIDEO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className={styles.videoLabel}>영상으로 만나는 유병현</span>
+                <ArrowOutIcon className={styles.videoIcon} />
+              </a>
+            )}
+            <button
             className={styles.menuToggle}
             type="button"
             ref={menuButtonRef}
@@ -198,6 +221,7 @@ export default function Header({ homeHref, solid: alwaysSolid = false }: HeaderP
           >
             <MenuIcon />
           </button>
+          </div>
         </div>
       </header>
       <SiteMenu id="site-menu" open={menuOpen} onClose={closeMenu} homeHref={homeHref} />
