@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Header.module.css";
-import { ArrowOutIcon, MenuIcon } from "./icons";
+import { ArrowOutIcon, MenuIcon, YoutubeIcon } from "./icons";
 import { goToSection } from "@/lib/pageNav";
 import SiteMenu from "./SiteMenu";
 import { PORTRAIT, useMediaQuery } from "@/hooks/useMediaQuery";
 
-/** The candidate's YouTube (the video link left of the menu button).
-    TODO: the real address — a placeholder until the user sends it. */
-export const VIDEO_URL = "https://www.youtube.com/";
+/** The candidate's video on YouTube (the link left of the menu button,
+    2026-11-10). */
+export const VIDEO_URL = "https://youtu.be/PCdxVLdm4e4";
 
 /** Mobile: past this much scroll, scrolling down slides the header away. */
 const HIDE_AFTER_PX = 40;
@@ -204,9 +204,13 @@ export default function Header({
                 href={VIDEO_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="후보자 영상 보기 (유튜브, 새 창)"
               >
-                <span className={styles.videoLabel}>영상으로 보는 비전</span>
+                {/* Wide screens: the words and an arrow; phones, short of
+                    room beside the stacked name: the YouTube mark alone. */}
+                <span className={styles.videoLabel}>후보자 영상 보기</span>
                 <ArrowOutIcon className={styles.videoIcon} />
+                <YoutubeIcon className={styles.videoMark} />
               </a>
             )}
             <button

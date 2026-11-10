@@ -98,6 +98,10 @@
   flex-shrink: 0;
 }
 
+.videoMark {
+  display: none;
+}
+
 @media (hover: hover) {
   .videoLink:hover {
     background-color: var(--color-white);
@@ -163,9 +167,35 @@
     font-size: calc(20 * var(--mu));
   }
 
-  /* Web first (2026-11-10): the phone header keeps its look for now. */
+  /* Phones (2026-11-10): no room for the words beside the stacked name
+     — the YouTube mark alone, in the header's colour, no pill. */
+  .actions {
+    gap: calc(14 * var(--mu));
+  }
+
   .videoLink {
+    padding: calc(4 * var(--mu));
+    border: 0;
+    border-radius: calc(6 * var(--mu));
+  }
+
+  .videoLabel,
+  .videoIcon {
     display: none;
+  }
+
+  .videoMark {
+    display: block;
+    width: calc(25 * var(--mu));
+    height: auto;
+  }
+
+  .videoLink:active,
+  .header .videoLink:hover,
+  .header.scrolled .videoLink:hover {
+    background-color: transparent;
+    color: inherit;
+    opacity: 0.7;
   }
 
   .menuToggle {
