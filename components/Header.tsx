@@ -7,9 +7,9 @@ import { goToSection } from "@/lib/pageNav";
 import SiteMenu from "./SiteMenu";
 import { PORTRAIT, useMediaQuery } from "@/hooks/useMediaQuery";
 
-/** The candidate's video on YouTube (the link left of the menu button,
-    2026-11-10). */
-export const VIDEO_URL = "https://youtu.be/PCdxVLdm4e4";
+/** The candidate's videos on YouTube (the link left of the menu button,
+    2026-11-10; a playlist since 2026-11-10, was one video). */
+export const VIDEO_URL = "https://youtube.com/playlist?list=PLcJJontX9TKo&si=7rZmJG7WDsfPPB0z";
 
 /** Mobile: past this much scroll, scrolling down slides the header away. */
 const HIDE_AFTER_PX = 40;
