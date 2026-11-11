@@ -11,10 +11,12 @@
    phone turned sideways, a squat window) the page shrinks with --u but the
    menu kept its full size and ran off the bottom; now every size below is
    N × --ms — 1px from about 780px of height up (the whole menu fits), less
-   on shorter screens, never under half. Portrait keeps 1px and its own
-   sizes. Whatever still doesn't fit scrolls inside the panel. */
+   on shorter screens, but never under 0.82px: a phone turned sideways
+   then gets the links at 18px, as when it is held upright (2026-11-11:
+   half size read "너무 작아" next to the page; the panel scrolls
+   instead). Portrait keeps 1px and its own sizes. */
 .root {
-  --ms: clamp(0.5px, calc(100dvh / 780), 1px);
+  --ms: clamp(0.82px, calc(100dvh / 780), 1px);
   position: fixed;
   inset: 0;
   z-index: 60;
@@ -50,6 +52,9 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  /* At least this much between the last link and the e-mail/SNS footer,
+     even when the window is short and the panel scrolls (2026-11-11). */
+  gap: calc(48 * var(--ms));
   padding: calc(20 * var(--ms)) calc(40 * var(--ms));
   overflow-y: auto;
   overscroll-behavior: contain;
