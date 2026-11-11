@@ -7,7 +7,14 @@
    in a stagger. Closing slides the panel out with the links still on it
    (no separate text fade — user request); they reset to hidden only once
    the panel is gone. `visibility` waits for the close transition too. */
+/* --ms: the menu's own unit (2026-11-11). On a short landscape screen (a
+   phone turned sideways, a squat window) the page shrinks with --u but the
+   menu kept its full size and ran off the bottom; now every size below is
+   N × --ms — 1px from about 780px of height up (the whole menu fits), less
+   on shorter screens, never under half. Portrait keeps 1px and its own
+   sizes. Whatever still doesn't fit scrolls inside the panel. */
 .root {
+  --ms: clamp(0.5px, calc(100dvh / 780), 1px);
   position: fixed;
   inset: 0;
   z-index: 60;
@@ -39,11 +46,11 @@
   right: 0;
   bottom: 0;
   /* On phones a strip of the dimmed page stays visible (tap to close). */
-  width: min(456px, calc(100vw - 48px));
+  width: min(calc(456 * var(--ms)), calc(100vw - 48px));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 20px 40px;
+  padding: calc(20 * var(--ms)) calc(40 * var(--ms));
   overflow-y: auto;
   overscroll-behavior: contain;
   background-color: var(--color-white);
@@ -63,7 +70,7 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: calc(40 * var(--ms));
 }
 
 /* div.c-header__wrapper: 20px vertical padding, brand left, X right. */
@@ -71,7 +78,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 0;
+  padding: calc(20 * var(--ms)) 0;
   color: #333;
 }
 
@@ -79,7 +86,7 @@
 .brand {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: calc(8 * var(--ms));
   color: inherit;
 }
 
@@ -91,7 +98,7 @@
 .brandLabel {
   font-family: var(--font-kr);
   font-weight: 400;
-  font-size: 12px;
+  font-size: calc(12 * var(--ms));
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -99,7 +106,7 @@
 .brandName {
   font-family: var(--font-kr);
   font-weight: 800;
-  font-size: 20px;
+  font-size: calc(20 * var(--ms));
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -114,15 +121,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  margin-right: -8px;
+  width: calc(40 * var(--ms));
+  height: calc(40 * var(--ms));
+  margin-right: calc(-8 * var(--ms));
   color: #333;
 }
 
 .close svg {
-  width: 24px;
-  height: 24px;
+  width: calc(24 * var(--ms));
+  height: calc(24 * var(--ms));
 }
 
 @media (hover: hover) {
@@ -156,7 +163,7 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: calc(10 * var(--ms));
   list-style: none;
 }
 
@@ -177,10 +184,10 @@
 
 .link {
   display: inline-block;
-  padding: 10px 0;
+  padding: calc(10 * var(--ms)) 0;
   font-family: var(--font-kr);
   font-weight: 600;
-  font-size: 22px;
+  font-size: calc(22 * var(--ms));
   line-height: 1.2;
   color: #333;
   transition: color 200ms ease, transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -221,21 +228,21 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding-top: 20px;
+  gap: calc(20 * var(--ms));
+  padding-top: calc(20 * var(--ms));
   color: var(--color-muted);
 }
 
 .footerDetail {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: calc(5 * var(--ms));
 }
 
 .sns {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: calc(8 * var(--ms));
 }
 
 /* The footer's outlined circles in the menu's muted beige; key red on
@@ -244,8 +251,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: calc(32 * var(--ms));
+  height: calc(32 * var(--ms));
   border: 1px solid var(--color-muted);
   border-radius: 999px;
   color: var(--color-muted);
@@ -253,8 +260,8 @@
 }
 
 .snsLink svg {
-  width: 19px;
-  height: 19px;
+  width: calc(19 * var(--ms));
+  height: calc(19 * var(--ms));
 }
 
 @media (hover: hover) {
@@ -273,14 +280,14 @@
 .footerLabel {
   font-family: var(--font-kr);
   font-weight: 400;
-  font-size: 12px;
+  font-size: calc(12 * var(--ms));
   line-height: 1;
 }
 
 .footerEmail {
   font-family: var(--font-kr);
   font-weight: 400;
-  font-size: 14px;
+  font-size: calc(14 * var(--ms));
   line-height: 1.6;
   text-transform: lowercase;
   color: inherit;
@@ -290,6 +297,10 @@
    a little less between them, so the eight fit with air and "Development
    Plan Download" stays on one line. */
 @media (orientation: portrait) {
+  .root {
+    --ms: 1px;
+  }
+
   .top {
     gap: 24px;
   }
