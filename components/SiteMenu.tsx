@@ -68,8 +68,31 @@ export default function SiteMenu({ id, open, onClose, homeHref }: SiteMenuProps)
 
     // The page behind must not move (or page-turn) while the menu is up.
     // Capture phase on window, so this runs before SectionPager's
-    // listeners, which then see the event as already handled.
-    const blockScroll = (e: Event) => {
+    // listeners, which then see the event as already handled. The panel
+    // itself still scrolls when the links don't fit a short window
+    // (2026-11-11): a wheel, swipe or key over it is let through as long
+    // as the panel can still move that way, and stopped at its ends so
+    // the page behind never takes over.
+    const panel = panelRef.current;
+    const panelCanScroll = (target: EventTarget | null, dy: number) => {
+      if (!panel || !(target instanceof Node) || !panel.contains(target) || dy === 0) return false;
+      return dy > 0
+        ? panel.scrollTop + panel.clientHeight < panel.scrollHeight - 1
+        : panel.scrollTop > 0;
+    };
+    const onWheel = (e: WheelEvent) => {
+      if (panelCanScroll(e.target, e.deltaY)) return;
+      if (e.cancelable) e.preventDefault();
+    };
+    let touchY: number | null = null;
+    const onTouchStart = (e: TouchEvent) => {
+      touchY = e.touches.length === 1 ? e.touches[0].clientY : null;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      const t = e.touches[0];
+      const dy = touchY !== null && t ? touchY - t.clientY : 0;
+      if (t) touchY = t.clientY;
+      if (e.touches.length === 1 && panelCanScroll(e.target, dy)) return;
       if (e.cancelable) e.preventDefault();
     };
     const onKeyDown = (e: KeyboardEvent) => {
@@ -95,17 +118,21 @@ export default function SiteMenu({ id, open, onClose, homeHref }: SiteMenuProps)
         return;
       }
       const onButton = e.target instanceof HTMLElement && /^(BUTTON|A)$/.test(e.target.tagName);
-      if (SCROLL_KEYS.has(e.key) && !(e.key === " " && onButton)) e.preventDefault();
+      if (!SCROLL_KEYS.has(e.key) || (e.key === " " && onButton)) return;
+      const dy = /^(ArrowUp|PageUp|Home)$/.test(e.key) || (e.key === " " && e.shiftKey) ? -1 : 1;
+      if (!panelCanScroll(e.target, dy)) e.preventDefault();
     };
 
     const active = { passive: false, capture: true } as const;
-    window.addEventListener("wheel", blockScroll, active);
-    window.addEventListener("touchmove", blockScroll, active);
+    window.addEventListener("wheel", onWheel, active);
+    window.addEventListener("touchstart", onTouchStart, { passive: true, capture: true });
+    window.addEventListener("touchmove", onTouchMove, active);
     window.addEventListener("keydown", onKeyDown, { capture: true });
     return () => {
       root.removeAttribute(MENU_OPEN_ATTR);
-      window.removeEventListener("wheel", blockScroll, { capture: true });
-      window.removeEventListener("touchmove", blockScroll, { capture: true });
+      window.removeEventListener("wheel", onWheel, { capture: true });
+      window.removeEventListener("touchstart", onTouchStart, { capture: true });
+      window.removeEventListener("touchmove", onTouchMove, { capture: true });
       window.removeEventListener("keydown", onKeyDown, { capture: true });
     };
   }, [open, onClose]);
